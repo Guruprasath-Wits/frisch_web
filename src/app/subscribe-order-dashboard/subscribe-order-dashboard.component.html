@@ -1,0 +1,211 @@
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Benutzer</li>
+                            <li class="breadcrumb-item" aria-current="page">Abonnementbestellungen</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+
+<div class="content content-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-3 col-md-4 theiaStickySidebar">
+                <app-dashboard-sidebar></app-dashboard-sidebar>
+            </div>
+            <div class="col-xl-9 col-md-8">
+                <div *ngIf="subscriptionData.length>0">
+                    <div class="page-title" *ngFor="let order of subscriptionData">
+                        <!-- <div *ngIf="order.delivery_date >= order.vacation_start && order.delivery_date <= order.vacation_end">
+                        </div> -->
+                        <div class="row">
+                            <div class="my-projects-list">
+                                <div class="row">
+                                    <div class="col-lg-12 flex-wrap">
+                                        <h3 *ngIf="order.vacationPause" class="text-center text-danger">---Angehalten---
+                                        </h3>
+                                        <div class="projects-card flex-fill subscrip_card" [ngStyle]="{ 'border-color': order.vacationPause ? 'red' : 'orange',
+                                            'box-shadow': order.vacationPause ? 'none' : 'rgb(255, 217, 0) 0px 5px 15px'
+                                         }">
+                                            <div class="card-body">
+                                                <div class="projects-details align-items-center">
+                                                    <div class="project-info">
+                                                        <!-- <span>Kontakt : {{ order.contact }}</span> -->
+                                                        <h2>{{ order.order_id }}</h2>
+                                                        <div class="customer-info">
+                                                            <ul class="list-details">
+                                                                <li>
+                                                                    <div class="slot">
+                                                                        <p>Hinweis</p>
+                                                                        <h5 style="text-transform: none;">{{
+                                                                            order.instruction }}</h5>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="slot">
+                                                                        <p>Adresse</p>
+                                                                        <h5>{{ order.address }}</h5>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="slot">
+                                                                        <p>Liefertermin</p>
+                                                                        <h5> {{ order.delivery_date }} </h5>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="project-hire-info">
+                                                        <div class="content-divider"></div>
+                                                        <div class="projects-amount">
+                                                            <!-- <h3>{{ order.price.split(".")[0] }}
+                                                                <sup>{{
+                                                                    order.price.split(".")[1] }}</sup> €<small
+                                                                    class="h5"> +
+                                                                    {{ order.tips }} € (Trinkgeld)</small></h3> -->
+                                                            <h3 *ngIf="order.price != 0">
+                                                                {{ order.price.split(".")[0] }}
+                                                                <sup>{{ order.price.split(".")[1] }}</sup> €
+                                                                <small class="h5">
+                                                                    + {{ order.tips || 0 | number: '1.2-2' }} €
+                                                                    (Trinkgeld)
+                                                                    <!-- +
+      {{ order.deliveryFee || 0 | number: '1.2-2' }} € (Liefergebühr) -->
+                                                                </small>
+                                                            </h3>
+
+                                                            <!-- <h5>in 12 Days</h5> -->
+                                                        </div>
+                                                        <div class="content-divider"></div>
+                                                        <div class="projects-action text-center d-flex">
+                                                            <a href="javascript:void(0)"
+                                                                (click)="openOrderDetails(order)"
+                                                                class="projects-btn bg-dark">Bestellübersicht
+                                                            </a>
+                                                            <a [routerLink]="['/edit-subscribe']"
+                                                                [queryParams]="{orderId:order.order_id}"><i
+                                                                    class="fa-solid fa-pen-to-square text-success fa-xl p-2"></i></a>
+
+                                                            <a href="javascript:void(0)"
+                                                                (click)="openAllOrderDetails(order)"
+                                                                class="fa-solid fa-eye text-primary fa-xl p-2">
+                                                            </a>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal" tabindex="-1" [ngClass]="{'show': isModalOpen}"
+                                                        style="display: block;" *ngIf="isModalOpen">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Bestelldetails</h5>
+                                                                    <button type="button" class="btn-close text-danger"
+                                                                        (click)="closeModal()"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <table *ngIf="orderDetails.length > 0"
+                                                                        class="text-center">
+                                                                        <thead>
+                                                                            <tr class="p-2">
+                                                                                <th>Produkt</th>
+                                                                                <th>Menge</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody *ngFor="let product of orderDetails">
+                                                                            <tr>
+                                                                                <td>{{ product.product_name }}</td>
+                                                                                <td>{{ product.quantity }} stk</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <p *ngIf="orderDetails.length === 0">Für diese
+                                                                        Bestellung sind keine Produkte verfügbar.</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button"
+                                                                        class="btn btn-danger bg-danger"
+                                                                        (click)="closeModal()">Schließen</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal" tabindex="-1"
+                                                        [ngClass]="{'show': isNewModalOpen}" style="display: block;"
+                                                        *ngIf="isNewModalOpen">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Lieferdetails</h5>
+                                                                    <button type="button" class="btn-close text-danger"
+                                                                        (click)="closeModal()"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <table *ngIf="orderDetails.length > 0"
+                                                                        class="text-center">
+                                                                        <thead>
+                                                                            <tr class="p-2">
+                                                                                <th>Bestellnummer</th>
+                                                                                <th>Liefertermin</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody *ngFor="let product of orderDetails">
+                                                                            <tr>
+                                                                                <td>{{ product.order_id }}</td>
+                                                                                <td>{{ product.delivery_date |
+                                                                                    date:'dd-MM-yyyy' }} </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <p *ngIf="orderDetails.length === 0">
+                                                                        Bitte beachten Sie! <br />
+                                                                        Die Lieferdetails sind ab Freitag, 16 Uhr
+                                                                        verfügbar. <br /><br />
+                                                                        Sie haben Zeit bis Freitag, 16 Uhr, um Produkte
+                                                                        hinzuzufügen oder zu entfernen. <br />
+                                                                        Es werden nur die Produkte geliefert, die bis
+                                                                        spätestens 16 Uhr hinzugefügt wurden. <br />
+                                                                        Änderungen nach 16 Uhr werden automatisch am
+                                                                        nächsten Liefertag berücksichtigt. <br /><br />
+                                                                        Danke!
+                                                                    </p>
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button"
+                                                                        class="btn btn-danger bg-danger"
+                                                                        (click)="closeModal()">Schließen</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center" *ngIf="subscriptionData.length===0">
+                    <h1>Werden Sie zum Dauerbesteller und genießen Sie den Komfort</h1>
+                    <h3>"<span class="text-warning">Probieren Sie jeden Bissen...</span>"</h3>
+                    <a routerLink="/ourProducts" class="btn btn-warning">Erkunden <i
+                            class="fa-solid fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

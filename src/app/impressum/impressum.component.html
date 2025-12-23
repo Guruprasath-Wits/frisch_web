@@ -1,0 +1,33 @@
+<div class="bread-crumb-bar"></div>
+
+<div class="container">
+  <div class="impressum-wrapper">
+    <h1>Impressum</h1>
+
+    <p class="cus-con">{{ imprintData?.name }}</p>
+
+    <div class="text-center">
+      <h1 class="cus-head">{{ imprintData?.company_name }}</h1>
+    </div>
+
+    <p class="cus-con">
+      {{ imprintData?.address }} 
+    </p>
+
+    <p><strong>Tel.:</strong> <a [href]="'tel:' + imprintData?.tel">{{ imprintData?.tel }}</a></p>
+    <p><strong>E-Mail:</strong> <a [href]="'mailto:' + imprintData?.email">{{ imprintData?.email }}</a></p>
+
+    <p class="cus-con">{{ imprintData?.business_type }}</p>
+
+    <div class="col-md-12">
+      <h3 class="cus-h3">{{ imprintData?.platform }}</h3>
+      <a [href]="imprintData?.link" target="_blank">{{ imprintData?.link }}</a>
+    </div>
+
+    <p class="small-text">
+      {{ imprintData?.notes }}
+    </p>
+  </div>
+</div>
+
+<app-footer></app-footer>

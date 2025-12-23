@@ -1,0 +1,97 @@
+<div class="card search-filter shadow cart">
+    <div class="card-header d-flex justify-content-between text-center">
+        <h4 class="card-title mb-0">Shopping Cart</h4>
+    </div>
+
+    <div class="container text-dark" *ngIf="isLogin || cartData.length>0; else empty_cart">
+        <div *ngIf="cartData.length>0">
+            <div class="d-flex flex-row flex-wrap">
+                <div class="col-lg-4 rounded-3 p-3" *ngFor="let cart of cartData">
+                    <div class="col-12">
+                        <img class="cart_product_img img-fluid shadow shadow-success p-1 border border-2 border-success"
+                            [src]="fileUrl + cart.productDetails?.product_img" alt="Product Image">
+                    </div>
+                    <div class="col-12 font-weight-bold p-3 quantity-control text-center">
+                        <div class="d-flex justify-content-between">
+                            <p>{{ cart.productDetails?.product_name }}</p>
+                            <button class="border-0 text-danger bg-transparent" style="margin-top: -15px;"
+                                (click)="deleteFromCart(cart.id)"><i class="fa-regular fa-trash-can fa-lg"></i></button>
+                        </div>
+                        <p>€{{ cart.productDetails?.price }}</p>
+                        <div class="input-group">
+                            <button type="button" class="quantity-left-minus btn btn-warning btn-number"
+                                (click)="decrementQuantity(cart)">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+
+                            <input type="text" id="quantity" name="quantity" class="input-number"
+                                [value]="cart.quantity" readonly />
+
+                            <!-- <button type="button" class="quantity-right-plus btn btn-warning btn-number"
+                        (click)="incrementQuantity(cart.product_id)">
+                        <i class="fa-solid fa-plus"></i>
+                    </button> -->
+
+                            <button type="button" class="quantity-right-plus btn btn-warning btn-number"
+                                (click)="incrementQuantity(cart)">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row card-footer total_amount text-center">
+                <div class="col-6 col-md-6 col-sm-3">Price</div>
+                <div class="col-6 col-md-6 col-sm-3">€ {{ total }}</div>
+            </div>
+
+            <div class="row card-footer delivery_amount text-center">
+                <div class="col-6 col-md-6 col-sm-3">Delivery Charge</div>
+                <div class="col-6 col-md-6 col-sm-3"> € - </div>
+            </div>
+
+            <div class="row card-footer text-center total">
+                <div class="col-6 col-md-6 col-sm-3">Total Amount<br>
+                </div>
+                <div class="col-6 col-md-6 col-sm-3">€ {{ totalAmount }}</div>
+            </div>
+
+
+            <!-- <div class="card-footer text-dark">
+            <span> Total :</span><br>
+            <span>(Including All Taxes)</span>
+        </div> -->
+
+            <div class="card-footer text-muted">
+                <div class="card-body text-center">
+                    <h1 class="card-title">Add a Tip</h1><br>
+                    <div class="row">
+                        <div class="d-flex flex-wrap flex-md-row justify-content-around">
+                            <button class="btn btn-warning" *ngFor="let button of buttons" [disabled]="button.disabled"
+                                (click)="selectAmount(button)" class="btn" [ngClass]="{
+                          'btn-primary': !button.disabled,
+                          'btn-secondary': button.disabled
+                        }">€ {{ button.value }}</button>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-around mt-5">
+                        <button class="col-md-4 btn border">Standing Order</button>
+                        <button class="col-md-4 btn btn-secondary" (click)="moveToOrder()">CheckOut</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #empty_cart>
+        <div class="text-center">
+            <!-- <img src="../../assets/img/empty-cart.png" class="img-fluid w-25" alt=""> -->
+            <iframe src="https://lottie.host/embed/2129ad54-2f26-416a-b5a4-434359546422/B1QOXsUKXW.lottie" width="550"
+                height="550"></iframe>
+        </div>
+    </ng-template>
+
+</div>

@@ -1,0 +1,119 @@
+.card-header {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.product_info {
+    padding: 0px 20px 20px 20px;
+}
+
+.product_info p {
+    font-size: 20px;
+    font-weight: 500;
+    color: black;
+    /* margin-left: 10px;
+    margin-right: 10px; */
+}
+
+.product_card {
+    border-radius: 30px;
+}
+
+.product_card:hover {
+    /* transform: scale(0.9, 0.9); */
+    transition: 0.5s;
+}
+
+.product_card img {
+    border-radius: 10px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.more_details {
+    border-radius: 20px;
+}
+
+.product-result {
+    border-radius: 1.25rem;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-control .btn-number {
+    padding: 2px 8px;
+    font-size: 16px;
+    border: none;
+}
+
+.quantity-control .input-number {
+    height: 27px;
+    width: 75px;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.quantity-control .btn-warning {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.quantity-control .btn-warning:hover {
+    background-color: #ffb006;
+}
+
+@media((min-width:426px) and (max-width:768px)) {
+    .product_info p {
+        font-size: 16px;
+    }
+}
+
+
+/* Popup Box Overlay */
+.popup-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Popup Content */
+.popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* text-align: center; */
+    width: 50%;
+    /* max-width: 400px; */
+}
+
+/* Close Button */
+.close-btn {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    background-color: #c9302c;
+}

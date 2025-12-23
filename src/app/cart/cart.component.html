@@ -1,0 +1,115 @@
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Warenkorb</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+
+<div class="container text-dark p-5">
+    <h1 class="card-title text-center mb-0"><i class="fa-solid fa-cart-shopping"></i> Warenkorb</h1><br>
+    <div class="row">
+        <div class="col-12 col-lg-8 col-md-8" *ngIf="isLogin || cartData.length>0">
+            <div class="d-flex flex-row flex-wrap">
+                <div class="cart-product col-12 col-lg-4 col-md-6 p-3" *ngFor="let cart of cartData">
+                    <div class="col-12">
+                        <img class="cart_product_img img-fluid shadow shadow-success p-1 border border-2 border-success"
+                            [src]="fileUrl + cart.productDetails?.product_img" alt="Product Image">
+                    </div>
+                    <div class="col-12 font-weight-bold p-3 quantity-control text-center">
+                        <div class="d-flex justify-content-between">
+                            <p>{{ cart.productDetails?.product_name }}</p>
+                            <button class="border-0 text-danger bg-transparent" style="margin-top: -15px;"
+                                (click)="deleteFromCart(cart.id)"><i class="fa-regular fa-trash-can fa-lg"></i></button>
+                        </div>
+                        <p>{{ cart.productDetails?.price.split(".")[0] }} <sup>{{ cart.productDetails?.price.split(".")[1] }}</sup> €</p>
+                        <div class="input-group">
+                            <button type="button" class="quantity-left-minus btn btn-warning btn-number"
+                                (click)="decrementQuantity(cart)">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+
+                            <input type="text" id="quantity" name="quantity" class="input-number"
+                                [value]="cart.quantity" readonly />
+
+                            <button type="button" class="quantity-right-plus btn btn-warning btn-number"
+                                (click)="incrementQuantity(cart)">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!isLogin || cartData.length===0">
+                <div class="text-center">
+                    <iframe src="https://lottie.host/embed/2129ad54-2f26-416a-b5a4-434359546422/B1QOXsUKXW.lottie"
+                        width="270" height="550"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 col-md-4 cart-calculate">
+         
+
+            <div class="row card-footer text-center total border-0">
+                <div class="col-6 col-md-6 col-sm-3"><p>Produktsumme</p></div>
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>{{ total.toFixed(2).split(".")[0] }} <sup>{{ total.toFixed(2).split(".")[1] }}</sup> €</p>
+                </div>
+            </div>
+            
+            <div class="row card-footer text-center total border-0">
+                <div class="col-6 col-md-6 col-sm-3"><p>Trinkgeld</p></div>
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>{{ tips.toFixed(2).split(".")[0] }} <sup>{{ tips.toFixed(2).split(".")[1] }}</sup> €</p>
+                </div>
+            </div>
+            
+            <hr>
+            <div class="card-footer text-muted border-0">
+                <div class="card-body text-center">
+                    <h3 class="card-title">
+                        Trinkgeld hinzufügen<br>
+                        <small class="small">(Ein kleines Dankeschön für unser Team wird immer geschätzt – selbstverständlich freiwillig)</small>
+                      </h3>
+                      
+                      <div class="row justify-content-center">
+                        <div class="col-6 col-md-6 mb-3 px-2 d-flex justify-content-center"
+                             *ngFor="let button of buttons">
+                          <button class="btn btn-warning w-100"
+                                  
+                                  (click)="selectAmount(button)"
+                                  [ngClass]="{
+                                    'btn-primary': !button.disabled,
+                                    'btn-secondary': button.disabled
+                                  }">
+                            <div class="text-center">
+                              {{ button.value.toFixed(2).split('.')[0] }}
+                              <sup>{{ button.value.toFixed(2).split('.')[1] }}</sup> €
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                      
+                      
+
+                    <div class="mt-5">
+                        <button class="w-100 btn border border-2" (click)="subscribe_order()">Dauerbestellung</button><br><br>
+                        <button class="w-100 btn btn-secondary" (click)="moveToOrder()">Zur Kasse</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

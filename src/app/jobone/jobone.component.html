@@ -1,0 +1,178 @@
+<style>
+    .card-text h2 {
+        color: #954535;
+    }
+
+    .card-text ul li {
+        margin-top: 20px;
+        margin-left: 50px;
+        font-size: 18px;
+    }
+
+    .card-right {
+        height: 150px;
+        font-size: 20px;
+        padding-left: 120px;
+    }
+
+    .card-right ul li {
+
+        color: #954535;
+        margin-top: 30px;
+
+    }
+
+    .card-body a {
+        margin-top: 30px;
+        float: right;
+    }
+</style>
+
+<div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Jobs</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<!-- <div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="section-header text-center">
+                <h1 class="custom-h1" style="font-size: 36px;">Werden Sie Teil unseres Frisch für Sie Teams!
+
+                </h1>
+            </div>
+        </div>
+        <div class="container">
+        <div class="row" style="margin-left: 40px;margin-right: 40px;">
+            
+            <div class="col-sm-12">
+              <div class="row card" style="display: flex;flex-direction: row;" >
+                <div class="col-md-6 card-body ">
+                  
+                  <div class="card-text">
+                    <h2>Sie bringen mit:
+                    </h2>
+
+                    <ul>
+                        <li>Führerschein Klasse B, eigenes Fahrzeug und ein Smartphone
+                        </li>
+                        <li>Grundkenntnisse in Deutsch oder Englisch
+                        </li>
+                        <li>Flexibilität und Bereitschaft, früh aufzustehen
+                        </li>
+                        <li>Zuverlässigkeit und Pünktlichkeit
+                        </li>
+                    </ul>
+                    
+                  </div>
+
+                  <div class="card-text">
+                    <h2>Wir bieten Ihnen:
+
+                    </h2>
+
+                    <ul>
+                        <li>Attraktiven Stundenlohn von 13€
+
+                        </li>
+                        <li>Zusätzliche Zuschläge für Nacht-, Sonntag- und Feiertagsarbeit
+
+                        </li>
+                        <li>Kilometerpauschale von 0,30€ pro Kilometer
+
+                        </li>
+                        <li>Attraktiver Mitarbeiterrabatt auf unsere Produkte
+
+                        </li>
+                    </ul>
+                    
+                  </div>
+
+                  <div class="card-text">
+                    <h2>Ihre Aufgaben:
+
+                    </h2>
+
+                    <ul>
+                        <li>Kontaktlose Lieferung von frischen Brötchen an Privathaushalte in Dortmund
+
+                        </li>
+                        <li>Befolgung der hinterlegten Lieferhinweise
+
+                        </li>
+                        <li>Einsatz an Samstagen, Sonntagen und Feiertagen in der Zeit von 4-8 Uhr
+
+                        </li>
+                        
+                    </ul>
+                    
+                  </div>
+                  <a href="#" class="btn btn-primary">Jetzt Bewerben
+                </a>
+                </div>
+
+                <div class="card col-md-4 card-right">
+                    <ul >
+                        <li >Ohne Anschreiben
+                        </li>
+                        <li > Ohne Lebenslauf
+                        </li>
+                    </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div> -->
+
+
+<div class="container jobs">
+    <h1 class="text-center jobs-head"><i class="fa-solid fa-bullhorn fa-fade"></i> Werden Sie Teil unseres Frisch für Sie Teams! <i class="fa-solid fa-bullhorn fa-flip-horizontal fa-fade"></i></h1><br>
+    <div class="row">
+        <div class="col-12 col-lg-6 col-md-6">
+            <img src="../../assets/img/sample_od2.jpg" alt="" class="job_img img-fluid">
+        </div>
+        <div class="job-details col-12 col-lg-6 col-md-6">
+            <div class="job-detail card shadow" *ngFor="let job of jobs">
+                <div class="card-header text-uppercase job-title">
+                    {{ job.title }}
+                </div>
+                <!-- <div class="card-body job-description justify-content-between d-flex">
+                    <p [innerHTML]="formatDescription(job.description)"></p>
+                    <a class="btn btn-warning" (click)="applyJob(job.title)"><i class="fa-solid fa-check"></i> Bewerben</a>
+                </div> -->
+                <div class="card-body job-description d-flex flex-column justify-content-between">
+                    <p [innerHTML]="formatDescription(job.description)" class="flex-grow-1"></p>
+                
+                    <div class="d-flex justify-content-end">
+                        <a class="btn btn-warning mt-auto" (click)="applyJob(job.title)">
+                             Bewerben
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

@@ -1,0 +1,258 @@
+.quantity-control .input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .quantity-control p {
+    color: black;
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  .quantity-control .btn-number {
+    padding: 2px 8px;
+    font-size: 16px;
+    border: none;
+  
+  }
+
+
+
+  
+  .quantity-control .input-number {
+    height: 27px;
+    width: 75px;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .quantity-control .btn-warning {
+    background-color: #ffc107;
+    color: #fff;
+  }
+  
+  .quantity-control .btn-warning:hover {
+    background-color: #ffb006;
+  }
+  
+  .total_amount,
+  .delivery_amount {
+    font-weight: 500;
+    font-size: 16px;
+  }
+  
+  .total {
+    font-weight: 600;
+    font-size: 18px;
+  }
+  
+  .total span {
+    font-size: 12px;
+  }
+  
+  .cart {
+    border-radius: 30px;
+}
+
+.cart-prouduct {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.cart-calculate {
+    margin-left: auto;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 20px; /* ✅ Reduced padding */
+    border-radius: 20px;
+    text-align: center; /* ✅ Ensures the image is centered */
+}
+
+.map-image {
+    width: 100%; /* ✅ Makes sure the image is responsive */
+    height: auto;
+    display: block;
+    max-width: 100%; /* ✅ Prevents overflow */
+}
+
+.address-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.address-info {
+  flex: 1; /* Takes up remaining space */
+  min-width: 60%; /* Ensures text doesn't get too squeezed */
+}
+
+.address-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  flex-wrap: wrap; /* Allows wrapping for smaller screens */
+}
+
+.address-info {
+  flex: 1; /* Takes up remaining space */
+  min-width: 60%; /* Ensures text doesn't get too squeezed */
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0; /* Prevents buttons from shrinking */
+}
+
+
+.address-content {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff9800;
+    min-width: 120px;
+}
+
+.address-icon {
+    margin-right: 10px;
+    font-size: 22px;
+}
+
+.address-details {
+  flex-grow: 1;
+  font-size: 16px;
+  color: #333;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allow wrapping */
+  word-break: break-word; /* Ensure text breaks properly */
+}
+
+
+.delete-btn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.delete-btn i {
+    margin-right: 5px;
+}
+
+
+
+.choose-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.choose-btn i {
+    margin-right: 5px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0; /* Prevents buttons from shrinking */
+}
+
+
+button {
+    width: 100px; /* Set a fixed width */
+    height: 40px; /* Set a fixed height */
+    font-size: 16px; /* Ensure text remains readable */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.delete-btn,
+.add-btn,
+.btn-number {
+    width: 100px;
+    height: 40px;
+}
+
+/* .delete-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    
+} */
+
+.delete-btn:hover {
+    background: darkred;
+}
+
+.add-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #f69e15;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 15px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.add-btn:hover {
+    background: #f69e15;
+}
+
+
+
+  img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    display: block;
+  }
+  
+  
+  
+  .cart_product_img {
+    border-radius: 30px;
+  }
+  
+  p{
+    font-size: 18px;
+  }
+  
+  @media(max-width:726px) {
+    .cart {
+      margin-top: 50px;
+    }
+  }

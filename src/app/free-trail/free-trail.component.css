@@ -1,0 +1,188 @@
+.carousel-wrapper {
+  position: relative;
+  padding: 0 20px;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 300px; /* Small width to show only one card */
+  margin: 0 auto 30px;
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.card {
+  width: 100%; /* Full width of the carousel */
+  border: none;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.card-img-top {
+  object-fit: contain;
+  width: 80%;
+  height: auto;
+  background: #f8f9fa;
+  border-radius: 20px;
+  display: block;
+  margin: 10px auto;
+}
+
+.card-body {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+}
+
+.product-name p {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.details-btn {
+  background: #ffc107;
+  padding: 8px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.details-btn:hover {
+  transform: translateX(5px);
+}
+
+.details-btn i {
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #ffc107;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+  z-index: 10;
+}
+
+.nav-button:hover {
+  background-color: #ffb300;
+}
+
+.nav-button i {
+  color: #333;
+  font-size: 1rem;
+}
+
+.prev-button {
+  left: 5%;
+}
+
+.next-button {
+  right: 5%;
+}
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+
+.carousel-indicators button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicators button.active {
+  background: #ffc107;
+  transform: scale(1.2);
+}
+
+.sample_note ul li {
+  font-size: 1rem;
+  color: black;
+  line-height: 1.8;
+}
+
+.product_info p {
+  color: black;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.product_card:hover {
+  transform: scale(0.95);
+  transition: 0.5s;
+}
+
+.cus-pro-h1 {
+  height: 40px;
+  background-color: #c4a484;
+  padding-top: 5px;
+  border-radius: 10px;
+}
+
+.cus-sec {
+  margin-top: -10px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.projects {
+  margin-bottom: 10px !important;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

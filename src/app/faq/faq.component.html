@@ -1,0 +1,39 @@
+<div class="bread-crumb-bar">
+  <div class="container">
+    <!-- <div class="row align-items-center inner-banner">
+      <div class="col-md-12 col-12 text-center">
+        <div class="breadcrumb-list">
+          <nav aria-label="breadcrumb" class="page-breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg" alt="Post Author">
+                  Home</a></li>
+              <li class="breadcrumb-item" aria-current="page">Faq</li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</div>
+
+<div class="container">
+  <div class="m-5">
+    <!-- <div class="text-left faq-card" *ngFor="let queries of faq; let i = index">
+      <h3> {{ i+1 }}. &nbsp;{{ queries.faq_qns }}</h3>
+      <div class="answer">
+        <p>{{ queries.faq_ans }}</p>
+      </div>
+    </div> -->
+
+    <h1 class="text-center">FAQ</h1>
+
+    <div class="faq-card mb-3" *ngFor="let queries of faq; let i = index">
+      <div class="faq-question">{{ queries.faq_qns }}</div>
+      <div class="faq-answer">{{ queries.faq_ans }}</div>
+    </div>
+  </div>
+</div>
+
+
+
+<app-footer></app-footer>

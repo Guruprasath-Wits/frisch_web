@@ -1,0 +1,40 @@
+<div class="settings-widget shadow">
+    <div class="settings-header d-sm-flex flex-row flex-wrap text-center text-sm-start align-items-center">
+        <!-- <a href=""><img alt="profile image" src="assets/img/img-04.jpg" class="avatar-lg rounded-circle"></a> -->
+        <div class="ms-sm-3 ms-md-0 ms-lg-3 mt-2 mt-sm-0 mt-md-2 mt-lg-0">
+            <!-- <p class="mb-2">Welcome,</p> -->
+            <h3 class="mb-0">Willkommen, {{ userData.username }} </h3>
+            <p class="mb-0">{{ userData.email }}</p>
+        </div>
+    </div>
+    <div class="settings-menu">
+        <ul>
+            <!-- <li class="nav-item">
+                <a routerLink="/userdashboard" class="nav-link">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+            </li> -->
+            <li class="nav-item">
+                <a routerLink="/manageOrders" class="nav-link"><i class="fa-solid fa-cart-shopping"></i> Bestellungen
+                </a>
+            </li>
+            <li class="nav-item">
+                <a routerLink="/subscribe-order-dashboard" class="nav-link"><i class="fa-solid fa-crown"></i> Dauerbestellung
+                </a>
+            </li>
+            <!-- <li class="nav-item">
+                <a routerLink="/userprofile" class="nav-link"><i class="fa-solid fa-file-invoice"></i> Invoices
+                </a>
+            </li> -->
+
+            <li class="nav-item">
+                <a routerLink="/userprofile" class="nav-link"><i class="fa-solid fa-gear"></i> Einstellungen
+                </a>
+            </li>
+            <!-- <li class="nav-item">
+                <a routerLink="/" class="nav-link"><i class="fa-solid fa-right-from-bracket"></i> Logout
+                </a>
+            </li> -->
+        </ul>
+    </div>
+</div>

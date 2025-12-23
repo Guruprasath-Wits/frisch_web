@@ -1,0 +1,524 @@
+<style>
+    .cus-map-con {
+        padding-top: 100px;
+    }
+
+    .card {
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+    }
+
+    .carousel-container {
+        width: 100%;
+        max-width: 1000px;
+        overflow: hidden;
+        position: relative;
+        margin: auto;
+    }
+
+    .carousel-track {
+        display: flex;
+        transition: transform 1s ease;
+    }
+
+    .card-item {
+        min-width: 33.33%;
+        flex: 1 0 33.33%;
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .card-header {
+        background-color: #d2a679;
+        color: #1a1a1a;
+        font-weight: 600;
+        font-size: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .card-img-top {
+        border-radius: 0;
+    }
+
+
+    .btn-custom {
+        background-color: #ffa726;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+    }
+
+
+    .cus-h1 {
+        font-size: 30px;
+        /* padding-left: 40px; */
+        padding-top:100px; 
+        line-height: 55px;
+        letter-spacing: 1.5px;
+        margin-left: 5%;
+        
+        color: white;
+        /* text-align: right; */
+    }
+
+    .cus-head {
+        background-color: #c4a484;
+        color: whitesmoke;
+        width: 350px;
+        height: 60px;
+        font-size: 40px;
+        font-weight: 800;
+        margin: 0px auto 0px auto;
+        padding: 5px;
+        letter-spacing: 1px;
+        border-radius: 20px;
+        text-align: center !important;
+    }
+
+    @media (max-width: 450px) {
+    .cus-head {
+        width: 260px;
+        font-size: 28px;
+    }
+}
+
+    .cus-con {
+        text-align: center !important;
+        margin-top: 20px;
+        font-size: 24px;
+        color: #CD7F32;
+        letter-spacing: 1px;
+        font-weight: 800;
+        margin-left: 5%;
+    }
+
+    @media(max-width:450px){
+        .cus-con {
+            text-align: center !important;
+            margin-left: 20%;
+            font-size: 18px;
+        }
+    }
+
+    @media(min-width:1920px){
+        .cus-con {
+        /* margin-left: 40%; */
+        }
+    }
+
+    .cus-h3 {
+        text-align: center;
+        font-weight: 800;
+        font-size: 20px;
+        margin-top: 10px;
+        line-height: 2;
+        margin-left: 5%;
+    }
+
+    @media(max-width:450px){
+        .cus-h3 {
+            margin-left: 20%;
+            font-size: 18px;
+        }
+    }
+
+
+    @media(min-width:1920px){
+        .cus-h3 {
+        /* margin-left: 40%; */
+        }
+    }
+
+    .cus-btn,
+    .cus-btn1 {
+        width: 200px;
+        height: 40px;
+        background-color: #ffbc34;
+        border-radius: 20px;
+        /* margin-left: 42%; */
+        font-size: 22px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        padding-top: 4px;
+    }
+
+    .cus-btn1 {
+        margin-left: 48%;
+        margin-top: 10px;
+    }
+
+    .con-img {
+        background-image: url('../../assets/img/cookies.png');
+        background-size: contain;
+        height: 400px;
+        margin: 20px;
+    }
+
+    .cus-search {
+        font-size: 32px;
+        line-height: 50px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    
+
+    .cus-view-btn {
+        margin-left: 70px;
+    }
+
+    .cus-sub {
+        font-size: 20px;
+        letter-spacing: 1px;
+        line-height: 30px;
+    }
+
+    .com-name {
+        color: #954535;
+        /* color: orange; */
+        font-weight: 800;
+        letter-spacing: 1px;
+        font-size: 34px;
+    }
+
+    .cus-input {
+        /* width: 30%; */
+        border-radius: 10px;
+        border: 2px solid #954535;
+        padding-left: 40px;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    }
+
+    .zip-code-icon {
+        margin-top: 15px;
+        margin-left: 10px;
+    }
+
+    .delivery_areas {
+        padding: 10px;
+        list-style: none;
+        font-weight: 600;
+        font-size: 20px;
+        line-height: 1.5;
+        color: black;
+    }
+
+    .cus-input:focus {
+        border: 2px solid #954535;
+    }
+
+    .cus-pro-h1 {
+        height: 40px;
+        background-color: #c4a484;
+        padding-top: 5px;
+        border-radius: 10px;
+    }
+
+    .wecan-con {
+        margin: 20px;
+    }
+
+    .wecan-con1 {
+        margin-left: -50px;
+    }
+
+    .wecan-con h1,
+    .wecan-con1 h1 {
+        line-height: 40px;
+    }
+
+    @media(max-width:426px) {
+        .cus-h1 {
+            margin-left: 25% !important;
+            line-height: 36px;
+            font-size: 21px;
+            color: white;
+        }
+
+        .cus-head {
+                    background-color: #c4a484;
+        color: whitesmoke;
+        width: 259px;
+        height: 60px;
+        font-size: 32px;
+        font-weight: 800;
+        margin-left: 47px !important;
+        padding-left: 8px;
+        padding-top: 7px;
+        letter-spacing: 1px;
+        border-radius: 20px;
+        }
+
+        .cus-btn {
+            width: 200px;
+            height: 40px;
+            background-color: #ffbc34;
+            border-radius: 20px;
+            /* margin-left: 20% !important; */
+            font-size: 22px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            padding-top: 4px;
+        }
+
+        .cus-map img {
+            margin-top: 45px;
+        }
+
+        .cus-map-con {
+            padding-top: 0 !important;
+        }
+
+        .cus-input {
+            width: 100% !important;
+            margin-left: 12%;
+            font-size: 14px !important;
+        }
+
+        .roadmap {
+            margin-top: 60px;
+        }
+
+        .roadmap-item {
+            width: 100%;
+        }
+
+        .com-name {
+            font-size: 23px !important;
+        }
+    }
+
+    @media(min-width:427px) and (max-width:770px) {
+        .cus-map img {
+            margin-top: 45px;
+        }
+
+        .cus-map-con {
+            padding-top: 0 !important;
+        }
+
+        .cus-input {
+            width: 100% !important;
+        }
+
+        .roadmap {
+            margin-top: 60px;
+        }
+
+        .roadmap-item {
+            width: 100%;
+        }
+
+        .com-name {
+            font-size: 23px !important;
+        }
+
+        .cus-view-btn {
+            margin-left: 0 !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .card-item {
+            min-width: 100%;
+            flex: 1 0 100%;
+        }
+    }
+
+    @media(max-width:376px) {
+        .cus-head {
+            width: 218px;
+        font-size: 27px;
+        height: 48px;
+        }
+    }
+
+    @media(max-width:321px) {
+        .cus-head {
+            width: 255px;
+            font-size: 32px;
+        }
+    }
+</style>
+
+<section
+  class="section home-banner row-middle"
+  id="home-banner1"
+  [ngStyle]="{'background-image': imageLoaded ? 'url(' + bannerImage + ')' : 'none'}"
+>
+  <img
+    [src]="bannerImage"
+    (load)="imageLoaded = true"
+    alt="banner"
+    style="display:none;"
+  />
+  <div class="overlay" *ngIf="imageLoaded"></div>
+
+  <div class="container">
+    <h1 class="cus-h1" id="cus-h1-new">
+      Möchtet ihr euren <br> Morgen <br> verzaubern?
+    </h1>
+    <div class="breaking-news-container">
+      <div class="breaking-news-text">
+        {{ settings.breaking_news }}
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section row-middle">
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-12 mt-2">
+                <h2 class="cus-con">Dann Haben wir Genau das richtige für euch !
+                </h2>
+                <div class="name-text">
+                    <h1 class="cus-head">{{ settings.company_name }}</h1>
+                </div>
+                <h2 class="cus-con">Ist da, um eure frühstücksroutine zu Revolutionieren
+                </h2>
+            </div>
+
+            <div class="col-md-12">
+                <h3 class="cus-h3">
+                    Zögern Sie nicht länger!<br>
+                    Ihre Kostenlose Probetüte inklusive liefergebühr wartet schon auf Sie
+
+                </h3>
+            </div>
+            <div class="freetrail">
+                <button class="btn cus-btn" [routerLink]="'/free-trail'">Jetzt Klicken</button>
+            </div>            
+        </div>
+    </div>
+</section>
+
+<section class="section ml-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5 col-sm-12 cus-map" >
+                <img class="img-fluid" src="../../assets/img/dormunt.png" alt="dor">
+            </div>
+
+            <div class="col-md-7 col-sm-12 cus-map-con">
+                <div class="col-md-11">
+                    <h1 class="cus-search" id="cursh">Finden Sie schnell heraus, ob die Lieferung von <span class="com-name">{{
+                            settings.company_name }}</span> in Ihrer Nähe möglich ist.<small>(Unten sehen Sie die Postleitzahlen, in die wir liefern)</small></h1>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-location-dot fa-xl text-danger position-absolute zip-code-icon p-2 pt-1"></i>
+                    <input type="text" [(ngModel)]="zipcode" (input)="checkZipCode()" placeholder="Bitte geben Sie Ihre Postleitzahl ein"
+                        class="form-control cus-input" maxlength="6" />
+                </div>
+
+
+                <ul *ngIf="zipcode.length > 0" class="delivery_areas">
+                    <li *ngFor="let suggestion of filteredAreas">
+                        {{ suggestion.zipcode }} - {{ suggestion.area_name }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="roadmap">
+    <div class="container">
+        <div class="section-header text-center">
+            <div class="section-line"></div>
+            <h1 class="custom-h1">Ihre Vorteile durch uns
+            </h1>
+        </div>
+        <div class="roadmap-container" *ngFor="let advantage of userBenefit; let i=index">
+            <div *ngIf="i%2==0" #align_right class="roadmap-item right">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title ad-head">{{ advantage.adv_qns }}</h2>
+                        <p class="ad-content">{{ advantage.adv_ans }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="i%2==1" #align_left class="roadmap-item left">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title ad-head">{{ advantage.adv_qns }}</h2>
+                        <p class="ad-content">{{ advantage.adv_ans }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<br>
+
+<section class="section projects">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-12 mx-auto">
+                <div class="section-header text-center aos" data-aos="fade-up">
+                    <div class="section-line1"></div>
+                    <h1 class="header-title custom-h2">
+                        Bestellen Sie jetzt unsere große Auswahl an frischen Backwaren und weiteren Produkten
+                    </h1>
+                </div>
+                <div class="cardrows">
+                <div class="category d-flex flex-row flex-wrap align-items-center justify-content-center">
+                    <div class="col-4 col-lg-2 col-md-2 position-relative" *ngFor="let category of categories">
+                        <a [routerLink]="['/ourProducts']" [queryParams]="{category: category.id}" class="category-link">
+                            <img class="img-fluid category-img" [src]="fileurl + category.category_img" [alt]="category.category_name">
+                            <div class="category-overlay">
+                                <span class="category-text">{{ category.category_name }}</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-header text-center" data-aos="fade-up">
+      <div class="section-line"></div>
+      <h1 class="header-title custom-h1">
+        Setzen Sie sich bitte mit uns in Verbindung
+      </h1>
+    </div>
+    <br>
+    <div class="cardrow">
+      <div class="row justify-content-center" id="box-col">
+        <div class="announce col-12 col-md-5 col-xl-4 mb-3 me-lg-4 text-center">
+          <img src="../../assets/img/icon/bell.png" alt="" class="announce-img mx-auto d-block">
+          <h1 class="announce_title">Webshop</h1>
+          <br>
+          <p class="text-justify">
+            {{settings.webshop}}
+          </p>
+        </div>
+        <div class="announce col-12 col-md-5 col-xl-4 mb-3 text-center">
+          <img src="../../assets/img/icon/telephone-2.png" alt="" class="announce-img mx-auto d-block">
+          <h1 class="announce_title">Telefon</h1>
+          <br>
+          <p class="text-justify">
+            {{settings.telephone}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<br><br>
+
+<app-footer></app-footer>

@@ -1,0 +1,15 @@
+table thead,tbody,tr,td,th{
+    padding: 7px;
+    border: 2px solid black;
+}
+
+.modal-body{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.subscrip_card{
+    border: 3px solid gold;
+    border-radius: 25px;
+    box-shadow: rgb(255, 217, 0) 0px 5px 15px;
+}

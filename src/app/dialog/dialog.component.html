@@ -1,0 +1,26 @@
+
+<h1 mat-dialog-title>Job Details</h1>
+<div mat-dialog-content>
+  <form [formGroup]="dialogform">
+ <label class="form-group">Company_Name</label>
+ <input matInput type="text"class="form-control" name="Company_name" formControlName="companyname" />
+
+ <label class="form-group">Description</label>
+ <input matInput type="text"class="form-control" name="description" formControlName="description"/>
+
+ <label class="form-group">Job Type</label>
+ <input matInput type="text"class="form-control" name="jobtype" formControlName="jobtype"/>
+ <label class="form-group">Experience</label>
+ <input matInput type="text"class="form-control" name="jobtype" formControlName="Experience"/>
+ <label class="form-group">Category</label>
+ <input matInput type="text"class="form-control" name="jobtype" formControlName="cattype"/>
+ <label class="form-group">LOGO</label>
+ <input matInput type="file"class="form-control"  name="jobtype" (change)="upload($event)" />
+ <p *ngIf="IMG">{{imagedata}} </p>
+</form>
+</div>
+<div mat-dialog-actions class="d-flex align-items-center justify-content-around">
+  <button mat-button mat-dialog-close class="btn btn-danger">Cancle</button>
+  <button *ngIf="!loading" mat-button  cdkFocusInitial class="btn btn-success"(click)="save($event)" >Submit</button>
+  <button *ngIf="loading" mat-button  cdkFocusInitial class="btn btn-success"(click)="update($event)" >Update</button>
+</div>

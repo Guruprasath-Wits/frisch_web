@@ -1,0 +1,258 @@
+
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Unsere Produkte</li>
+                            <li class="breadcrumb-item" aria-current="page">Abonnementbestellung</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+<!-- Loading Overlay -->
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="spinner"></div>
+  <p>Bitte warten...</p>
+</div>
+
+<div class="container mt-5">
+
+    <!-- <marquee behavior="" direction="">Note : Delivery is only Available on Weekends !!!</marquee> -->
+    <h1 class="text-center" style="font-size: 28px;"><i class="fa-solid fa-crown text-warning"></i> Bestellübersicht</h1>
+    <div *ngIf="showFirst20Popup" class="popup-overlay">
+        <!-- <div class="popup-content">
+            <div class="congrats text-center">
+                <h1 style="text-align: center;">Herzlichen Glückwunsch!</h1>
+                <p>Sie gehören zu den ersten 10 Kunden – die Liefergebühr entfällt ausschließlich im ersten Monat!</p></div>
+            <iframe src="https://lottie.host/embed/9de19eda-7796-4103-b242-284d89b73609/Ev5jRegeqf.lottie" width="500px" height="500px"></iframe>
+            <div class="text-center">
+                <button (click)="showFirst20Popup = false" class="btn btn-warning">OK</button>
+            </div>
+        </div> -->
+
+        <div class="modal">
+  <div class="modal-content">
+    <h1>Herzlichen Glückwunsch!</h1>
+    <p>
+      Sie gehören zu den ersten 20 Kunden – die Liefergebühr entfällt für die ersten 4 Wochen!
+    </p>
+    <button (click)="showFirst20Popup = false" class="ok-button">OK</button>
+  </div>
+</div>
+
+    </div>
+    <div class="row">
+        <div class="subscription_order col-12 col-md-6 col-lg-6">
+            <h3 class="bg-warning p-3">Bestellte Produkte</h3>
+            <div class="d-flex justify-content-around flex-wrap">
+                <div class="product_details card" style="width: 14rem;" *ngFor="let products of cartData">
+                    <img class="card-img-top" [src]="fileUrl+products.productDetails?.product_img" alt="Card image cap">
+                    <div class="card-body">
+                        <p class="text-center text-dark">{{ products.productDetails?.product_name }} x {{
+                            products.quantity }} - stk</p>
+                    </div>
+                </div>
+            </div>
+            <a routerLink="/ourProducts" class="btn btn-warning w-100">Entdecken Sie mehr <i
+                    class="fa-solid fa-chevron-right"></i></a>
+        </div>
+        <div class="iban col-12 col-md-6 col-lg-6 overflow-auto">
+            <h3 class="bg-warning p-3">Bankdaten</h3>
+            <div class="p-3">
+               <div class="row text-dark">
+                        <div >
+                            <p><i class="fa-solid fa-user"></i> {{ userData.username }}</p>
+                            <p><i class="fa-solid fa-envelope"></i> {{ userData.email }}</p>
+                            <p><i class="fa-solid fa-phone"></i> {{ userData.phone }}</p>
+                            <p><i class="fa-solid fa-location-dot"></i> {{ userData.street }} {{ userData.address }},{{ userData.zipcode }},{{ userData.ort }}</p>
+                        </div>  
+                    </div>
+
+     <!-- <form *ngIf="isLogin" [formGroup]="SubscriptionForm" (ngSubmit)="confirmSubscriptionOrder()"> -->
+      <form *ngIf="isLogin" [formGroup]="SubscriptionForm" (ngSubmit)="confirmSubscription()">
+      
+  <h3>Zahlungsart wählen</h3>
+  <div class="d-flex gap-3 mb-3">
+    <!-- <label>
+      <input type="radio" formControlName="paymentType" value="sepa"> SEPA
+    </label> -->
+    <!-- <label>
+      <input type="radio" formControlName="paymentType" value="paypal"> PayPal
+    </label> -->
+
+        <label>
+      <input type="radio" formControlName="paymentType" value="Überweisung"> Überweisung (monatliche Sammelabrechnung)
+    </label>
+  </div>
+
+  <!-- SEPA Section -->
+  <div *ngIf="SubscriptionForm.get('paymentType')?.value === 'sepa'">
+    <label for="">Bitte geben Sie Ihre IBAN ein</label><br>
+    <input type="text" formControlName="iban" class="w-100 border border-1 border-warning p-2 rounded" placeholder="IBAN">
+    <button type="button" class="btn btn-warning mt-2" (click)="verifyIban()">IBAN prüfen</button>
+    <div *ngIf="ibanError" class="text-danger">{{ ibanError }}</div>
+    <div *ngIf="ibanVerified && ibanDetails">
+      <div class="mt-3 p-2 border rounded" style="background-color: #dbb476;">
+        <p><strong>Bankname:</strong> {{ ibanDetails.validation.bic.name }}</p>
+        <p><strong>BIC:</strong> {{ ibanDetails.validation.bic.bic }}</p>
+        <p><strong>IBAN:</strong> {{ ibanDetails.validation.iban }}</p>
+        <p><strong>Bankleitzahl:</strong> {{ ibanDetails.validation.bic.nationalBankCode }}</p>
+      </div>
+      <div class="p-1 d-flex align-items-center">
+        <input type="checkbox" formControlName="declaration" [disabled]="!ibanVerified">
+        <span class="ml-2"> &nbsp; Einverständniserklärung anzeigen (SEPA-Mandate)</span>
+        &nbsp;&nbsp;
+        <i class="fas fa-info-circle text-primary ml-2" style="cursor: pointer;" (click)="openDialog()"></i>
+      </div>
+    </div>
+    <div *ngIf="SubscriptionForm.get('iban')?.invalid && (SubscriptionForm.get('iban')?.touched || SubscriptionForm.get('iban')?.dirty)" class="text-danger">
+      <span *ngIf="SubscriptionForm.get('iban')?.errors?.['required']">IBAN ist erforderlich.</span>
+      <span *ngIf="SubscriptionForm.get('iban')?.errors?.['pattern']">IBAN muss genau 22 Zeichen enthalten.</span>
+    </div>
+  </div>
+
+  <!-- PayPal Section (if needed, add here) -->
+
+  <!-- Other form fields (address, zipcode, instruction, delivery_date, etc.) -->
+  <!-- <div>
+    
+    <input
+                          #addressInput
+                          type="text"
+                          class="p-2 mt-2 rounded border border-warning w-100"
+                          placeholder="Alternativadresse (Leer lassen, um an die registrierte Adresse zu liefern)"
+                          formControlName="address">
+  </div> -->
+  <div>
+    <input
+      #zipcodeInput
+      type="number"
+      class="p-2 mt-2 rounded border border-warning w-100"
+      placeholder="PLZ widerholen (Bitte geben Sie Ihre Postleitzahl ein)"
+      formControlName="zipcode"
+    />
+    <div class="error text-danger"
+      *ngIf="SubscriptionForm.get('zipcode')?.invalid && SubscriptionForm.get('zipcode')?.touched">
+      Bitte geben Sie Ihre Postleitzahl ein
+    </div>
+  </div>
+  <div>
+   
+    <textarea formControlName="instruction" rows="2"
+      class="p-2 mt-2 rounded border border-warning w-100"
+      placeholder="Bitte geben Sie einen Sicheren Abstellort an (Optional)"></textarea>
+  </div>
+    <div>
+        <label class="fw-bold">Startdatum der Dauerbestellung</label>
+    <input type="date" formControlName="delivery_date"
+      class="p-2 mt-2 rounded border border-warning w-100" [min]="minDate"
+      (change)="validateDate($event)">
+    <div class="error text-danger"
+      *ngIf="SubscriptionForm.get('delivery_date')?.hasError('afterFriday4pm')">
+      Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
+    </div>
+    <div class="error text-danger"
+      *ngIf="SubscriptionForm.get('delivery_date')?.hasError('weekendOrder')">
+      Bestellungen können nur von Montag bis Freitag vor 16:00 Uhr aufgegeben werden.
+    </div>
+    <div class="text-danger">
+      Bitte beachten Sie: Die Lieferung erfolgt nur an Wochenenden
+    </div>
+  </div>
+
+<div class="mt-3">
+  <label class="fw-bold">Lieferrythmus</label>
+
+  <div class="d-flex gap-4 mt-2">
+
+    <div class="custom-checkbox"
+         [class.selected]="SubscriptionForm.get('delivery_day_option')?.value === 'saturday'"
+         [class.disabled]="disableSaturday"
+         (click)="!disableSaturday && selectWeekend('saturday')">
+      <span class="checkmark">✔</span>Jeden Samstag
+    </div>
+
+    <div class="custom-checkbox"
+         [class.selected]="SubscriptionForm.get('delivery_day_option')?.value === 'sunday'"
+         [class.disabled]="disableSunday"
+         (click)="!disableSunday && selectWeekend('sunday')">
+      <span class="checkmark">✔</span>Jeden Sonntag
+    </div>
+
+    <div class="custom-checkbox"
+         [class.selected]="SubscriptionForm.get('delivery_day_option')?.value === 'both'"
+         (click)="selectWeekend('both')">
+      <span class="checkmark">✔</span> An beiden Tagen (Samstag & Sonntag)
+    </div>
+
+  </div>
+
+  <div class="text-danger mt-2" *ngIf="weekendError">
+    Bitte wählen Sie einen Lieferzeitraum (Samstag, Sonntag oder beide Tage).
+  </div>
+
+  <!-- <div class="text-danger mt-1">
+    Die Lieferung erfolgt nur am Wochenende.
+  </div> -->
+</div>
+  
+
+  <br>
+  <!-- Billing area and summary (unchanged) -->
+  <div class="billing-area row p-3">
+    <h4>Zahlungsinformationen</h4>
+    <div class="col-6 text-start">
+      <p>Artikelsumme</p>
+      <p>Trinkgeld</p>
+      <p>Liefergebühr</p>
+      <hr>
+      <p class="h4">Gesamtbetrag</p>
+      <hr>
+    </div>
+    <div class="col-6 text-end">
+      <p>{{ itemTotal.split(".")[0] }} <sup>{{ itemTotal.split(".")[1] }}</sup> €</p>
+      <p *ngIf="tips != 0">{{ tips.split(".")[0] }} <sup>{{ tips.split(".")[1] }}</sup> €</p>
+      <p *ngIf="tips == 0">0 <sup>00</sup> €</p>
+      <p *ngIf="selectedDateInfo === 'Invalid' || selectedDateInfo === ''"> - €</p>
+      <p *ngIf="selectedDateInfo === 'Weekend' && settings.weekend_fee!=0">
+        {{ settings.weekend_fee.split(".")[0] }} <sup>{{ settings.weekend_fee.split(".")[1] }}</sup> €
+      </p>
+      <p *ngIf="selectedDateInfo === 'Weekend' && settings.weekend_fee==0">
+        0 <sup>00</sup> €
+      </p>
+      <hr>
+      <p class="h4" *ngIf="totalAmount && totalAmount !== '0.00'">
+        {{ totalAmount.split(".")[0] }} <sup>{{ totalAmount.split(".")[1] }}</sup> €
+      </p>
+      <p class="h4" *ngIf="totalAmount === '0.00'">0 <sup>00</sup> €</p>
+      <hr>
+    </div>
+  </div>
+  <br><br>
+  <div class="d-flex justify-content-around">
+   <button class="btn btn-warning w-100"
+  [disabled]="
+    (SubscriptionForm.get('paymentType')?.value === 'sepa' 
+      && (!ibanVerified || !SubscriptionForm.get('declaration')?.value))
+    || SubscriptionForm.get('zipcode')?.invalid
+    || SubscriptionForm.get('delivery_date')?.invalid
+    || selectedDateInfo === 'Invalid'
+    || selectedDateInfo === ''
+  ">
+  Jetzt zum genannten Preis bestellen
+</button>
+
+  </div>
+</form>
+            </div>
+        </div>
+    </div>
+</div>

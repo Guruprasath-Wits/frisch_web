@@ -1,0 +1,136 @@
+/* Style for the "In den Warenkorb" button */
+.cart-hover .btn-warning {
+    color: #fff;
+    background-color: #f0ad4e;
+    border-color: #eea236;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+
+.cart-hover .btn-warning:hover {
+    background-color: #ec971f;
+    border-color: #d58512;
+}
+
+/* Style for SweetAlert date picker container */
+.swal2-popup .swal2-html-container {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Style for date input inside SweetAlert */
+#date-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+#date-input:focus {
+    outline: none;
+    border-color: #5cb85c;
+}
+
+/* SweetAlert confirm button customization */
+.swal2-confirm {
+    background-color: #5cb85c !important;
+    color: #fff !important;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.swal2-confirm:hover {
+    background-color: #4cae4c !important;
+}
+
+/* SweetAlert cancel button customization */
+.swal2-cancel {
+    background-color: #d9534f !important;
+    color: #fff !important;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.swal2-cancel:hover {
+    background-color: #c9302c !important;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-number {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+
+}
+
+.input-number {
+    height: 34px;
+    width: 100px;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* .btn-warning {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.btn-warning:hover {
+    background-color: #ffb006;
+} */
+
+.about_product p{
+    font-size: 16px;
+    font-weight: 400;
+    color: black;
+}
+
+.product_info{    
+    padding: 0px 20px 20px 20px;
+}
+
+.product_info p{
+    font-size: 18px;
+    color: black;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.product_name p{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.product_card{
+    border-radius: 30px;
+}
+
+.product_card img{
+    border-radius: 10px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+
+.add_cart{
+    border-radius: 20px;
+}

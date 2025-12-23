@@ -1,0 +1,190 @@
+<!-- <p>userprofile works!</p>/ -->
+
+
+<div class="main-wrapper">
+    <div class="bread-crumb-bar">
+        <div class="container">
+           
+        </div>
+    </div>
+
+
+    <div class="content content-page">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-3 col-md-4 theiaStickySidebar">
+                    <app-dashboard-sidebar></app-dashboard-sidebar>
+                </div>
+
+                <div class="col-xl-9 col-md-8">
+                    <div class="pro-pos">
+                        <nav class="user-tabs mb-4">
+                            <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                                <li class="nav-item">
+                                    <a class="nav-link active" routerLink="/userprofile">Profil aktualisieren</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" routerLink="/deleteaccount">Dauerbestellungsbeendigung</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" routerLink="/vacation-pause">Temporäre Pause</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <div class="setting-content">
+                            <form [formGroup]="profileForm" (ngSubmit)="updateProfile()" (keydown.enter)="$event.preventDefault()">
+                                <div class="card">
+                                    <div class="pro-head">
+                                        <h3 class="pro-title without-border mb-0">Profil </h3>
+                                    </div>
+                                    <div class="pro-body p-0">
+                                        <div class="form-row pro-pad">
+                                            <div class="form-group col-12 col-md-6">
+                                                <label>Vorname</label>
+                                                <input type="text" class="form-control" formControlName="fname"
+                                                    [value]="userData.fname" readonly>
+                                                <!-- <div class="error text-danger"
+                                                    *ngIf="profileForm.controls['username'].invalid && profileForm.controls['username'].touched">
+                                                    Invalid Username
+                                                </div> -->
+                                            </div>
+                                            <div class="form-group col-12 col-md-6">
+                                                <label>Nachname</label>
+                                                <input type="text" class="form-control" formControlName="lname"
+                                                    [value]="userData.lname" readonly>
+                                                <!-- <div class="error text-danger"
+                                                    *ngIf="profileForm.controls['username'].invalid && profileForm.controls['username'].touched">
+                                                    Invalid Username
+                                                </div> -->
+                                            </div>
+                                            <!-- <div class="form-group col-12 col-md-6">
+                                                <label>Geburtsdatum</label>
+                                                <input type="date" class="form-control" formControlName="dob"
+                                                    [value]="userData.dob" readonly>
+                                               
+                                            </div> -->
+                                            <div class="form-group col-12 col-md-6">
+                                                <label>E-Mail-Adresse</label>
+                                                <input type="email" class="form-control" formControlName="email"
+                                                    [value]="userData.email" readonly>
+                                                <!-- <div class="error text-danger"
+                                                    *ngIf="profileForm.controls['email'].invalid && profileForm.controls['email'].touched">
+                                                    Invalid Email
+                                                </div> -->
+                                            </div>
+                                            <div class="form-group col-12 col-md-6">
+                                                <label>Kontakt</label>
+                                                <input type="text" class="form-control" formControlName="phone"
+                                                    [value]="userData.phone" readonly>
+                                                <!-- <div class="error text-danger"
+                                                    *ngIf="profileForm.controls['mobile'].invalid && profileForm.controls['mobile'].touched">
+                                                    Invalid Phone Number
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="pro-head">
+                                        <h3 class="pro-title without-border mb-0">Standort</h3>
+                                    </div>
+                                    <div class="pro-body">
+                                        <div class="row">
+                                            <div class="form-group col-12 col-md-12">
+  <label>Adresse</label>
+  <input 
+    type="text" 
+    class="form-control" 
+    formControlName="address"
+    [value]="userData.street + ' ' + userData.address + ', ' + userData.zipcode + ', ' + userData.ort" 
+    readonly>
+</div>
+
+                                            <div class="form-group col-12 col-md-6">
+                                                <label>PLZ</label>
+                                                <input type="text" class="form-control" formControlName="zipcode"
+                                                    [value]="userData.zipcode" readonly>
+                                                <!-- <div class="error text-danger"
+                                                *ngIf="profileForm.controls['zipcode'].invalid && profileForm.controls['zipcode'].touched">
+                                                Invalid Zip Code
+                                            </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="card">
+                                    <div class="pro-head">
+                                        <h3 class="pro-title without-border mb-0">Bankdaten</h3>
+                                    </div>
+                                    <div class="pro-body">
+                                        <div class="row">
+  <div class="form-group col-12 col-md-12">
+    <label>IBAN</label>
+    <input
+      type="text"
+      class="form-control"
+      [value]="userData.ban_no" readonly
+      formControlName="ban_no" 
+      
+    />
+   
+    <div *ngIf="ban_no?.invalid && (ban_no?.touched || ban_no?.dirty)" class="text-danger">
+                            <span *ngIf="ban_no?.errors?.['required']">IBAN ist erforderlich.</span>
+                            <span *ngIf="ban_no?.errors?.['pattern']">IBAN muss genau 22 Ziffern enthalten.</span>
+                            
+                        </div>
+
+  </div>
+</div>
+
+                                    </div>
+                                </div> -->
+
+                                <!-- <div class="card">
+                                    <div class="pro-head">
+                                        <h3 class="pro-title without-border mb-0">Passwort bestätigen</h3>
+                                    </div>
+                                    <div class="pro-body">
+                                        <div class="row">
+                                            <div class="col-12 col-md-8">
+                                                <div class="form-group">
+                                                    <label>Passwort</label>
+                                                    <input type="password" class="form-control"
+                                                        formControlName="new_password" (keyup)="passwordKeyup()">
+                                                    <div class="error text-danger" *ngIf="!passwordIsValid">
+                                                        Das Passwort muss:
+                                                        <ol>
+                                                            <li>Enthalten Sie mindestens 8 Zeichen</li>
+                                                            <li>Fügen Sie einen Großbuchstaben ein</li>
+                                                            <li>Fügen Sie eine Ziffer ein</li>
+                                                            <li>Fügen Sie ein Sonderzeichen ein</li>
+                                                        </ol>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Passwort Widerholen</label>
+                                                    <input type="password" class="form-control"
+                                                        formControlName="confirm_password"
+                                                        (keyup)="passwordMatchValidator(profileForm)">
+                                                    <div class="error text-danger" *ngIf="!passwordMatch">
+                                                        Passwort stimmt nicht überein
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <!-- <div class="pro-body d-flex justify-content-between">
+                                    
+                                    <button class="btn bg-success text-white" type="submit">Aktualisieren</button>
+                                </div> -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

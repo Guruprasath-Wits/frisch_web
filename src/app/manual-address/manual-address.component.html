@@ -1,0 +1,106 @@
+<div class="bread-crumb-bar">
+    <div class="container">
+        <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page"><a routerLink="/my-address">Meine Adresse</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Adresse</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container text-dark p-5">
+    <h1 class="card-title text-center mb-0">
+        <i class="fa-solid fa-house"></i>Adresse
+    </h1><br>
+
+    <div class="row">
+        <div class="col-12 col-lg-8 col-md-8">
+            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" class="address-container">
+                <!-- House / Flat No -->
+                <div class="input-card">
+                  <label>🏠 Haus/Wohnung Nr.</label>
+                  <input type="text" formControlName="houseNo" placeholder="Geben Sie die Haus-/Wohnungs-Nr. ein." />
+                  <small *ngIf="addressForm.get('houseNo')?.invalid && addressForm.get('houseNo')?.touched">
+                    Hausnummer ist erforderlich
+                  </small>
+                </div>
+              
+                <!-- Address -->
+                <div class="input-card">
+                  <label>📍 Adresse</label>
+                  <textarea formControlName="address" placeholder="Geben Sie die vollständige Adresse ein"></textarea>
+                  <small *ngIf="addressForm.get('address')?.invalid && addressForm.get('address')?.touched">
+                    Adresse ist erforderlich
+                  </small>
+                </div>
+              
+                <!-- City -->
+                <div class="input-card">
+                  <label>🏢 Stadt</label>
+                  <input type="text" formControlName="city" placeholder="Geben Sie die Stadt ein" />
+                  <small *ngIf="addressForm.get('city')?.invalid && addressForm.get('city')?.touched">
+                    Stadt ist erforderlich
+                  </small>
+                </div>
+              
+                <!-- Landmark (Optional) -->
+                <div class="input-card">
+                  <label>📍 Wahrzeichen (optional)</label>
+                  <input type="text" formControlName="landmark" placeholder="Wahrzeichen eingeben (optional)" />
+                </div>
+              
+                <!-- Address Type Selection -->
+                <div class="button-group">
+                    <button 
+                      type="button" 
+                      class="btn btn-outline" 
+                      [ngClass]="{'selected': addressForm.value.addressType === 'Home'}"
+                      (click)="setAddressType('Home')">HEIM
+                    </button>
+                  
+                    <button 
+                      type="button" 
+                      class="btn btn-outline" 
+                      [ngClass]="{'selected': addressForm.value.addressType === 'Office'}"
+                      (click)="setAddressType('Office')">BÜRO
+                    </button>
+                  
+                    <button 
+                      type="button" 
+                      class="btn btn-outline" 
+                      [ngClass]="{'selected': addressForm.value.addressType === 'Other'}"
+                      (click)="setAddressType('Other')">ANDERE
+                    </button>
+                  </div>
+                  
+                  <!-- Show Validation Error Message -->
+                  <div *ngIf="addressForm.controls['addressType'].invalid && addressForm.controls['addressType'].touched" class="error">
+                    Bitte wählen Sie einen Adresstyp aus.
+                  </div>
+              
+                <!-- Confirm Address Button -->
+                <button type="submit" [disabled]="addressForm.invalid" class="confirm-button">
+                  ✅ ADRESSE BESTÄTIGEN
+                </button>
+              </form>
+              
+              
+              
+        </div>
+
+        <div class="col-12 col-lg-4 col-md-4 cart-calculate">
+            <div class="card-footer text-center total border-0">
+                <img src="/assets/img/maps.png" alt="Map of Berlin" style="margin-top: 25px;" class="img-fluid map-image">
+            </div>
+        </div>
+    </div>
+</div>

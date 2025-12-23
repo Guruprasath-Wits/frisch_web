@@ -1,0 +1,165 @@
+<header class="header">
+  <nav class="navbar navbar-light bg-white shadow-sm navbar-expand-lg">
+    <div class="container-fluid">
+
+      <a routerLink="/" class="navbar-brand d-flex align-items-center">
+        <img src="assets/img/logo2.png" alt="Logo"
+          style="width: 80px; height: 80px; border-radius: 50%; object-fit: contain;">
+        <span class="company_name ms-2">{{ settings.company_name }}</span>
+      </a>
+
+      <!-- Hamburger for mobile only -->
+      <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Offcanvas Side Menu for Mobile only -->
+      <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileMenu"
+        aria-labelledby="mobileMenuLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="mobileMenuLabel">{{ settings.company_name }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+        </div>
+
+        <div class="offcanvas-body">
+          <ul class="navbar-nav">
+
+            <li class="nav-item mx-2">
+              <a routerLink="/" class="nav-link" (click)="closeOffcanvas()">
+                <i class="fa-solid fa-house"></i>&nbsp;Startseite
+              </a>
+            </li>
+
+            <li class="nav-item mx-2">
+              <a routerLink="/free-trail" class="nav-link" (click)="closeOffcanvas()">
+                <i class="fa-solid fa-bag-shopping"></i>&nbsp;Probebestellung
+              </a>
+            </li>
+
+            <li class="nav-item mx-2">
+              <a routerLink="/ourDelivery" class="nav-link" (click)="closeOffcanvas()">
+                <i class="fa-solid fa-truck"></i>&nbsp;Unsere Liefergebiete
+              </a>
+            </li>
+
+            <li class="nav-item mx-2">
+              <a routerLink="/ourProducts" class="nav-link" (click)="closeOffcanvas()">
+                <i class="fa-solid fa-cookie-bite"></i>&nbsp;Unsere Produkte
+              </a>
+            </li>
+
+            <li class="nav-item mx-2">
+              <a routerLink="/jobs" class="nav-link" (click)="closeOffcanvas()">
+                <i class="fa-solid fa-user-plus"></i>&nbsp;Jobs
+              </a>
+            </li>
+
+            <li class="nav-item mx-2">
+              <a routerLink="/faq" class="nav-link" (click)="closeOffcanvas()">
+                <i class="fa-solid fa-person-circle-question"></i>&nbsp;FAQ
+              </a>
+            </li>
+
+            <li class="nav-item mx-2 position-relative">
+              <a routerLink="/cart" class="nav-link d-flex align-items-center" (click)="closeOffcanvas()">
+                <span class="cart-icon-wrapper position-relative">
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span class="cart_quantity" *ngIf="cartData.length > 0">{{ cartData.length }}</span>
+                </span>
+                &nbsp;Warenkorb
+              </a>
+            </li>
+
+            <li *ngIf="!loginStatus" class="nav-item mx-2">
+              <a routerLink="/auth" class="nav-link reg-btn" (click)="closeOffcanvas()">
+                <i class="fas fa-user"></i>&nbsp;Registrieren/Anmelden
+              </a>
+            </li>
+
+            <li *ngIf="loginStatus" class="nav-item mx-2">
+              <a routerLink="/manageOrders" class="nav-link" (click)="closeOffcanvas()">
+                <i class="fas fa-user"></i>&nbsp;Mein Konto
+              </a>
+            </li>
+
+            <li *ngIf="loginStatus" class="nav-item mx-2">
+              <a href="javascript:void(0);" (click)="logOut(); closeOffcanvas()" class="nav-link">
+                Abmelden <i class="fa-solid fa-arrow-right-from-bracket"></i>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- Desktop Menu only -->
+      <div class="collapse navbar-collapse d-none d-lg-block">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+
+          <li class="nav-item">
+            <a routerLink="/" class="nav-link"><i class="fa-solid fa-house"></i>&nbsp;Startseite</a>
+          </li>
+
+          <li class="nav-item">
+            <a routerLink="/free-trail" class="nav-link">
+              <i class="fa-solid fa-bag-shopping"></i>&nbsp;Probebestellung
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a routerLink="/ourDelivery" class="nav-link">
+              <i class="fa-solid fa-truck"></i>&nbsp;Unsere Liefergebiete
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a routerLink="/ourProducts" class="nav-link">
+              <i class="fa-solid fa-cookie-bite"></i>&nbsp;Unsere Produkte
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a routerLink="/jobs" class="nav-link">
+              <i class="fa-solid fa-user-plus"></i>&nbsp;Jobs
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a routerLink="/faq" class="nav-link">
+              <i class="fa-solid fa-person-circle-question"></i>&nbsp;FAQ
+            </a>
+          </li>
+
+          <li class="nav-item position-relative">
+            <a routerLink="/cart" class="nav-link">
+              <i class="fa-solid fa-cart-shopping"></i>&nbsp;Warenkorb
+              <span class="cart_quantity" *ngIf="cartData.length > 0">{{ cartData.length }}</span>
+            </a>
+          </li>
+
+          <li *ngIf="!loginStatus" class="nav-item">
+            <a routerLink="/auth" class="nav-link reg-btn">
+              <i class="fas fa-user"></i>&nbsp;Registrieren/Anmelden
+            </a>
+          </li>
+
+          <li *ngIf="loginStatus" class="nav-item">
+            <a routerLink="/manageOrders" class="nav-link">
+              <i class="fas fa-user"></i>&nbsp;Mein Konto
+            </a>
+          </li>
+
+          <li *ngIf="loginStatus" class="nav-item">
+            <a href="javascript:void(0);" (click)="logOut()" class="nav-link">
+              Abmelden <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+    </div>
+  </nav>
+</header>

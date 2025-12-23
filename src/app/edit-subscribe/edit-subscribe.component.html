@@ -1,0 +1,436 @@
+
+<style>
+  /* === GLOBAL FIX === */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100%;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden;
+  }
+
+  .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+  }
+
+  /* === CARD & TEXT === */
+  .acard {
+    text-align: center;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    width: 250px;
+    height: 40px;
+    margin-top: 20px;
+  }
+
+  .acard p {
+    text-align: center;
+    color: black;
+    font-weight: 600;
+    padding-top: 10px;
+    letter-spacing: 1.5px;
+    font-size: 20px;
+  }
+
+  .acard:hover {
+    transform: translateY(-5px);
+    background-color: #e4a484;
+  }
+
+  .cus-h1 {
+    color: #954535;
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .cus-h2 {
+    color: #954535;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .cus-img {
+    width: 600px;
+    height: 500px;
+    margin-top: -80px;
+    margin-left: 40px;
+  }
+
+  @media(max-width:426px) {
+    .cus-img {
+      display: none;
+    }
+  }
+
+  @media(min-width:427px) and (max-width:770px) {
+    .cus-img {
+      display: none;
+    }
+    .static-card {
+      margin-left: 175px;
+    }
+    .area-con {
+      background-image: url('../../assets/img/dortmund.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+
+  /* === FILTER SIDEBAR === */
+  .card.search-filter {
+    border-radius: 15px;
+    border: none;
+    width: 95%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: #fff;
+    position: relative;
+    z-index: 2;
+  }
+
+  .filter-widget {
+    padding: 10px 0;
+  }
+
+  .filter-widget h4 {
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  /* Checkbox container */
+  .checkbox-container {
+    margin-bottom: 10px;
+  }
+
+  /* Label wrapper ensures entire row clickable */
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    font-size: 16px;
+    user-select: none;
+    padding: 5px;
+    transition: background 0.2s ease;
+  }
+
+  .checkbox-label:hover {
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  /* Hide default checkbox */
+  .checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  /* Custom checkmark box */
+  .checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  /* Show checkmark when checked */
+  .checkbox-label input:checked ~ .checkmark {
+    background-color: #ffb74d;
+    border-color: #e69500;
+  }
+
+  /* Add tick symbol */
+  .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .checkbox-label input:checked ~ .checkmark::after {
+    display: block;
+  }
+
+  .checkbox-label .checkmark::after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .label-text {
+    color: #333;
+    flex-grow: 1;
+  }
+
+  /* === PRODUCT CARD === */
+  .product_card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 10px;
+    margin: 15px auto;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+    background: #fff;
+  }
+
+  .product_img img {
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+  }
+
+  .quantity-control {
+    justify-content: center;
+  }
+
+  /* === POPUP BOX === */
+  .popup-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+
+  .popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    height: auto;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+
+  .close-btn {
+    background: #954535;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  /* === RESPONSIVE FIX === */
+  @media (max-width: 768px) {
+    .col-md-4, .col-md-8, .col-lg-3, .col-lg-9 {
+      max-width: 100% !important;
+      flex: 1 1 100%;
+      box-sizing: border-box;
+    }
+
+    .card.search-filter,
+    .product_card {
+      width: 95% !important;
+      margin: 10px auto !important;
+    }
+
+    .popup-content {
+      width: 95%;
+      height: 80%;
+    }
+  }
+</style>
+
+<div class="bread-crumb-bar">
+    <div class="container">
+        <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Unsere Produkte</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4 col-lg-4 col-xl-3">
+                <div class="card search-filter shadow p-2">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="card-title mb-0">Filtern</h4>
+                        <a href="javascript:void(0);" (click)="onClearAll()">Zurücksetzen</a>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="filter-widget">
+                            <h4 class="font-weight-bold">Kategorie</h4>
+                            <div *ngFor="let category of categories" class="checkbox-container">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="select_specialist" [value]="category.id"
+                                        (change)="onCategoryFilter($event)"
+                                        [checked]="selectedCategories.includes(category.id)">
+                                    <span class="checkmark"></span>{{ category.category_name }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="popup-box" *ngIf="showProductDescribe">
+                <div class="popup-content">
+                    <h1 class="text-warning">Description</h1>
+                    <p style="font-size: 16px; font-weight: 500;">{{ productDescribeData?.product_name }}</p>
+                    <p>{{ productDescribeData?.description }}</p>
+                    <table class="table">
+                        <tr>
+                            <th scope="row">Gewicht</th>
+                            <td>{{ productDescribeData?.weight }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Zutaten</th>
+                            <td>{{ productDescribeData?.ingredients }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Nährwertangaben</th>
+                            <td>{{ productDescribeData?.nutri_inform }}</td>
+                        </tr>
+                    </table>
+                    <div class="text-end">
+                        <button class="close-btn" (click)="closePopup()">Close</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8 col-lg-8 col-xl-9">
+                <div class="product-result w-100 bg-primary p-3 text-dark">
+                    {{ enabledPaginatedProducts.length }} Produkte
+                </div>
+                <div *ngIf="filteredProducts.length>0">
+                    <div class="d-md-flex flex-row flex-wrap">
+                        <div class="col-lg-3 col-md-6 col-xl-3" *ngFor="let product of paginatedProducts">
+                            <div class="product_card text-center shadow mt-4 justify-content-between"
+                                style="margin-right: 10px; margin-left: 10px;">
+                                <div class="product_img">
+                                    <img [src]="fileUrl + product.product_img" alt="author" class="img-fluid">
+                                </div><br>
+                                <div class="product_info">
+                                    <div class="text-start font-weight-bold">
+                                        <div class="d-flex justify-content-between">
+                                            <p style="cursor: pointer;">{{ product.product_name }}</p>
+                                            <img style="cursor: pointer;" src="../../assets/img/icon/information.png"
+                                                width="30" height="30" (click)="showProductDescription(product)">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <p>( {{ product.price.replace(".",",") }} €<small class="h6">/stk</small>)
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p>{{ product.price.split(".")[0] }} <sup>{{ product.price.split(".")[1]
+                                                    }}</sup> €</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group quantity-control mt-2">
+                                        <button type="button" class="btn btn-warning btn-number"
+                                            (click)="decrementQuantity(product)">
+                                            <i class="fa-solid fa-minus"></i>
+                                        </button>
+
+                                        <span
+                                            class="input-number">
+                                            {{ product.quantity || 0 }}
+                                        </span>
+
+                                        <button type="button" class="btn btn-warning btn-number"
+                                            (click)="incrementQuantity(product)">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </button>
+                                    </div>
+
+                                    <br>
+                                    <div class="cart-hover">
+
+
+                                        <!-- <a class="more_details btn btn-warning w-100 font-weight-bold"
+                                            [class.disabled]="!product.quantity"
+                                            [style.pointer-events]="!product.quantity ? 'none' : 'auto'"
+                                            (click)="editSubscribe(product)">
+                                            Hinzufügen zu dauerbestellung <i class="fa-solid fa-bag-shopping"></i>
+                                        </a> -->
+                                        <a class="more_details btn btn-warning w-90 font-weight-bold"
+                                            [class.disabled]="product.quantity == null"
+                                            [style.pointer-events]="product.quantity == null ? 'none' : 'auto'"
+                                            (click)="editSubscribe(product)">
+                                            Dauerbestellung anpassen <i class="fa-solid fa-bag-shopping"></i>
+                                        </a>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <nav aria-label="Product pagination" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">
+                                    Previous
+                                </button>
+                            </li>
+
+                            <li class="page-item" *ngFor="let page of pageNumbers"
+                                [class.active]="page === currentPage">
+                                <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+                            </li>
+
+                            <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                                    Next
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="text-center p-2" *ngIf="filteredProducts.length<0 || filteredProducts.length==0">
+                    <iframe src="https://lottie.host/embed/7f7517c8-6da6-497d-a0f0-3ec0d24818e0/ljmSp9Ly6K.lottie"
+                        frameborder="0" width="400" height="400"></iframe>
+                    <!-- <h3>No Products Available !!!</h3> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-footer></app-footer>

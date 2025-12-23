@@ -1,0 +1,173 @@
+<div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page"><a routerLink="/ourProducts">Unsere Produkte</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Auftragsbestätigung</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h1 class="text-center">Bestellübersicht</h1>
+    <div class="row">
+        <div class="ordered-products col-12 col-md-6 col-lg-6 overflow-auto">
+            <h3 class="bg-warning p-3">Bestellte Produkte</h3>
+            <div class="d-flex justify-content-around flex-wrap">
+                <div class="product_details card" style="width: 14rem;" *ngFor="let products of cartData">
+                    <img class="card-img-top" [src]="fileUrl+products.productDetails?.product_img" alt="Card image cap">
+                    <div class="card-body">
+                        <p class="text-center text-dark">{{ products.productDetails?.product_name }} x {{ products.quantity }}  St</p>
+                    </div>
+                </div>
+            </div>
+            <a routerLink="/ourProducts" class="btn btn-warning w-100">Entdecken Sie mehr <i
+                    class="fa-solid fa-chevron-right"></i></a>
+        </div>
+        <div class="order-form col-12 col-md-6 col-lg-6 overflow-auto">
+            <h3 class="bg-warning p-3">Auftragsbestätigung</h3>
+            <div class="p-3">
+                <div class="container">
+                    <div class="row text-dark">
+                        <div >
+                            <p><i class="fa-solid fa-user"></i> {{ userData.username }}</p>
+                            <p><i class="fa-solid fa-envelope"></i> {{ userData.email }}</p>
+                            <p><i class="fa-solid fa-phone"></i> {{ userData.phone }}</p>
+                            <p><i class="fa-solid fa-location-dot"></i> {{ userData.street }} {{ userData.address }}, {{ userData.zipcode }},{{ userData.ort }}</p>
+                        </div>  
+                    </div>
+                </div>
+
+                <form *ngIf="isLogin" [formGroup]="orderForm" (ngSubmit)="confirmOrder()">
+                    <!-- <div>
+                       
+                        <input
+                          #addressInput
+                          type="text"
+                          class="p-2 mt-2 rounded border border-warning w-100"
+                          placeholder="Alternativadresse (Leer lassen, um an die registrierte Adresse zu liefern)"
+                          formControlName="address">
+                      </div> -->
+
+                     
+
+                      <div>
+                        <input
+                          #zipcodeInput
+                          type="number"
+                          class="p-2 mt-2 rounded border border-warning w-100"
+                          placeholder="PLZ widerholen (Bitte geben Sie Ihre Postleitzahl ein)"
+                          formControlName="zipcode"
+                        />
+                      
+                        <div class="error text-danger"
+                          *ngIf="orderForm.get('zipcode')?.invalid && orderForm.get('zipcode')?.touched">
+                          Bitte geben Sie Ihre Postleitzahl ein
+                        </div>
+                      </div>
+                      
+
+                    <!-- <a routerLink="/my-address">Select Location</a> -->
+
+                    <div>
+                        <textarea formControlName="instruction" rows="2"
+                            class="p-2 mt-2 rounded border border-warning w-100"
+                            placeholder="Bitte geben Sie einen Sicheren Abstellort an (Optional)"></textarea>
+                        <!-- <div class="text-danger">Bitte geben Sie einen Hinweis zu Ihrer Bestellung an.</div> -->
+                    </div>
+
+                    <div>
+                        <input type="date" formControlName="delivery_date" 
+                            class="p-2 mt-2 rounded border border-warning w-100" [min]="minDate"
+                            (change)="validateDate($event)">
+
+                        <div class="error text-danger"
+                            *ngIf="orderForm.get('delivery_date')?.hasError('afterFriday4pm')">
+                            Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
+                        </div>
+                       
+
+                        <div class="text-danger">
+                            Bitte beachten Sie: Die Lieferung erfolgt nur an Wochenenden und Feiertagen!!! 
+                        </div>
+                    </div>
+                    <br>
+                    <div class="billing-area row p-3">
+                        <h4>Zahlungsinformationen</h4>
+                        <div class="col-6 text-start">
+                            <p>Produktsumme</p>
+                            <p>Trinkgeld</p>
+                            <p>Liefergebühr</p>
+                            <hr>
+                            <p class="h4">Gesamtbetrag</p>
+                            <hr>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p>{{ itemTotal.split(".")[0] }} <sup>{{ itemTotal.split(".")[1] }}</sup> €</p>
+                            <p *ngIf="tips != 0">{{ tips.split(".")[0] }} <sup>{{ tips.split(".")[1] }}</sup> €</p>
+                            <p *ngIf="tips == 0">0 <sup>00</sup> €</p>
+                        
+                            <p *ngIf="selectedDateInfo === '' || selectedDateInfo === 'Invalid'"> - €</p>
+                        
+                      
+                            <p *ngIf="selectedDateInfo === 'Weekend'">
+                                {{ settings.weekend_fee.split(".")[0] }} <sup>{{ settings.weekend_fee.split(".")[1] }}</sup> €
+                            </p>
+                        
+
+                       
+                            <p *ngIf="selectedDateInfo === 'PublicHoliday'">
+                                {{ settings.weekday_fee.split(".")[0] }} <sup>{{ settings.weekday_fee.split(".")[1] }}</sup> €
+                            </p>
+
+                           <p *ngIf="selectedDateInfo.includes('Weekend') && selectedDateInfo.includes('PublicHoliday')">
+  {{ settings.weekday_fee.split('.')[0] }}
+  <sup>{{ settings.weekday_fee.split('.')[1] }}</sup> €
+</p>
+
+
+
+                        
+                      
+                            <p *ngIf="selectedDateInfo === 'Valid'">0 <sup>00</sup> €</p>
+                        
+                            <hr>
+                        
+                           
+                            <p class="h4" *ngIf="totalAmount && totalAmount !== '0.00'">
+                                {{ totalAmount.split(".")[0] }} <sup>{{ totalAmount.split(".")[1] }}</sup> €
+                            </p>
+                            <p class="h4" *ngIf="totalAmount === '0.00'">0 <sup>00</sup> €</p>
+                        
+                            <hr>
+                        </div>
+                        
+                        
+                    </div>
+                    <br>
+                    <!-- <div id="card-element"></div>
+                    <br> -->
+                    <button type="submit" 
+        [disabled]="orderForm.invalid || selectedDateInfo === '' || selectedDateInfo === 'Valid'"
+        class="p-2 rounded btn btn-warning w-100">
+        Bezahlen
+</button>
+
+                </form>
+                <br><br>
+            </div>
+        </div>
+    </div>

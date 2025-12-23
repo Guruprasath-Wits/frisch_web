@@ -1,0 +1,66 @@
+.faq-card {
+  padding: 15px;
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+  /* background-color: #f9f9f9; */
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+  margin: 0px 10px 0px 10px;
+}
+
+.faq-question {
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  color: black;
+  font-size: 18px;
+  text-align: center;
+}
+
+.faq-answer {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: height 0.5s ease, opacity 0.5s ease;
+  padding-top: 10px;
+  padding-bottom: 0;
+  font-size: 16px;
+  color: black;
+  text-align: center;
+}
+
+.faq-card:hover .faq-answer {
+  height: 40px;
+  opacity: 1;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.faq-card:hover {
+  background-color: #f1f1f1;
+  border-radius: 50px;
+}
+
+.faq-card:hover .faq-question {
+  color: green;
+}
+
+.delivery_area{
+  height: 400px;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #91919169;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 10px;
+}

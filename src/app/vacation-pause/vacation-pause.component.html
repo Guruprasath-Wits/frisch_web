@@ -1,0 +1,77 @@
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Benutzer</li>
+                            <li class="breadcrumb-item" aria-current="page">Einstellungen</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<div class="content content-page">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-xl-3 col-md-4 theiaStickySidebar">
+                <app-dashboard-sidebar></app-dashboard-sidebar>
+            </div>
+
+
+            <div class="col-xl-9 col-md-8">
+                <nav class="user-tabs mb-4">
+                    <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/userprofile">Profil aktualisieren</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/deleteaccount">Dauerbestellungsbeendigung</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" routerLink="/vacation-pause">Temporäre Pause</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="setting-content">
+                    <div class="card">
+                        <div class="pro-head">
+                            <h3 class="pro-title without-border mb-0">Temporäre Pause</h3>
+                        </div>
+                        <div class="pro-body">
+                            <form [formGroup]="vacationPauseForm" (ngSubmit)="vacationPause()">
+                                <div class="row">
+                                    <div class="form-group col-12 col-md-6">
+                                        <label>Vom</label>
+                                        <input type="date" class="form-control" formControlName="vacation_from" [min]="minDate">
+                                        <div class="error text-danger"
+                                            *ngIf="vacationPauseForm.controls['vacation_from'].invalid && vacationPauseForm.controls['vacation_from'].touched">
+                                           Abwesenheit ab dem (Datum) ist erforderlich.
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 col-md-6">
+                                        <label>Bis</label>
+                                        <input type="date" class="form-control" formControlName="vacation_to" [min]="minDate">
+                                        <div class="error text-danger"
+                                            *ngIf="vacationPauseForm.controls['vacation_to'].invalid && vacationPauseForm.controls['vacation_to'].touched">
+                                            Abwesenheit bis zum (Datum) ist erforderlich.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button type="submit" class="btn bg-warning text-dark" [disabled]="vacationPauseForm.invalid" >Pausieren</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

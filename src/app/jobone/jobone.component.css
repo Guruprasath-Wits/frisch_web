@@ -1,0 +1,189 @@
+.custom-h1 {
+    animation-name: cus-h1;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
+
+.jobs {
+    margin: 50px;
+}
+
+@media(max-width:450px){
+    .jobs-head{
+        margin-top: 12%;
+        font-weight: 500;
+        animation-name: jobs-animate;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+    }
+}
+
+.jobs-head{
+    font-weight: 500;
+    animation-name: jobs-animate;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+.jobs-head span{
+    animation-name: jobs-animate;
+    animation-duration: 2s;
+}
+
+.job_img {
+    border-radius: 30px;
+}
+
+/* .job-title span {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #000;
+    padding-left: 20px;
+}
+
+.job-description {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+    padding: 10px;
+}
+
+.job-description.show {
+    max-height: 100px;
+    opacity: 1;
+}
+
+.job-description.hide {
+    max-height: 0;
+    opacity: 0;
+}
+
+.job-drop-down,
+.job-drop-up {
+    cursor: pointer;
+}
+
+.job-title {
+    background-color: #EFCC80;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.job-description span {
+    font-size: 18px;
+    font-weight: 500;
+    color: #000;
+}
+
+.job-title button {
+    background: none;
+    border: none;
+} */
+
+.job-detail{
+    border-radius: 20px;
+}
+
+.job-title{
+    background-color: #EFCC80;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #000;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.job-description{
+    font-size: 16px;
+    font-weight: 500;
+    color: #131135;
+}
+
+
+/* @keyframes jobs-animate{
+    50%{
+        color: green;
+        transition: 1s;
+    }
+    100%{
+        color: red;
+        transition: 1s;
+
+    }
+} */
+
+@keyframes jobs-animate {
+    0% {
+        color: orange;
+        font-weight: 500;
+    }
+
+    25% {
+        color: #c4a484;
+        font-weight: 500;
+
+    }
+
+    50% {
+        color: rgba(255, 30, 0, 0.814);
+    }
+
+    75% {
+        color: #c4a484;
+        font-weight: 500;
+
+    }
+
+    100% {
+        color: orange;
+        font-weight: 500;
+
+    }
+}
+
+@media(max-width:770px) {
+    .card-right {
+        display: none;
+    }
+}
+
+@media(max-width:991px) {
+    .jobs {
+        margin: 10px;
+    }
+
+    .job-detail{
+        margin-top: 30px;
+    }
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  

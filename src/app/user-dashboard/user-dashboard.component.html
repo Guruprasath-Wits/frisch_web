@@ -1,0 +1,74 @@
+<!-- <p>user-dashboard works!</p> -->
+
+<div class="bread-crumb-bar">
+    <div class="container">
+        <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a routerLink="/"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">User</li>
+                            <li class="breadcrumb-item" aria-current="page">Dashboard</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="content content-page">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xl-3 col-md-4 theiaStickySidebar">
+                <app-dashboard-sidebar></app-dashboard-sidebar>
+            </div>
+
+            <div class="col-xl-9 col-md-8">
+                <div class="dashboard-sec">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4">
+                            <div class="dash-widget">
+                                <div class="dash-info">
+                                    <div class="dash-widget-info">Processing</div>
+                                    <div class="dash-widget-count">{{ orders.length }}</div>
+                                </div>
+                                <!-- <div class="dash-widget-more">
+                                    <a routerLink="/managejobs" class="d-flex">View Details <i
+                                            class="fas fa-arrow-right ms-auto"></i></a>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <div class="dash-widget">
+                                <div class="dash-info">
+                                    <div class="dash-widget-info">Delivered</div>
+                                    <div class="dash-widget-count">{{ orders.length }}</div>
+                                </div>
+                                <!-- <div class="dash-widget-more">
+                                    <a href="ongoing-projects.html" class="d-flex">View Details <i
+                                            class="fas fa-arrow-right ms-auto"></i></a>
+                                </div> -->
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-6 col-lg-4">
+                            <div class="dash-widget">
+                                <div class="dash-info">
+                                    <div class="dash-widget-info">Completed Job Requests</div>
+                                    <div class="dash-widget-count">25</div>
+                                </div>
+                                <div class="dash-widget-more">
+                                    <a href="completed-projects.html" class="d-flex">View Details <i
+                                            class="fas fa-arrow-right ms-auto"></i></a>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

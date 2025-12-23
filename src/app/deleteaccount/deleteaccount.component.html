@@ -1,0 +1,88 @@
+<!-- <p>deleteaccount works!</p> -->
+
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Benutzer</li>
+                            <li class="breadcrumb-item" aria-current="page">Einstellungen</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<div class="content content-page">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-xl-3 col-md-4 theiaStickySidebar">
+                <app-dashboard-sidebar></app-dashboard-sidebar>
+            </div>
+
+
+            <div class="col-xl-9 col-md-8">
+                <nav class="user-tabs mb-4">
+                    <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/userprofile">Profil aktualisieren</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" routerLink="/deleteaccount">Dauerbestellungsbeendigung</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" routerLink="/vacation-pause">Temporäre Pause</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="setting-content">
+                    <div class="card">
+                        <div class="pro-head">
+                            <h3 class="pro-title without-border mb-0">Dauerbestellungsbeendigung</h3>
+                        </div>
+                        <div class="pro-body">
+                            <form [formGroup]="contractForm" (ngSubmit)="contractTermination()">
+                                <div class="form-group">
+                                    <label>Grund</label>
+                                    <textarea class="form-control" rows="5" formControlName="reason"></textarea>
+                                    <div class="error text-danger"
+                                        *ngIf="contractForm.controls['reason'].invalid && contractForm.controls['reason'].touched">
+                                        Der Kündigungsgrund ist erforderlich
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-12 col-md-6">
+                                        <label>Beendigungsdatum</label>
+                                        <input type="date" class="form-control" formControlName="termination_date" [min]="today">
+                                        <div class="error text-danger"
+                                            *ngIf="contractForm.controls['termination_date'].invalid && contractForm.controls['termination_date'].touched">
+                                            Das Kündigungsdatum ist erforderlich
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 col-md-6">
+                                        <label>Passwort</label>
+                                        <input type="password" class="form-control" formControlName="password">
+                                        <div class="error text-danger"
+                                            *ngIf="contractForm.controls['password'].invalid && contractForm.controls['password'].touched">
+                                            Passwort ist erforderlich
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button type="submit" class="btn bg-danger text-white" [disabled]="contractForm.invalid">Beenden</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

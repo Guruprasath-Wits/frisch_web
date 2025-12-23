@@ -1,0 +1,241 @@
+/* .container{
+    display: flex;
+   
+}
+
+.con-ban{
+    width: 100%;
+    height: 100px;
+    background-image: url('../../assets/img/con-ban.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.left{
+    width: 40%;
+    margin-top: 50px;
+    margin-left: 60px;
+    margin-bottom: 40px !important;
+    
+}
+
+.right{
+    width: 50%;
+    margin-top: 50px;
+    margin-bottom: 40px !important;
+    border-bottom-left-radius: 30%;
+    
+}
+
+.cus-img{
+    width: 450px;
+    height: 515px;
+    border-bottom-right-radius: 30%;
+    border-bottom-left-radius: 10%;
+    border-top-left-radius: 20%;
+    border:5px solid #ffbc34;
+    box-shadow: rgba(255, 223, 0, 0.15) 0px 2px 4px 0px, rgba(255, 223, 0, 0.35) 0px 2px 16px 0px;
+}
+
+.right form{
+    border: 4px solid #ffbc34;
+    padding: 40px 40px 80px 40px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-bottom-left-radius: 30%;
+    
+}
+
+.right form label{
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+}
+
+.right form input,textarea{
+    border: 1px solid #FFBF00;
+}
+
+.right form input:focus, textarea:focus{
+    border:1px solid #ffbc34;
+    box-shadow: rgba(255, 223, 0, 0.15) 0px 2px 4px 0px, rgba(255, 223, 0, 0.35) 0px 2px 16px 0px;
+
+}
+
+.cus-h1{
+    text-align: center;
+    font-size: 30px;
+}
+
+@media(max-width:426px){
+    .left{
+        width: 0px !important;
+        margin-left: 0px !important;
+    }
+    .right{
+        width: 100% ;
+    }
+
+    .left img{
+        display: none;
+    }
+} */
+
+.contact{
+    margin: 50px 0px;
+}
+
+.contact_head{
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.contact_img{
+    /* width: 400px;
+    height: 500px; */
+    overflow: hidden;
+    border-radius: 50px;
+    /* float: right; */
+    box-shadow: 8px 8px orange;
+    /* box-shadow: 8px 8px rgba(0, 0, 0, 0.305); */
+}
+
+/* .contact_img:hover{
+    transform: translate(-20px,-20px);
+    transition: 1s;
+    box-shadow: 18px 18px orange;
+} */
+
+.contact_form{
+    padding: 30px;
+    /* margin-left: 10px; */
+    border-radius: 20px;
+}
+
+.contact_form input,textarea{
+    padding: 10px;
+    border: 2px solid orange;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.field{
+    margin-bottom: 20px;
+}
+
+.contact_form input:focus, textarea:focus{
+    border-color: orange;
+}
+
+.contact_btn{
+    border-radius: 10px;
+}
+
+/* @media(max-width:991px){
+    .contact_img{
+        width: 400px;
+        height: 500px;
+        float: left;
+        margin-left: 160px;
+    }
+
+    .contact_form{
+        margin-top: 30px;
+        padding: 30px;
+        width: 500px;
+        margin-left: 115px;
+    }
+
+    .contact_form input,textarea{
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid orange;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+} 
+    
+@media(max-width:426px){
+    .contact{
+        margin: 10px;
+    }
+
+    .contact_img{
+        width: 370px;
+        height: 450px;
+        float: left;
+        margin-left: 10px;
+    }
+
+    .contact_form{
+        margin-top: 30px;
+        padding: 30px;
+        width: 400px;
+    }
+
+    .contact_form input,textarea{
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid orange;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+}
+
+@media(max-width:376px){
+
+    .contact_img{
+        display: none;
+    }
+
+    .contact_form{
+        padding: 20px;
+        width: 350px;
+    }
+
+    .contact_form input,textarea{
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid orange;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+}
+
+@media(max-width:321px){
+    .contact_form{
+        margin: 0px;
+        width: 310px;
+    }
+} */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  

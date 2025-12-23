@@ -1,0 +1,274 @@
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<div class="content home-banner">
+  <div class="container">
+    <div class="row" style="margin-top: 60px; width: 100%;">
+      <div class="col-md-12">
+        <div class="account-content">
+          <div class="align-items-center justify-content-center">
+            <div class="ml-10 login-right">
+              <div class="d-flex cus-signup" style="margin-left: 50px !important;">
+                <div class="col-md-6 left">
+                  <img class="img-fluid cus-img1" src="../../assets/img/signup2.jpg" alt="">
+                  <!-- <div class="pat"></div> -->
+                </div>
+                <div class="col-md-6 right">
+                  <div class="tab-content pt-0">
+                    <div class="wrapper">
+                      <div class="login-header text-center">
+                        <a href="index.html"><img src="assets/img/logo1.png" alt="logo" style="width: 100px;"
+                            class="img-fluid"></a>
+                        <h3 style="font-size: 22px; padding-right: 10px;"> <span class="h3"
+                            style="color: #954535">Frisch für Sie</span></h3>
+                        <p class="text-success">"Regional gebacken, frisch geliefert – Genuss aus unserer Region."</p>
+                      </div>
+                      <div class="form-container">
+                        <div class="slide-controls">
+                          <input type="radio" name="slide" id="signup" [(ngModel)]="isLogin" [value]="false" />
+                          <input type="radio" name="slide" id="login" [(ngModel)]="isLogin" [value]="true" />
+                          <label for="login" class="slide signup" (click)="showSignup()">Anmelden</label>
+                          <label for="signup" class="slide login" (click)="showLogin()">Registrieren</label>
+                          <div class="slide-tab" [style.left]="isLogin ? '0%' : '50%'"></div>
+                        </div>
+                        <div class="form-inner">
+                          <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+                            <div class="field">
+                              <input type="text" formControlName="email" placeholder="E-Mail-Adresse" />
+                              <div *ngIf="loginForm.controls['email'].invalid && loginForm.controls['email'].touched"
+                                class="error text-danger">
+                                Bitte geben Sie eine gültige E-Mail-Adresse ein
+                              </div>
+                            </div>
+                            <div class="field d-flex">
+                              <input [type]="LoginPasswordField" formControlName="password" placeholder="Passwort"
+                                (keyup)="onLoginPasswordKeyup()" />
+                              <div class="text-end login-password">
+                                <i *ngIf="!showLoginPassword" class="fa-regular fa-eye fa-xl"
+                                  (click)="showLoginPass()"></i>
+                                <i *ngIf="showLoginPassword" class="fa-regular fa-eye-slash fa-xl"
+                                  (click)="hideLoginPass()"></i>
+                              </div>
+                            </div>
+                            <div class="error text-danger"
+                              *ngIf="loginForm.controls['password'].invalid && loginForm.controls['password'].touched">
+                              Passwort ist erforderlich
+                            </div>
+                            <div *ngIf="!loginPasswordValid" class="error text-danger">
+                              Das Passwort muss Folgendes enthalten
+                              <ol>
+                                <li>Mindestens 8 Zeichen</li>
+                                <li>Einen Großbuchstaben</li>
+                                <li>Eine Ziffer</li>
+                                <li>Ein Sonderzeichen</li>
+                              </ol>
+                            </div>
+                            <div class="field">
+                              <button type="submit"
+                                [disabled]="loginForm.invalid || !loginPasswordValid">Anmelden</button>
+                            </div>
+                            <div class="pass-link">
+                              <a href="javascript:void(0)" (click)="forgetPassword()">Passwort vergessen?</a>
+                            </div>
+                            <div class="signup-link">
+                              Kein Konto?<br />
+                              <a href="#" (click)="switchToSignup($event)">Registrieren Sie sich jetzt</a>
+                            </div>
+                          </form>
+
+                          <form *ngIf="!isLogin && !showOtpForm" [formGroup]="signupForm" (ngSubmit)="onSignupSubmit()">
+                            <div class="field">
+                              <input type="text" formControlName="fname" placeholder="Vorname" />
+                              <div *ngIf="signupForm.controls['fname'].invalid && signupForm.controls['fname'].touched"
+                                class="error text-danger">
+                                Vorname ist erforderlich
+                              </div>
+                            </div>
+                            <div class="field">
+                              <input type="text" formControlName="lname" placeholder="Nachname" />
+                              <div *ngIf="signupForm.controls['lname'].invalid && signupForm.controls['lname'].touched"
+                                class="error text-danger">
+                                Nachname ist erforderlich
+                              </div>
+                            </div>
+                            <div class="field">
+                              <input type="text" formControlName="email" placeholder="E-Mail-Adresse" />
+                              <div *ngIf="signupForm.controls['email'].invalid && signupForm.controls['email'].touched"
+                                class="error text-danger">
+                                Bitte geben Sie eine gültige E-Mail-Adresse ein
+                              </div>
+                            </div>
+                            <div class="field">
+                              <input type="number" formControlName="phone" placeholder="Telefonnummer" />
+                              <!-- <div *ngIf="signupForm.controls['phone'].invalid && signupForm.controls['phone'].touched"
+                                class="error text-danger">
+                                Handynummer ist erforderlich
+                              </div> -->
+                            </div><br>
+                            <!-- <div class="field">
+                              <input #addressInput type="text" formControlName="address"
+                                placeholder="Straße, Hausnummer" />
+                              <div
+                                *ngIf="signupForm.controls['address'].invalid && signupForm.controls['address'].touched"
+                                class="error text-danger">
+                                Straße, Hausnummer ist erforderlich
+                              </div>
+                            </div> -->
+                            <div class="street-row">
+
+
+                              <div class="house-col">
+                                <input type="text" formControlName="street" placeholder="Straße" />
+                                <div
+                                  *ngIf="signupForm.controls['street'].invalid && signupForm.controls['street'].touched"
+                                  class="error text-danger">
+                                  Straße erforderlich
+                                </div>
+                              </div>
+
+                              <div class="street-col">
+                                <input type="number" formControlName="address" placeholder="Haus-Nr" />
+                                <div
+                                  *ngIf="signupForm.controls['address'].invalid && signupForm.controls['address'].touched"
+                                  class="error text-danger">
+                                  Hausnummer erforderlich
+                                </div>
+                              </div>
+
+                            </div>
+
+
+                            <div class="field">
+                              <input type="text" formControlName="zipcode" placeholder="Postleitzahl" />
+                              <div
+                                *ngIf="signupForm.controls['zipcode'].invalid && signupForm.controls['zipcode'].touched"
+                                class="error text-danger">
+                                Postleitzahl erforderlich
+                              </div>
+                            </div>
+                            <div class="field">
+                              <input type="text" formControlName="ort" placeholder="Ort" />
+                              <div *ngIf="signupForm.controls['ort'].invalid && signupForm.controls['ort'].touched"
+                                class="error text-danger">
+                                Ort erforderlich
+                              </div>
+                            </div>
+                            <div class="field d-flex">
+                              <input [type]="SignupPasswordField" formControlName="password" placeholder="Passwort"
+                                (keyup)="onSignupPasswordKeyup()" />
+                              <div class="text-end login-password">
+                                <i *ngIf="!showSignupPassword" class="fa-regular fa-eye fa-xl"
+                                  (click)="showSignupPass()"></i>
+                                <i *ngIf="showSignupPassword" class="fa-regular fa-eye-slash fa-xl"
+                                  (click)="hideSignupPass()"></i>
+                              </div>
+                            </div>
+                            <div class="error text-danger"
+                              *ngIf="signupForm.controls['password'].invalid && signupForm.controls['password'].touched">
+                              Passwort ist erforderlich
+                            </div>
+                            <div *ngIf="!SignPasswordValid" class="error text-danger">
+                              Das Passwort muss:
+                              <ol>
+                                <li>Enthalten Sie mindestens 8 Zeichen</li>
+                                <li>Fügen Sie einen Großbuchstaben ein</li>
+                                <li>Fügen Sie eine Ziffer ein</li>
+                                <li>
+                                  Fügen Sie ein Sonderzeichen ein (erlaubte Sonderzeichen:
+                                  ! @ # $ % & * ( ) - _ + = {{ '{' }} {{ '}' }} [ ] ? / \ | <>)
+                                </li>
+
+
+                              </ol>
+                            </div>
+                            <div class="field">
+                              <input type="password" formControlName="confirmPassword"
+                                placeholder="Passwort Widerholen" />
+                              <div
+                                *ngIf="signupForm.controls['confirmPassword'].invalid && signupForm.controls['confirmPassword'].touched"
+                                class="error text-danger">
+                                Das Bestätigungspasswort muss mit dem eingegebenen Passwort übereinstimmen
+                              </div>
+                            </div><br><br>
+                            <div class="form-check mt-2">
+                              <input type="checkbox" id="terms" formControlName="acceptTerms"
+                                class="form-check-input" />
+                              <label for="terms" class="form-check-label">
+                                Ja, ich stimme den
+                                <a [href]="settings?.agb" target="_blank" class="text-danger">AGB</a> und der
+                                <a [href]="settings?.data_protection" target="_blank"
+                                  class="text-danger">Datenschutzerklärung</a> zu.
+                              </label>
+                            </div>
+
+
+
+                            <!-- Error message if checkbox is not checked -->
+                            <div
+                              *ngIf="signupForm.controls['acceptTerms'].invalid && signupForm.controls['acceptTerms'].touched"
+                              class="error text-danger">
+                              Bitte stimme den AGB und der Datenschutzerklärung zu
+
+                            </div>
+
+
+
+                            <div class="form-check mt-2">
+                              <input type="checkbox" id="terms" formControlName="acceptTerm" class="form-check-input" />
+                              <label for="terms" class="form-check-label">
+                                Ja, ich möchte über Angebote und Neuigkeiten per E-Mail informiert werden.
+
+                              </label>
+                            </div>
+
+                            <div
+                              *ngIf="signupForm.controls['acceptTerm'].invalid && signupForm.controls['acceptTerm'].touched"
+                              class="error text-danger">
+                              Bitte stimme Angebote und Neuigkeiten per E-Mail informiert werden
+
+                            </div>
+
+
+                            <div class="field">
+                              <button type="submit" [disabled]=" !SignPasswordValid">Registrieren</button>
+                            </div>
+                            <!-- signupForm.invalid || -->
+                            <div class="signup-link">
+                              Sie haben bereits ein Konto?<br />
+                              <a href="#" (click)="switchToLogin($event)">Login Jetzt</a>
+                            </div>
+                          </form>
+
+                          <form *ngIf="showOtpForm" [formGroup]="otpForm" (ngSubmit)="onOtpSubmit()">
+                            <h6>Bitte überprüfen Sie Ihr E-Mail-Postfach (ggf. den Spam-Ordner) und geben Sie den soeben
+                              erhaltenen Bestätigungscode hier ein.</h6>
+
+                            <div class="field">
+                              <input type="text" formControlName="otp"
+                                placeholder="Bitte geben Sie Bestätigungscode ein" />
+                              <div *ngIf="otpForm.controls['otp'].invalid && otpForm.controls['otp'].touched"
+                                class="error text-danger">
+                                Bestätigungscode ist erforderlich und muss 6-stellig sein
+                              </div>
+                            </div>
+                            <div class="field">
+                              <button type="submit" [disabled]="otpForm.invalid">Bestätigungscode überprüfen</button>
+                            </div>
+                          </form>
+
+                          <br>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" id="company" class="tab-pane fade"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

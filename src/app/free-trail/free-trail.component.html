@@ -1,0 +1,99 @@
+<div class="bread-crumb-bar"></div>
+
+<section class="section projects">
+  <div class="container">
+    <div class="row">
+
+      <!-- Left Section: Carousel -->
+      <div class="col-12 col-lg-6 col-md-6">
+        <div *ngIf="freeTrails.length > 0">
+          <div class="carousel-wrapper">
+
+            <!-- Previous Button Disabled at First Slide -->
+            <button class="nav-button prev-button" 
+                    (click)="prev()" 
+                    [disabled]="currentIndex === 0">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <!-- Next Button Disabled at Last Slide -->
+            <button class="nav-button next-button" 
+                    (click)="next()" 
+                    [disabled]="currentIndex === freeTrails.length - 1">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <!-- Carousel Content -->
+            <div class="carousel">
+              <div class="carousel-inner">
+                <div 
+                  class="card product_img" 
+                  [ngStyle]="{'transform': 'translateX(-' + (currentIndex * 100) + '%)'}"
+                  *ngFor="let card of freeTrails; let i = index">
+                  
+                <img 
+                 [src]="fileUrl + '/uploads/products/' + card.product_img" 
+                  class="card-img-top" 
+                  [alt]="card.name || 'Product Image'">
+
+
+                  <div class="card-body">
+                    <div class="product-name">
+                      <p>{{ card.name }}</p>
+                    </div>
+
+                    <div class="product-link">
+                      <a (click)="freeTrail(card.id)" class="details-btn">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <!-- Carousel Indicators -->
+            <div class="carousel-indicators">
+              <button *ngFor="let card of freeTrails; let i = index" 
+                      [class.active]="i === currentIndex"
+                      (click)="goToSlide(i)">
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- No Free Trials -->
+        <!-- <div class="text-center" *ngIf="freeTrails.length === 0">
+          <h2>No Free Trail !!!</h2>
+        </div> -->
+      </div>
+
+      <!-- Right Section: Product Description & Products -->
+      <div class="sample_note col-12 col-lg-6 col-md-6" *ngIf="freeTrails.length > 0">
+
+        <!-- Product Description -->
+        <ul [innerHTML]="formatDescription(freeTrails[currentIndex].desc)" class="flex-grow-1"></ul>
+
+        <!-- Product Names -->
+        <div *ngIf="freeTrails[currentIndex].products?.length > 0" class="mt-3">
+          <div *ngFor="let product of freeTrails[currentIndex].products">
+            1 x {{ product.name }}
+          </div>
+        </div>
+
+        <br>
+
+        <!-- Product Full Description -->
+        <p *ngIf="freeTrails[currentIndex]?.description">
+          {{ freeTrails[currentIndex].description }}
+        </p>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

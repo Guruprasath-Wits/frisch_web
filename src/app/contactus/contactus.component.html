@@ -1,0 +1,162 @@
+<style>
+    .cus-h1 {
+        text-align: center;
+        font-size: 38px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        padding: 50px 50px 50px 50px;
+    }
+</style>
+
+<div class="bread-crumb-bar">
+    <div class="container">
+        <!-- <div class="row align-items-center inner-banner">
+            <div class="col-md-12 col-12 text-center">
+                <div class="breadcrumb-list">
+                    <nav aria-label="breadcrumb" class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html"><img src="assets/img/home-icon.svg"
+                                        alt="Post Author"> Home</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Contact Us</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<!-- <section class="section contact">
+    <div class="contact_us d-flex container">
+        <div class="left">
+            <img class="img-fluid cus-img" src="assets/img/contact.jpg" alt="">
+        </div>
+
+        <div class="right bg-white">
+            <form>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Vorname</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="First Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Nachname</label>
+                    <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Last Name">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email Adresse</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+                        placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                        else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Telefonnummer</label>
+                    <input type="phone" class="form-control" id="exampleInputPassword1" placeholder="Phone No">
+                </div>
+               
+
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Deine Nachricht
+                    </label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">Schreib uns, wie dir helfen Können
+                    </textarea>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="float: right;margin-bottom: 20px;">Submit</button>
+            </form>
+        </div>
+    </div>
+</section> -->
+
+<div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+<div class="container mt-5 mb-5">
+    <!-- <h1 class="text-center contact_head">Contact Us</h1> -->
+    <div class="row">
+        <!-- <div class="col-12 col-lg-6 col-md-6 col-sm-6">
+            <div class="contact_img">
+                <img class="img-fluid cus-img" src="assets/img/contact_re.jpg" alt="">
+            </div>
+        </div> -->
+        <div class="col-12 col-lg-3 col-md-3 col-sm-3"></div>
+        <div class="contact_form border border-1 shadow col-12 col-lg-6 col-md-6 col-sm-6">
+            <h2 class="text-center"><i class="fa-solid fa-comment"></i> kontakt</h2>
+            <h3 class="text-center">Wir sind für Sie da</h3>
+            <h4>Anrede</h4>
+            <form [formGroup]="contactForm" (ngSubmit)="submitContact()">
+                <div class="form-group d-flex justify-content-around">
+                    <div><input type="radio" formControlName="gender" value="Frau"> Frau</div>
+                    <div><input type="radio" formControlName="gender" value="Herr"> Herr</div>
+                    <div><input type="radio" formControlName="gender" value="keine angabe"> keine angabe</div>
+                    <div class="error text-danger"
+                        *ngIf="contactForm.controls['gender'].invalid && contactForm.controls['gender'].touched">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Vorname" formControlName="firstname">
+                    <div class="error text-danger"
+                        *ngIf="contactForm.controls['firstname'].invalid && contactForm.controls['firstname'].touched">
+                        Vorname ist erforderlich
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Nachname" formControlName="lastname">
+                    <div class="error text-danger"
+                        *ngIf="contactForm.controls['lastname'].invalid && contactForm.controls['lastname'].touched">
+                        Nachname ist erforderlich
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="email" placeholder="Email" formControlName="email">
+                    <div class="error text-danger"
+                        *ngIf="contactForm.controls['email'].invalid && contactForm.controls['email'].touched">
+                        E-Mail ist erforderlich
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="d-flex justify-content-between">
+                        <input class="form-control" type="text" value="+49" style="width: 55px;" readonly>
+                        <input class="form-control" type="number"
+                            placeholder="Mobilfunk und Festnetz – ohne führende Null" formControlName="phone">
+                    </div>
+                    <div class="error text-danger"
+                        *ngIf="contactForm.controls['phone'].invalid && contactForm.controls['phone'].touched">
+                        Telefonnummer ist erforderlich
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea class="w-100" rows="3" placeholder="Teilen Sie uns mit, wie wir Ihnen behilflich sein können"
+                        formControlName="description"></textarea>
+                    <div class="error text-danger"
+                        *ngIf="contactForm.controls['description'].invalid && contactForm.controls['description'].touched">
+                        Beschreibung ist erforderlich
+                    </div>
+                </div>
+                <!-- <div>
+                    <input type="checkbox"> Ich möchte den Kostenlosen Newsletter abbonieren
+                </div> -->
+                <div class="m-2">
+                    <input type="checkbox" formControlName="declaration"> Ich habe die <a [href]="settings?.data_protection" style="color: red;">Datenschutzerklärung</a> gelesen und
+                    akzeptiert <br>
+                    <div class="error text-danger"
+                        *ngIf="contactForm.controls['description'].invalid && contactForm.controls['description'].touched">
+                        Bitte stimmen Sie der Datenschutzerklärung zu.
+                    </div>
+                </div>
+                <button type="submit" class="contact_btn btn btn-warning w-100">Absenden</button>
+            </form>
+        </div>
+        <div class="col-12 col-lg-3 col-md-3 col-sm-3"></div>
+    </div>
+</div>
+
+<app-footer></app-footer>

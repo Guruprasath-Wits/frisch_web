@@ -1,0 +1,76 @@
+.login-header {
+    margin-bottom: 20px;
+    padding-top: 150px;
+    
+  }
+  
+  .login-header img {
+    max-width: 150px;
+    margin-bottom: 10px;
+  }
+
+  .contain{
+
+    /* margin-left: 500px;
+
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    width: 550px; */
+    padding: 50px;
+
+
+  }
+
+ 
+  
+  .forget-pass-form {
+
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #636161;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .forget-pass-form .field {
+    margin-bottom: 15px;
+  }
+  
+  .forget-pass-form input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .forget-pass-form input:focus {
+    border-color: #954535;
+    outline: none;
+  }
+  
+  .forget-pass-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #954535;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .forget-pass-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .forget-pass-form button:hover:not(:disabled) {
+    background-color: #7e3d2f;
+  }
+  
+  .error {
+    font-size: 14px;
+  }
+  

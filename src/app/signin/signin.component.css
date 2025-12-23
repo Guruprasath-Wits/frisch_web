@@ -1,0 +1,226 @@
+.cus-img {
+  
+    border-radius: 30px;
+    margin-left: 30px;
+    border: 1px solid #f69e15;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  
+  }
+
+ 
+  
+  .left{
+    margin-top: 80px;
+  }
+  
+  .pat {
+  
+    background-color: #f69e15;
+    position: absolute;
+    width: 400px;
+    height: 450px;
+    border-radius: 35% 65% 75% 25% / 25% 33% 67% 75%;
+    float: left;
+    transform: translate(-20px, 20px);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
+    filter: blur(10px);
+  
+  }
+  
+  .left {
+    display: flex;
+  }
+  
+  .cus-signup {
+    width: 100%;
+    margin-left: 50px;
+  }
+  
+  .wrapper {
+    max-width: 550px;
+    height: 490px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-left: 50px;
+    margin-top: 75px;
+  }
+  
+  .wrapper .title-text {
+    display: flex;
+    width: 200%;
+    font-size: 22px;
+  }
+  
+  .wrapper .title-text .title {
+    width: 50%;
+    font-size: 35px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    color: #555;
+  }
+  
+  
+  .wrapper .form-container {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .form-container .slide-controls {
+    display: flex;
+    justify-content: space-between;
+    height: 50px;
+    width: 100%;
+    border: 1px solid lightgrey;
+    overflow: hidden;
+    margin: 10px 0 10px 0;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  .slide-controls .slide {
+    width: 100%;
+    height: 100%;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 48px;
+    text-align: center;
+    cursor: pointer;
+    color: #000000;
+    z-index: 1;
+    transition: all 0.6s ease;
+  }
+  
+  .slide-controls .signup {
+    color: #212121;
+  }
+  
+  .slide-controls .slide-tab {
+    position: absolute;
+    height: 100%;
+    width: 50%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background-color: #f69e15;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  input[type="radio"] {
+    display: none;
+  }
+  
+  #signup:checked~.slide-tab {
+    left: 50%;
+  }
+  
+  #signup:checked~.signup {
+    color: #000000;
+  }
+  
+  #signup:checked~.login {
+    color: #212121;
+  }
+  
+  .form-container .form-inner {
+    display: flex;
+    width: 200%;
+  }
+  
+  .form-container .form-inner form {
+    width: 50%;
+    transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .form-inner form .field {
+    height: 50px;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .form-inner form .field input {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    font-size: 17px;
+    padding-left: 15px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    border-bottom-width: 2px;
+    transition: all 0.4s ease;
+  }
+  
+  .form-inner form .field input:focus {
+    border-color: #f69e15;
+  }
+  
+  .form-inner form .pass-link {
+    margin-top: 5px;
+  }
+  
+  .form-inner form .pass-link a,
+  a {
+    color: #f69e15;
+    text-decoration: none;
+  }
+  
+  .form-inner form .signup-link {
+    color: #212121;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .form-inner form .pass-link a:hover,
+  .form-inner form .signup-link a:hover {
+    text-decoration: underline;
+  }
+  
+  form .field button {
+    background: -webkit-linear-gradient(left, #131135, #131135);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+    padding-left: 0;
+    border: none;
+    cursor: pointer;
+  
+    width: 100%;
+    height: 100%;
+    outline: none;
+    font-size: 17px;
+    padding-left: 15px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    border-bottom-width: 2px;
+    transition: all 0.4s ease;
+  }
+
+  @media(max-width:426px){
+
+    .left{
+      display: none;
+    }
+
+    .right{
+      margin-left: 12px;
+        width: 400px;
+    }
+  }
+
+  @media(min-width:427px) and (max-width:770px){
+
+    .left{
+      display: none;
+    }
+
+    .right{
+      margin-left: 100px;
+        width: 600px;
+    }
+
+
+
+  }

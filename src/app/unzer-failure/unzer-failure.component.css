@@ -1,0 +1,23 @@
+.failure-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .failure-img {
+    width: 100px;
+  }
+  
+  h3 {
+    color: red;
+  }
+  
+  .btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+      

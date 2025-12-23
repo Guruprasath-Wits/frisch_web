@@ -1,0 +1,17 @@
+<!-- <br><br>
+<br><br><div class="container">
+  <button class="btn btn-primary" (click)="initUnzerCheckout()">Proceed to Payment</button>
+</div> -->
+
+<!-- <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner"></div>
+  </div>
+
+<div id="unzer-checkout-container" ></div> -->
+
+
+<div *ngIf="isLoading" class="loading-overlay">
+  <div class="spinner"></div>
+</div>
+
+<div id="unzer-checkout-container" [style.display]="isLoading ? 'none' : 'block'"></div>
