@@ -154,6 +154,29 @@
                                 Ort erforderlich
                               </div>
                             </div>
+
+                            <div class="field">
+                              <label
+                                style="color: #666; font-size: 14px; margin-bottom: 5px; display: block;">Geburtsdatum</label>
+                              <input type="date" formControlName="dob" placeholder="Geburtsdatum" />
+                              <div *ngIf="signupForm.controls['dob'].invalid && signupForm.controls['dob'].touched"
+                                class="error text-danger">
+                                Geburtsdatum ist erforderlich
+                              </div>
+                            </div><br>
+
+                            <div class="field">
+                              <input type="text" formControlName="floor" placeholder="Etage" />
+                            </div>
+
+                            <div class="field">
+                              <select formControlName="lift_availability"
+                                style="width: 100%; height: 100%; border: 1px solid #999; border-radius: 5px; padding-left: 15px; outline: none; transition: 0.3s;font-size: 17px; font-weight: 500; color: #666;">
+                                <option [ngValue]="null" disabled selected>Aufzug vorhanden?</option>
+                                <option value="Yes">Ja</option>
+                                <option value="No">Nein</option>
+                              </select>
+                            </div>
                             <div class="field d-flex">
                               <input [type]="SignupPasswordField" formControlName="password" placeholder="Passwort"
                                 (keyup)="onSignupPasswordKeyup()" />
