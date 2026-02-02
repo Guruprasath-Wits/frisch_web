@@ -10,7 +10,7 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent {
-  constructor(private cdr: ChangeDetectorRef,private dataService: DataService, private authService: AuthService, private route: Router) { }
+  constructor(private cdr: ChangeDetectorRef, private dataService: DataService, private authService: AuthService, private route: Router) { }
 
   cartData: any[] = []
   products: any[] = []
@@ -28,16 +28,16 @@ export class CartComponent {
 
   ngOnInit() {
     console.log("🔄 Subscribing to cartCleared$ event...");
-    
+
     this.dataService.cartCleared$.subscribe((shouldClear) => {
       console.log("📢 Cart clear event received:", shouldClear);
       if (shouldClear) {
         this.clearCartAfterPayment();
       }
     });
-  this.loadTipAmt()
+    this.loadTipAmt()
     this.loadCartData(); // ✅ This should be AFTER subscribing
-}
+  }
 
 
   loadCartData() {
@@ -89,15 +89,44 @@ export class CartComponent {
       console.log("📌 Cart should be empty now:", this.cartData);
     }, 1000);
   }
-  
+
 
   fetchProductDetails() {
     let loadedProducts = 0;
 
     this.cartData.forEach(cartItem => {
-      this.dataService.getProductById(cartItem.product_id).subscribe(
-        (productResponse) => {
-          cartItem.productDetails = productResponse.product;
+      // Check if it's a combo or a regular product
+      const fetchObservable = cartItem.is_combo
+        ? this.dataService.getComboById(cartItem.product_id)
+        : this.dataService.getProductById(cartItem.product_id);
+
+      fetchObservable.subscribe(
+        (response) => {
+          // Adjust response handling based on endpoint structure
+          cartItem.productDetails = cartItem.is_combo ? response.combo : response.product;
+
+          // Combos might need price normalization if string
+          if (cartItem.is_combo && cartItem.productDetails) {
+            // Ensure price is a string for .split() in template, but parsable as float
+            // If it's a number, convert to fixed string. If string, leave as is.
+            let priceVal = cartItem.productDetails.price;
+            if (typeof priceVal === 'number') {
+              cartItem.productDetails.price = priceVal.toFixed(2);
+            } else if (typeof priceVal === 'string') {
+              // Ensure it has 2 decimals if it's a string like "4.5"
+              let fVal = parseFloat(priceVal);
+              if (!isNaN(fVal)) {
+                cartItem.productDetails.price = fVal.toFixed(2);
+              }
+            }
+
+            cartItem.productDetails.product_name = cartItem.productDetails.name; // Map name
+            cartItem.productDetails.product_img = cartItem.productDetails.image; // Map image
+          } else if (cartItem.productDetails && typeof cartItem.productDetails.price === 'number') {
+            // Regular products might be numbers, ensure string for template .split()
+            cartItem.productDetails.price = cartItem.productDetails.price.toFixed(2);
+          }
+
           loadedProducts++;
 
           if (loadedProducts === this.cartData.length) {
@@ -105,7 +134,7 @@ export class CartComponent {
           }
         },
         (error) => {
-          console.log("Error fetching product details for product_id " + cartItem.product_id + ":", error);
+          console.log("Error fetching details for product_id " + cartItem.product_id + ":", error);
           loadedProducts++;
 
           if (loadedProducts === this.cartData.length) {
@@ -172,7 +201,7 @@ export class CartComponent {
       (response) => {
         if (response.status) {
           this.dataService.cartLoad?.next("true")
-           this.dataService.cartLoad1.next(true);
+          this.dataService.cartLoad1.next(true);
           Swal.fire({
             position: "top-end",
             icon: "success",
@@ -180,14 +209,14 @@ export class CartComponent {
             showConfirmButton: false,
             timer: 2000, // 2 seconds
             didClose: () => {
-                this.loadTipAmt()
-                this.loadCartData();
+              this.loadTipAmt()
+              this.loadCartData();
               // window.location.reload();
             }
           })
           // this.loadCartData();
           // window.location.reload();
-          
+
         }
       },
       (error) => {
@@ -216,18 +245,18 @@ export class CartComponent {
     console.log("Total Amount: " + this.total);
   }
 
- 
+
   moveToOrder() {
     if (this.cartData.length > 0) {
       localStorage.setItem('total', this.total.toFixed(2));
       localStorage.setItem('totalAmount', this.totalAmount.toFixed(2));
-  
+
       const formattedTips = this.tips.toFixed(2);
       this.formattedTips = formattedTips;
-  
+
       localStorage.setItem('tips', formattedTips);
       console.log('Formatted Tips:', formattedTips);
-  
+
       this.route.navigate(['/orders']);
     } else {
       Swal.fire(
@@ -237,7 +266,7 @@ export class CartComponent {
       );
     }
   }
-  
+
 
   subscribe_order() {
     if (this.cartData.length > 0) {
@@ -246,10 +275,10 @@ export class CartComponent {
       // this.formattedTips = `${Math.floor(this.tips)} ⁰⁰`;
       const formattedTips = this.tips.toFixed(2);
       this.formattedTips = formattedTips;
-  
+
       localStorage.setItem('tips', formattedTips);
       console.log('Formatted Tips:', formattedTips);
-  
+
       // localStorage.setItem('tips', this.tips);
       this.route.navigate(['/subscribe-order']);
     } else {
@@ -267,7 +296,7 @@ export class CartComponent {
   formatCurrency(value: number): string {
     let euros = Math.floor(value); // Get the whole euro part
     let cents = Math.round((value - euros) * 100); // Get the cents part
-  
+
     return `${euros} <sup>${cents.toString().padStart(2, '0')}</sup> €`;
   }
 
@@ -295,19 +324,19 @@ export class CartComponent {
 
   //   this.selectedButton = clickedButton;
   // }
-  loadTipAmt(){
+  loadTipAmt() {
     let storedTip = localStorage.getItem('tips');
 
     if (storedTip) {
       let tipAmount = parseFloat(storedTip);
-  
+
       // Find the button that matches the stored tip amount
       let selectedButton = this.buttons.find(button => button.value === tipAmount);
-  
+
       if (selectedButton) {
         this.selectedButton = selectedButton;
         this.tips = tipAmount;
-  
+
         // Disable other buttons
         this.buttons.forEach(button => button.disabled = button !== selectedButton);
       }
@@ -315,7 +344,7 @@ export class CartComponent {
   }
 
   // selectAmount(clickedButton: { value: number, disabled: boolean }): void {
-   
+
   //   if (this.selectedButton === clickedButton) {
   //     // Reset Trinkgeld when clicking the same button
   //     this.tips = 0;
@@ -323,22 +352,22 @@ export class CartComponent {
   //     this.selectedButton = null;
   //     return;
   //   }
-  
+
   //   // If a button was already selected, reset the tip
   //   if (this.selectedButton) {
   //     this.tips = 0;
   //   }
-  
+
   //   // Disable other buttons to allow only one selection
   //   this.buttons.forEach(button => button.disabled = button !== clickedButton);
-  
+
   //   // Update Trinkgeld amount (Tip)
   //   this.tips = clickedButton.value;
-  
+
   //   // Store selected button
   //   this.selectedButton = clickedButton;
   // }
-  
+
   selectAmount(clickedButton: { value: number, disabled: boolean }): void {
     if (this.selectedButton === clickedButton) {
       // Reset Trinkgeld when clicking the same button
@@ -348,25 +377,25 @@ export class CartComponent {
       this.selectedButton = null;
       return;
     }
-  
+
     // If a button was already selected, reset the tip
     if (this.selectedButton) {
       this.tips = 0;
     }
-  
+
     // Disable other buttons to allow only one selection
     this.buttons.forEach(button => button.disabled = button !== clickedButton);
-  
+
     // Update Trinkgeld amount (Tip)
     this.tips = clickedButton.value;
-  
+
     // Store the selected tip in localStorage
     localStorage.setItem('tips', this.tips.toString());
-  
+
     // Store selected button
     this.selectedButton = clickedButton;
   }
-  
+
   resetButtons(): void {
     this.buttons.forEach(button => button.disabled = false);
   }
