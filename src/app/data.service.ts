@@ -264,6 +264,10 @@ export class DataService {
 
 
 
+  public postMissingProduct(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + "missingProduct/create", data);
+  }
+
 }
 
 
