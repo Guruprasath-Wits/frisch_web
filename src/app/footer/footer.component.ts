@@ -1,5 +1,7 @@
-import { Component,ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { DataService } from '../data.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-footer',
@@ -9,7 +11,7 @@ import { DataService } from '../data.service';
 export class FooterComponent {
   @ViewChild('iframeContainer') iframe!: ElementRef;
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private router: Router) { }
   settings: any = {};
   // areas: any[] = [];
 
@@ -40,7 +42,7 @@ export class FooterComponent {
       this.iframe.nativeElement.src = newUrl; // Load new URL inside iframe
     }
   }
-  
+
 
   // loadDeliveryAreas() {
   //   this.dataService.getDeliveryAreas().subscribe(
@@ -55,5 +57,6 @@ export class FooterComponent {
   //     }
   //   )
   // }
+
 
 }

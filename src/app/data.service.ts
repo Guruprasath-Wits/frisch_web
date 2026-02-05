@@ -11,23 +11,23 @@ export class DataService {
     throw new Error('Method not implemented.');
   }
 
-  cartLoad=new BehaviorSubject("false")
+  cartLoad = new BehaviorSubject("false")
 
-  public apiUrl = 'https://api.frischfuersie.de/';
-  public fileUrl = 'https://api.frischfuersie.de';
-  // public apiUrl = 'http://localhost:4001/';
-  // public fileUrl = 'http://localhost:4001';
+  // public apiUrl = 'https://api.frischfuersie.de/';
+  // public fileUrl = 'https://api.frischfuersie.de';
+  public apiUrl = 'http://localhost:4001/';
+  public fileUrl = 'http://localhost:4001';
   stripe: any;
   private cartCleared = new BehaviorSubject<boolean>(false);
   cartCleared$ = new BehaviorSubject<boolean>(false);
 
-   cartLoad1 = new Subject<boolean>();
+  cartLoad1 = new Subject<boolean>();
 
   // public isLogged: boolean = false;
 
   constructor(private http: HttpClient) {
     this.cartLoad?.next("false")
-   }
+  }
 
   //  getCartDatas(userId: string) {
   //   return this.http.get<any>(this.apiUrl + `cart/userCart/${userId}`);
@@ -75,7 +75,7 @@ export class DataService {
   public getSampleProductsData(): Observable<any> {
     return this.http.get(this.apiUrl + "sampleOrder/read");
   }
-   public getSampleProductsDataByID(orderId:any): Observable<any> {
+  public getSampleProductsDataByID(orderId: any): Observable<any> {
     return this.http.get(this.apiUrl + `sampleOrder/read/${orderId}`);
   }
 
@@ -116,8 +116,8 @@ export class DataService {
   }
 
   validateIban(payload: { iban: string, customerName: string }) {
-  return this.http.post(this.apiUrl + 'validate-iban', payload);
-}
+    return this.http.post(this.apiUrl + 'validate-iban', payload);
+  }
 
   public deleteCartData(cartId: any): Observable<any> {
     return this.http.post(this.apiUrl + `cart/delete/${cartId}`, {});
@@ -139,15 +139,15 @@ export class DataService {
   //   const url = `${this.apiUrl}pay?${new URLSearchParams(orderData).toString()}`;
   //   window.open(url, "_blank"); // Opens in a new tab
   // }
-  
+
 
   public subscriptionOrder(subscribeData: any): Observable<any> {
     return this.http.post(this.apiUrl + "all_subscribe-orders/create", subscribeData);
   }
 
-    public createPaypalReference(orderData: any): Observable<any> {
-       return this.http.post(this.apiUrl + "all_subscribe_paypal", orderData);
-}
+  public createPaypalReference(orderData: any): Observable<any> {
+    return this.http.post(this.apiUrl + "all_subscribe_paypal", orderData);
+  }
 
   public notifyToAdmin(notification: any): Observable<any> {
     return this.http.post(this.apiUrl + "notifications/create", notification);
@@ -158,7 +158,7 @@ export class DataService {
     return this.http.post(this.apiUrl + "address/create", data)
   }
 
-  public getAddress(): Observable<any>{
+  public getAddress(): Observable<any> {
     return this.http.get(this.apiUrl + "address/read")
   }
 
@@ -174,12 +174,12 @@ export class DataService {
     return this.http.get(this.apiUrl + `orders/read/${userId}`);
   }
 
-  public getOrderDataByOrderId(orderId:any):Observable<any>{
-    return this.http.get(this.apiUrl+`all_subscribe-orders/readOrder/${orderId}`);
+  public getOrderDataByOrderId(orderId: any): Observable<any> {
+    return this.http.get(this.apiUrl + `all_subscribe-orders/readOrder/${orderId}`);
   }
 
-  public updateSubscribeOrder(orderId:any,updatedData:any):Observable<any>{
-    return this.http.post(this.apiUrl+`all_subscribe-orders/updateOrder/${orderId}`,updatedData)
+  public updateSubscribeOrder(orderId: any, updatedData: any): Observable<any> {
+    return this.http.post(this.apiUrl + `all_subscribe-orders/updateOrder/${orderId}`, updatedData)
   }
 
   public subscriptionCheck(userId: any): Observable<any> {
@@ -189,7 +189,7 @@ export class DataService {
   public getSubscriptionOrderData(subscribeData: any): Observable<any> {
     return this.http.get(this.apiUrl + "all_subscribe-orders/readAll", subscribeData);
   }
-    public getOrderDeliveryDetailsData(orderId: any): Observable<any> {
+  public getOrderDeliveryDetailsData(orderId: any): Observable<any> {
     return this.http.get(this.apiUrl + `subscribe-orders/Deliveryread/${orderId}`)
   }
 
@@ -227,14 +227,14 @@ export class DataService {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: 1000 }) // Amount in cents
     });
-  
+
     const { clientSecret } = await response.json();
-    
+
     const result = await this.stripe.confirmCardPayment(clientSecret);
-    
+
     if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
       console.log('Payment Success');
-  
+
       // Save payment status to backend
       await fetch(this.apiUrl + 'api/update-payment-status', {
         method: 'POST',
@@ -244,17 +244,21 @@ export class DataService {
           payment_status: 'succeeded'
         })
       });
-  
+
     } else {
       console.error('Payment Failed', result.error);
     }
   }
 
-savePaypalSubscription(payload:any): Observable<any> {
-  return this.http.post(`${this.apiUrl}save-paypal-subscription`, payload);
-}
+  savePaypalSubscription(payload: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}save-paypal-subscription`, payload);
+  }
 
-  
+
+
+  public postMissingProduct(data: any): Observable<any> {
+    return this.http.post(this.apiUrl + "missingProduct/create", data);
+  }
 
 }
 

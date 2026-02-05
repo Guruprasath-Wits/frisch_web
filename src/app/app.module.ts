@@ -74,6 +74,7 @@ import { UnzerFailureComponent } from './unzer-failure/unzer-failure.component';
 import { EmbeddedPaymentComponent } from './embedded-payment/embedded-payment.component';
 import { PaypalSubscriptionSuccessComponent } from './paypal-subscription-success/paypal-subscription-success.component';
 import { PaypalSubscriptionFailureComponent } from './paypal-subscription-failure/paypal-subscription-failure.component';
+import { MissingProductDialogComponent } from './dialog/missing-product-dialog/missing-product-dialog.component';
 
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -144,7 +145,8 @@ import { PaypalSubscriptionFailureComponent } from './paypal-subscription-failur
     UnzerFailureComponent,
     EmbeddedPaymentComponent,
     PaypalSubscriptionSuccessComponent,
-    PaypalSubscriptionFailureComponent
+    PaypalSubscriptionFailureComponent,
+    MissingProductDialogComponent
 
   ],
   imports: [
