@@ -64,6 +64,14 @@ export class DataService {
     return this.http.get(this.apiUrl + 'product/read');
   }
 
+  public getComboData(): Observable<any> {
+    return this.http.get(this.apiUrl + 'combo');
+  }
+
+  public getComboById(comboId: number): Observable<any> {
+    return this.http.get(this.apiUrl + `combo/${comboId}`);
+  }
+
   public getProductById(productId: number): Observable<any> {
     return this.http.get(this.apiUrl + `product/read/${productId}`)
   }

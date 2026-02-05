@@ -30,6 +30,8 @@ export class OurProductsComponent implements OnInit {
 
   filteredProducts: any[] = [];
   selectedCategories: number[] = [];
+  showCombosOnly: boolean = false;
+  allProductsAndCombos: any[] = [];
 
   currentPage: number = 1;
   itemsPerPage: number = 8;
@@ -81,6 +83,7 @@ export class OurProductsComponent implements OnInit {
 
   onClearAll(): void {
     this.selectedCategories = [];
+    this.showCombosOnly = false;
     this.applyFilters();
   }
 
@@ -109,6 +112,11 @@ export class OurProductsComponent implements OnInit {
     console.log("Filtered Products:", this.filteredProducts);
   }
 
+        return productCategories.some(catId =>
+          this.selectedCategories.includes(catId)
+        );
+      });
+    }
 
   updateTotalPages(): void {
     this.totalPages = Math.ceil(this.enabledPaginatedProducts.length / this.itemsPerPage);
@@ -237,7 +245,8 @@ export class OurProductsComponent implements OnInit {
       const cart_data: any = {
         user_id: JSON.parse(userId),
         product_id: product.id,
-        quantity: product.quantity
+        quantity: product.quantity,
+        is_combo: product.isCombo ? 1 : 0
       };
 
       this.dataService.addToCart(cart_data).subscribe(
