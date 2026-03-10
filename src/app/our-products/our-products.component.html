@@ -187,6 +187,48 @@
     flex-grow: 1;
   }
 
+  /* Disabled state for checkboxes */
+  .checkbox-label.disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(1);
+  }
+
+  .checkbox-label.disabled input {
+    cursor: not-allowed;
+  }
+
+  /* Selection style for select type */
+  .filter-select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #ffb74d;
+    border-radius: 12px;
+    background: #fff;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffb74d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 183, 77, 0.2);
+  }
+
+  .filter-select:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+
   /* === PRODUCT CARD === */
   .product_card {
     border-radius: 12px;
@@ -288,18 +330,40 @@
           </div>
           <hr />
           <div class="card-body">
-            <div class="filter-widget">
-              <h4 class="font-weight-bold">Kategorie</h4>
-
-              <div *ngFor="let category of categories" class="checkbox-container">
-                <label class="checkbox-label">
-                  <input type="checkbox" [value]="category.id" (change)="onCategoryFilter($event)"
-                    [checked]="selectedCategories.includes(category.id)" />
+            <!-- CATEGORY TYPE CHECKBOX GROUP -->
+            <div class="filter-widget mb-4">
+              <h4 class="font-weight-bold mb-3">
+                Sub-Category Type
+                <i *ngIf="cartData.length > 0" class="fas fa-lock text-muted" title="Locked by cart items"></i>
+              </h4>
+              <p *ngIf="cartData.length > 0" class="small text-muted mb-2">
+                Ihre Auswahl ist auf den Bereich im Warenkorb fixiert.
+              </p>
+              <div class="checkbox-container" *ngFor="let main of mainCategories">
+                <label class="checkbox-label" [class.disabled]="cartData.length > 0">
+                  <input type="checkbox" [checked]="selectedCategoryType === main.category_name"
+                    (change)="setCategoryTypeFilter(main.category_name, $any($event.target).checked)">
                   <span class="checkmark"></span>
-                  <span class="label-text">{{ category.category_name }}</span>
+                  <span class="label-text">{{ main.category_name }}</span>
                 </label>
               </div>
+            </div>
 
+            <hr />
+
+            <!-- CATEGORY LIST CHECKBOX GROUP (Multiple Selection - No Disable) -->
+            <div class="filter-widget">
+              <h4 class="font-weight-bold mb-3">Kategorie</h4>
+              <div style="max-height: 300px; overflow-y: auto;">
+                <div class="checkbox-container" *ngFor="let category of categories">
+                  <label class="checkbox-label">
+                    <input type="checkbox" [checked]="selectedCategories.includes(category.id)"
+                      (change)="setCategoryFilter(category.id, $any($event.target).checked)">
+                    <span class="checkmark"></span>
+                    <span class="label-text">{{ category.category_name }}</span>
+                  </label>
+                </div>
+              </div>
             </div>
 
             <!-- MISSING PRODUCT WIDGET -->
@@ -370,7 +434,10 @@
                 </div>
                 <div class="product_info mt-2">
                   <div class="d-flex justify-content-between">
-                    <p style="cursor: pointer;">{{ product.product_name }}</p>
+                    <p (click)="selectProductFilter(product)"
+                      style="cursor: pointer; text-decoration: underline; color: #954535;">
+                      {{ product.product_name }}
+                    </p>
                     <img src="../../assets/img/icon/information.png" width="30" height="30" style="cursor: pointer;"
                       (click)="showProductDescription(product)">
                   </div>
@@ -386,7 +453,7 @@
                       <i class="fa-solid fa-plus"></i>
                     </button>
                   </div>
-                  <a class="btn btn-warning w-120 mt-3 fw" (click)="moveToCart(product)">
+                  <a class="btn btn-warning w-120 mt-3 fw" (click)="moveToCart(product); selectProductFilter(product)">
                     In den Warenkorb legen <i class="fa-solid fa-cart-shopping"></i>
                   </a>
                 </div>

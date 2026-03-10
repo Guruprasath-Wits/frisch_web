@@ -26,12 +26,16 @@ export class OurProductsComponent implements OnInit {
   isLogin = localStorage.getItem('isLoggedIn');
   products: any[] = [];
   categories: any[] = [];
+  allCategories: any[] = [];
+  selectedCategoryType: string = 'all';
+  mainCategories: any[] = [];
   fileUrl: any = this.dataService.fileUrl;
 
   filteredProducts: any[] = [];
   selectedCategories: number[] = [];
   showCombosOnly: boolean = false;
   allProductsAndCombos: any[] = [];
+  selectedCategoryId: any = 'all';
 
   currentPage: number = 1;
   itemsPerPage: number = 8;
@@ -52,6 +56,7 @@ export class OurProductsComponent implements OnInit {
     });
 
     this.loadCategoryData();
+    this.loadMainCategoryData();
     this.loadCartData();
     this.loadProductData(); // filter applied after products load
 
@@ -65,6 +70,17 @@ export class OurProductsComponent implements OnInit {
   // ---------- FILTER ----------
   setCategoryFilter(categoryId: number, checked: boolean): void {
     if (checked) {
+      const targetCat = this.allCategories.find(c => c.id === categoryId);
+
+      if (targetCat && targetCat.category_type) {
+        // If switching to a category of a different type, clear previous selections
+        if (this.selectedCategoryType !== targetCat.category_type) {
+          this.selectedCategories = [];
+          this.selectedCategoryType = targetCat.category_type;
+          this.filterCategoriesByType();
+        }
+      }
+
       if (!this.selectedCategories.includes(categoryId)) {
         this.selectedCategories.push(categoryId);
       }
@@ -72,29 +88,140 @@ export class OurProductsComponent implements OnInit {
       this.selectedCategories = this.selectedCategories.filter(id => id !== categoryId);
     }
 
-    // ✅ Always call filter after update
+    if (this.selectedCategories.length === 0) {
+      this.selectedCategoryId = 'all';
+    } else {
+      this.selectedCategoryId = this.selectedCategories[0];
+    }
+
     this.applyFilters();
   }
 
-  onCategoryFilter(event: Event): void {
-    const checkbox = event.target as HTMLInputElement;
-    this.setCategoryFilter(Number(checkbox.value), checkbox.checked);
+  selectProductFilter(product: any): void {
+    if (product.category_id) {
+      const catIds = String(product.category_id)
+        .split(',')
+        .map(id => Number(id.trim()));
+
+      const firstCatId = catIds[0];
+      if (firstCatId) {
+        const targetCat = this.allCategories.find(c => c.id === firstCatId);
+        if (targetCat && targetCat.category_type) {
+          // Select the Sub-Category Type (top checkboxes)
+          this.selectedCategoryType = targetCat.category_type;
+          this.filterCategoriesByType();
+
+          // Also check the specific Kategorie box to show related products
+          if (!this.selectedCategories.includes(firstCatId)) {
+            this.selectedCategories.push(firstCatId);
+          }
+          this.applyFilters();
+        }
+      }
+    }
+  }
+
+  onCategorySelect(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const val = select.value;
+    this.selectedCategoryId = val;
+
+    if (val === 'all') {
+      this.selectedCategories = [];
+    } else {
+      const categoryId = Number(val);
+      this.selectedCategories = [categoryId];
+
+      // Sync the Type dropdown if not already set
+      const targetCat = this.allCategories.find(c => c.id === categoryId);
+      if (targetCat && targetCat.category_type) {
+        this.selectedCategoryType = targetCat.category_type;
+        this.filterCategoriesByType();
+      }
+    }
+
+    this.applyFilters();
+  }
+
+  onCategoryTypeChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.selectedCategoryType = select.value;
+    this.filterCategoriesByType();
+    this.selectedCategories = []; // Only clear selections, keep type
+    this.applyFilters();
+  }
+
+  setCategoryTypeFilter(typeName: string, checked: boolean): void {
+    if (this.cartData.length > 0) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Filter gesperrt',
+        text: 'Bitte leeren Sie Ihren Warenkorb, um den Bereich (Sub-Category Type) zu wechseln.',
+        confirmButtonColor: '#ffb74d'
+      });
+      return;
+    }
+
+    if (checked) {
+      this.selectedCategoryType = typeName;
+      this.filterCategoriesByType();
+      this.selectedCategories = []; // Clear sub-category when type changes
+    } else {
+      this.selectedCategoryType = 'all';
+      this.filterCategoriesByType();
+      this.selectedCategories = [];
+    }
+    this.applyFilters();
+  }
+
+  filterCategoriesByType(): void {
+    if (this.selectedCategoryType === 'all') {
+      this.categories = this.allCategories.filter(
+        (item: any) => item.category_type !== 'free_trial'
+      );
+    } else {
+      this.categories = this.allCategories.filter(
+        (item: any) => item.category_type === this.selectedCategoryType
+      );
+    }
   }
 
   onClearAll(): void {
     this.selectedCategories = [];
+    this.selectedCategoryId = 'all';
+
+    if (this.cartData.length === 0) {
+      this.selectedCategoryType = 'all';
+    }
+
+    this.filterCategoriesByType();
     this.showCombosOnly = false;
     this.applyFilters();
   }
 
 
   applyFilters(): void {
-    if (this.selectedCategories.length === 0) {
-      // show all products if no filter selected
-      this.filteredProducts = [...this.products];
-    } else {
-      // filter products based on multiple category_ids
-      this.filteredProducts = this.products.filter(product => {
+    let result = [...this.products];
+
+    // 1. Primary Filter: By Sub-Category Type (Main Category)
+    if (this.selectedCategoryType !== 'all') {
+      // Find all category IDs matching the selected type
+      const validCategoryIds = this.allCategories
+        .filter(cat => cat.category_type === this.selectedCategoryType)
+        .map(cat => cat.id);
+
+      result = result.filter(product => {
+        const productCategories = String(product.category_id)
+          .split(',')
+          .map((id: string) => Number(id.trim()));
+
+        return productCategories.some(id => validCategoryIds.includes(id));
+      });
+    }
+
+    // 2. Secondary Filter: By Specific Checked Categories
+    if (this.selectedCategories.length > 0) {
+      result = result.filter(product => {
         const productCategories = String(product.category_id)
           .split(',')
           .map((id: string) => Number(id.trim()));
@@ -105,11 +232,15 @@ export class OurProductsComponent implements OnInit {
       });
     }
 
+    this.filteredProducts = result;
     this.currentPage = 1;
     this.updateTotalPages();
 
-    console.log("Selected Categories:", this.selectedCategories);
-    console.log("Filtered Products:", this.filteredProducts);
+    console.log("Filter Result:", {
+      type: this.selectedCategoryType,
+      selected: this.selectedCategories,
+      count: this.filteredProducts.length
+    });
   }
 
 
@@ -175,11 +306,13 @@ export class OurProductsComponent implements OnInit {
           this.filteredProducts = [...this.products];
           this.updateTotalPages();
 
-          // ✅ Apply filter only after products are loaded
-          if (this.initialCategoryId) {
+          // ✅ Apply proper priority filter after products are loaded
+          if (this.cartData.length > 0) {
+            this.refreshViewFromCart();
+          } else if (this.initialCategoryId) {
             this.setCategoryFilter(this.initialCategoryId, true);
           } else {
-            this.applyFilters(); // show all by default
+            this.applyFilters();
           }
         }
       },
@@ -193,9 +326,26 @@ export class OurProductsComponent implements OnInit {
     this.dataService.getCategoryData().subscribe(
       (response: any) => {
         if (response.status) {
-          this.categories = response.category.filter(
-            (item: any) => item.category_type !== 'free_trial'
-          );
+          this.allCategories = response.category;
+
+          // Re-sync if we had an initial category ID (as requested for deep linking)
+          if (this.initialCategoryId) {
+            const target = this.allCategories.find(c => c.id === this.initialCategoryId);
+            if (target) {
+              this.selectedCategoryId = target.id;
+              if (target.category_type) {
+                this.selectedCategoryType = target.category_type;
+              }
+            }
+          }
+
+          this.filterCategoriesByType();
+
+          if (this.cartData.length > 0) {
+            this.refreshViewFromCart();
+          } else {
+            this.applyFilters(); // Ensure products match the synced state
+          }
         }
       },
       (error: any) => {
@@ -203,6 +353,19 @@ export class OurProductsComponent implements OnInit {
       }
     );
   }
+  loadMainCategoryData() {
+    this.dataService.getMainCategoryData().subscribe(
+      (response: any) => {
+        if (response.status) {
+          this.mainCategories = response.category;
+        }
+      },
+      (error: any) => {
+        console.log('Error fetching main category data', error);
+      }
+    );
+  }
+
   loadCartData() {
     if (!this.authService.isLoggedIn) return;
     this.userId = localStorage.getItem('userId');
@@ -212,17 +375,55 @@ export class OurProductsComponent implements OnInit {
       (response: any) => {
         if (response?.status && response.card?.length) {
           this.cartData = response.card;
+          // Synchronize view based on the new cart contents
+          this.refreshViewFromCart();
           this.syncProductQuantities();
         } else {
           this.cartData = [];
           this.syncProductQuantities();
+          this.applyFilters();
         }
       },
       () => {
         this.cartData = [];
         this.syncProductQuantities();
+        this.applyFilters();
       }
     );
+  }
+
+  refreshViewFromCart(): void {
+    if (!this.cartData || this.cartData.length === 0 || this.products.length === 0 || this.allCategories.length === 0) {
+      return;
+    }
+
+    // Lock to the category type of items in the cart (assuming all type-consistent)
+    const firstItem = this.cartData[0];
+    const product = this.products.find(p => p.id === firstItem.product_id);
+
+    if (product && product.category_id) {
+      const catIds = String(product.category_id).split(',').map(id => Number(id.trim()));
+      const category = this.allCategories.find(c => c.id === catIds[0]);
+
+      if (category && category.category_type) {
+        this.selectedCategoryType = category.category_type;
+        this.filterCategoriesByType();
+
+        // Check the individual category boxes for all items in the cart
+        this.cartData.forEach(item => {
+          const cartProduct = this.products.find(p => p.id === item.product_id);
+          if (cartProduct && cartProduct.category_id) {
+            const ids = String(cartProduct.category_id).split(',').map(id => Number(id.trim()));
+            ids.forEach(id => {
+              if (!this.selectedCategories.includes(id)) {
+                this.selectedCategories.push(id);
+              }
+            });
+          }
+        });
+      }
+    }
+    this.applyFilters();
   }
 
   syncProductQuantities() {
@@ -231,12 +432,28 @@ export class OurProductsComponent implements OnInit {
       const cartItem = this.cartData.find((item: any) => item.product_id === product.id);
       product.quantity = cartItem ? cartItem.quantity : 1;
     });
-    this.filteredProducts = [...this.products];
+    // Removed direct filteredProducts reset to preserve active filters.
   }
 
   // ---------- CART ----------
   moveToCart(product: any) {
     if (this.isLogin) {
+      if (this.cartData.length > 0) {
+        // Find category type of the product being added
+        const catIds = String(product.category_id).split(',').map(id => Number(id.trim()));
+        const category = this.allCategories.find(c => c.id === catIds[0]);
+
+        if (category && category.category_type && category.category_type !== this.selectedCategoryType) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Gemischte Bestellung nicht möglich',
+            text: `Sie haben bereits Produkte aus dem Bereich "${this.selectedCategoryType}" im Warenkorb. Bitte schließen Sie diese Bestellung zuerst ab oder leeren Sie Ihren Warenkorb.`,
+            confirmButtonColor: '#ffb74d'
+          });
+          return;
+        }
+      }
+
       let userId: any = localStorage.getItem('userId');
       const cart_data: any = {
         user_id: JSON.parse(userId),
@@ -250,6 +467,7 @@ export class OurProductsComponent implements OnInit {
           if (response.status) {
             this.dataService.cartLoad?.next("true");
             this.dataService.cartLoad1.next(true);
+            this.loadCartData(); // Refresh cart lock state
             Swal.fire({
               position: 'top-end',
               icon: 'success',

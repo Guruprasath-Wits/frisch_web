@@ -44,6 +44,10 @@ export class DataService {
     return this.http.get(this.apiUrl + 'category/read');
   }
 
+  public getMainCategoryData(): Observable<any> {
+    return this.http.get(this.apiUrl + 'main-category/read');
+  }
+
   public getSettingsData(): Observable<any> {
     return this.http.get(this.apiUrl + 'setting/read');
   }
@@ -268,7 +272,7 @@ export class DataService {
     return this.http.post(this.apiUrl + "missingProduct/create", data);
   }
 
-   public applyCoupon(couponCode: string, userId: any): Observable<any> {
+  public applyCoupon(couponCode: string, userId: any): Observable<any> {
     return this.http.post(`${this.apiUrl}coupon/validate`, { couponCode, userId });
   }
 
