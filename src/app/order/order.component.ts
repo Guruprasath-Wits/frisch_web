@@ -1,4 +1,4 @@
-import { Component, OnInit,ElementRef, NgZone, ViewChild,ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, NgZone, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { DataService } from '../data.service';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -17,20 +17,20 @@ declare var google: any;
   selector: 'app-order',
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.css'],
-  
+
 })
 export class OrderComponent implements OnInit {
   houseNo: string = '';
   address: string = '';
   city: string = '';
-  isLoading = false; 
+  isLoading = false;
   lat: any;
-lng: any;
-postcodes: any[] = []
+  lng: any;
+  postcodes: any[] = []
   stripe: Stripe | null = null; // Define stripe as a class property
 
-  constructor(private http: HttpClient,private cdr: ChangeDetectorRef,private ngZone: NgZone,private fb: FormBuilder, private dataService: DataService, private authService: AuthService, private route: ActivatedRoute, private router: Router) {
-  
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private ngZone: NgZone, private fb: FormBuilder, private dataService: DataService, private authService: AuthService, private route: ActivatedRoute, private router: Router) {
+
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
   }
@@ -60,21 +60,27 @@ postcodes: any[] = []
   itemTotal: any = localStorage.getItem('total');
   totalAmount: any = parseFloat(localStorage.getItem('totalAmount') ?? '0').toFixed(2).toString();
   tips: any = localStorage.getItem('tips');
-  
+
 
   selectedDateInfo: string = ''
   holidays: any[] = []
   deliveryFee: number = 0;
+  discountAmount: number = 0;
+  couponApplied: boolean = false;
+  couponType: string = '';
+  discountPercentage: number = 0;
 
   i: number = 0
+  availableCoupons: any[] = [];
+  showCouponModal: boolean = false;
 
- 
+
 
   ngOnInit() {
     // this.validateDate(event)
     setTimeout(() => {
       this.validateDate(); // Call without arguments
-  });
+    });
     // this.stripe = loadStripe('pk_test_51QMXiP06yTdeLqihXYXgftABoWwPsuhWpZTodjuMQ9DG9Cwo5eSMloAP4oQG1ebgAAFkg2la35VBLgKBGPJPg0u700XDbq7AW5');
     this.route.queryParams.subscribe(params => {
       this.houseNo = params['houseNo'] || '';
@@ -92,7 +98,7 @@ postcodes: any[] = []
 
     this.initializeForms();
     this.fetchGermanHolidays();
-
+    this.loadAvailableCoupons();
   }
 
   async makePayment() {
@@ -100,42 +106,42 @@ postcodes: any[] = []
       console.error('Stripe failed to load.');
       return;
     }
-  
+
     // Step 1: Request a Payment Intent from the backend
     const response = await fetch(this.apiUrl + 'api/create-payment-intent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount: 1000 }) // Amount in cents
     });
-  
+
     const { clientSecret } = await response.json();
-  
+
     // Step 2: Create Stripe Elements and Card Input
     const elements = this.stripe.elements();
     const cardElement = elements.create('card');
     cardElement.mount('#card-element'); // Ensure this exists in your template
-  
+
     // Step 3: Create a Payment Method
     const { paymentMethod, error } = await this.stripe.createPaymentMethod({
       type: 'card',
       card: cardElement
     });
-  
+
     if (error) {
       console.error('Error creating payment method:', error);
       return;
     }
-  
+
     // Step 4: Confirm the payment using the generated payment method
     const { paymentIntent, error: confirmError } = await this.stripe.confirmCardPayment(clientSecret, {
       payment_method: paymentMethod.id
     });
-  
+
     if (confirmError) {
       console.error('Payment Failed:', confirmError);
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       console.log('Payment Success');
-  
+
       // Save payment status in backend
       await fetch(this.apiUrl + 'api/update-payment-status', {
         method: 'POST',
@@ -149,23 +155,23 @@ postcodes: any[] = []
   }
   async fetchGermanHolidays() {
     try {
-        const response = await fetch('https://get.api-feiertage.de?states=nw');
-        if (!response.ok) {
-            throw new Error(`Error fetching data: ${response.statusText}`);
-        }
+      const response = await fetch('https://get.api-feiertage.de?states=nw');
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.statusText}`);
+      }
 
-        const data = await response.json();
-        console.log('Holidays:', data['feiertage']);
+      const data = await response.json();
+      console.log('Holidays:', data['feiertage']);
 
-        // Extract holiday dates
-        this.holidays = Object.values(data['feiertage']).map((item: any) => item.date);
+      // Extract holiday dates
+      this.holidays = Object.values(data['feiertage']).map((item: any) => item.date);
 
-        return this.holidays;
+      return this.holidays;
     } catch (error) {
-        console.error('Error fetching German holidays:', error);
-        return [];
+      console.error('Error fetching German holidays:', error);
+      return [];
     }
-}
+  }
 
 
   loadSettingsData() {
@@ -191,7 +197,7 @@ postcodes: any[] = []
       console.error("Google Maps API not loaded or Places API missing!");
       return;
     }
-  
+
     const autocomplete = new google.maps.places.Autocomplete(
       this.addressInputRef.nativeElement,
       {
@@ -199,24 +205,24 @@ postcodes: any[] = []
         componentRestrictions: { country: 'DE' } // Restrict to Germany
       }
     );
-  
+
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
         const place = autocomplete.getPlace();
         console.log(place); // Log entire place object for debugging
-  
+
         if (place.geometry && place.geometry.location) {
           const latitude = place.geometry.location.lat();
           const longitude = place.geometry.location.lng();
           const formattedAddress = place.formatted_address;
-  
+
           // Updating form with address, latitude, and longitude
           this.orderForm.patchValue({
             address: formattedAddress,
             lat: latitude,
             lng: longitude
           });
-  
+
           console.log(`Address: ${formattedAddress}`);
           console.log(`Latitude: ${latitude}`);
           console.log(`Longitude: ${longitude}`);
@@ -226,21 +232,22 @@ postcodes: any[] = []
       });
     });
   }
-  
-  
-  
+
+
+
 
   private initializeForms(): void {
     const fullAddress = this.houseNo && this.address && this.city
-    ? `${this.houseNo}, ${this.address}, ${this.city}`
-    : this.storedAddress;
+      ? `${this.houseNo}, ${this.address}, ${this.city}`
+      : this.storedAddress;
     this.orderForm = this.fb.group({
       address: [fullAddress],
       instruction: [null],
       delivery_date: [null, Validators.required],
       lat: [this.lat],
       lng: [this.lng],
-      zipcode: [null, Validators.required]
+      zipcode: [null, Validators.required],
+      coupon_code: [null]
     });
   }
 
@@ -271,7 +278,7 @@ postcodes: any[] = []
           console.log(cartItem.productDetails)
           loadedProducts++;
           // console.log(cartItem);
-          this.products[this.i++] = [cartItem.productDetails.product_name, cartItem.quantity,cartItem.productDetails.price];
+          this.products[this.i++] = [cartItem.productDetails.product_name, cartItem.quantity, cartItem.productDetails.price];
           console.log(this.products);
         },
         (error) => {
@@ -297,249 +304,330 @@ postcodes: any[] = []
     )
   }
 
-  
+
 
   totalQuantity = this.cartData.reduce((totalQuantity, item) => totalQuantity + item.quantity, 0);
   totalAmount$ = new BehaviorSubject<string>('0.00');
 
-  
 
 
 
-checkPublicHoliday(date: string): Promise<boolean> {
-  // Convert the selected date string (YYYY-MM-DD) to a Date object
-  const selectedDate = new Date(date);
 
-  // Get the year from the selected date
-  const selectedYear = selectedDate.getFullYear();
+  checkPublicHoliday(date: string): Promise<boolean> {
+    // Convert the selected date string (YYYY-MM-DD) to a Date object
+    const selectedDate = new Date(date);
 
-  // Use that year in the API URL
-  const apiUrl = `https://date.nager.at/api/v3/PublicHolidays/${selectedYear}/DE`;
+    // Get the year from the selected date
+    const selectedYear = selectedDate.getFullYear();
 
-  return new Promise((resolve) => {
-    this.http.get<any[]>(apiUrl).subscribe(
-      holidays => {
-        const isHoliday = holidays.some(holiday => holiday.date === date);
-        resolve(isHoliday);
-      },
-      error => {
-        console.error('Error fetching public holidays:', error);
-        resolve(false); // treat errors as non-holiday
-      }
-    );
-  });
-}
+    // Use that year in the API URL
+    const apiUrl = `https://date.nager.at/api/v3/PublicHolidays/${selectedYear}/DE`;
 
-
-// Make validateDate async
-async validateDate(event?: any) {
-  // 1️⃣ Get selected date
-  let inputDate: Date | null = null;
-
-  if (event?.target?.value) {
-    inputDate = new Date(event.target.value);
-  } else {
-    const formValue = this.orderForm.get('delivery_date')?.value;
-    if (formValue) inputDate = new Date(formValue);
+    return new Promise((resolve) => {
+      this.http.get<any[]>(apiUrl).subscribe(
+        holidays => {
+          const isHoliday = holidays.some(holiday => holiday.date === date);
+          resolve(isHoliday);
+        },
+        error => {
+          console.error('Error fetching public holidays:', error);
+          resolve(false); // treat errors as non-holiday
+        }
+      );
+    });
   }
 
-  if (!inputDate || isNaN(inputDate.getTime())) {
-    this.selectedDateInfo = 'Invalid';
-    this.orderForm.get('delivery_date')?.setErrors({ invalidDateFormat: true });
+
+  // Make validateDate async
+  async validateDate(event?: any) {
+    // 1️⃣ Get selected date
+    let inputDate: Date | null = null;
+
+    if (event?.target?.value) {
+      inputDate = new Date(event.target.value);
+    } else {
+      const formValue = this.orderForm.get('delivery_date')?.value;
+      if (formValue) inputDate = new Date(formValue);
+    }
+
+    if (!inputDate || isNaN(inputDate.getTime())) {
+      this.selectedDateInfo = 'Invalid';
+      this.orderForm.get('delivery_date')?.setErrors({ invalidDateFormat: true });
+      this.deliveryFee = 0;
+      this.updateTotal();
+      return;
+    }
+
+    const day = inputDate.getDay();
+    const formattedDate = inputDate.toISOString().split('T')[0];
+
+    const currentDate = new Date();
+    const todayFormatted = currentDate.toISOString().split('T')[0];
+    const currentDay = currentDate.getDay();
+    const currentHour = currentDate.getHours();
+    const currentMinutes = currentDate.getMinutes();
+
+
+    this.selectedDateInfo = '';
+    this.orderForm.get('delivery_date')?.setErrors(null);
     this.deliveryFee = 0;
-    this.updateTotal();
-    return;
-  }
 
-  const day = inputDate.getDay();
-  const formattedDate = inputDate.toISOString().split('T')[0];
-
-  const currentDate = new Date();
-  const todayFormatted = currentDate.toISOString().split('T')[0];
-  const currentDay = currentDate.getDay();
-  const currentHour = currentDate.getHours();
-  const currentMinutes = currentDate.getMinutes();
-
- 
-  this.selectedDateInfo = '';
-  this.orderForm.get('delivery_date')?.setErrors(null);
-  this.deliveryFee = 0;
-
-  const formatDate = (date: Date) => {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  };
+    const formatDate = (date: Date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    };
     const tomorrowFormattedNew = formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1));
 
 
-  
-  const blockedDates =
-    currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))
-      ? [
+
+    const blockedDates =
+      currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))
+        ? [
           formatDate(currentDate),
           formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)),
           formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)),
         ]
-      : [];
+        : [];
 
-  if (blockedDates.includes(formattedDate)) {
-    this.selectedDateInfo = 'Invalid';
-    this.orderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+    if (blockedDates.includes(formattedDate)) {
+      this.selectedDateInfo = 'Invalid';
+      this.orderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+      this.updateTotal();
+      return;
+    }
+    // ❌ Block today
+    if (formattedDate === todayFormatted || formattedDate === tomorrowFormattedNew || formattedDate === '2026-01-01') {
+      this.selectedDateInfo = 'Invalid';
+      this.orderForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
+      this.updateTotal();
+      return;
+    }
+
+    const isHoliday = await this.checkPublicHoliday(formattedDate);
+
+    const tomorrow = new Date(currentDate);
+    tomorrow.setDate(currentDate.getDate() + 1);
+    const tomorrowFormatted = formatDate(tomorrow);
+
+
+    if (
+      formattedDate === tomorrowFormatted &&
+      isHoliday &&
+      (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))
+    ) {
+      this.selectedDateInfo = 'Invalid';
+      this.orderForm.get('delivery_date')?.setErrors({ invalidDate: true });
+      this.updateTotal();
+      return;
+    }
+    // Weekend check or weekday check
+    if (day === 6 || day === 0) {
+      // Saturday or Sunday
+      if (isHoliday) {
+        // Weekend + public holiday → still weekend fee
+        this.selectedDateInfo = 'Weekend/PublicHoliday';
+        this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0;
+      } else {
+        this.selectedDateInfo = 'Weekend';
+        this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
+      }
+    } else if (isHoliday) {
+      // Weekday but public holiday → allow
+      this.selectedDateInfo = 'PublicHoliday';
+      this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0; // optional, can have special fee
+      console.log(this.deliveryFee)
+    } else {
+      // Normal weekday → still block
+      this.selectedDateInfo = 'Invalid';
+      this.orderForm.get('delivery_date')?.setErrors({ invalidDate: true });
+      this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0; // optional
+    }
+
+    if (this.selectedDateInfo !== 'Invalid') {
+      localStorage.setItem('selectedDeliveryDate', formattedDate);
+    }
+
     this.updateTotal();
-    return;
-  }
-  // ❌ Block today
-  if (formattedDate === todayFormatted || formattedDate === tomorrowFormattedNew || formattedDate === '2026-01-01') {
-    this.selectedDateInfo = 'Invalid';
-    this.orderForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
-    this.updateTotal();
-    return;
+    console.log(`Selected Date Info: ${this.selectedDateInfo}, DeliveryFee: ${this.deliveryFee}`);
   }
 
-  const isHoliday = await this.checkPublicHoliday(formattedDate);
+  applyCoupon() {
+    const couponCode = this.orderForm.get('coupon_code')?.value;
+    if (!couponCode) {
+      Swal.fire('Error', 'Please enter a coupon code', 'error');
+      return;
+    }
 
-  const tomorrow = new Date(currentDate);
-tomorrow.setDate(currentDate.getDate() + 1);
-const tomorrowFormatted = formatDate(tomorrow);
-
-
-if (
-  formattedDate === tomorrowFormatted &&
-  isHoliday &&
-  (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))
-) {
-  this.selectedDateInfo = 'Invalid';
-  this.orderForm.get('delivery_date')?.setErrors({ invalidDate: true });
-  this.updateTotal();
-  return;
-}
-
-  // Weekend check or weekday check
-  if (day === 6 || day === 0) {
-    // Saturday or Sunday
-    if (isHoliday) {
-    // Weekend + public holiday → still weekend fee
-    this.selectedDateInfo = 'Weekend/PublicHoliday';
-    this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0;
-  } else {
-    this.selectedDateInfo = 'Weekend';
-    this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
-  }
-  } else if (isHoliday) {
-    // Weekday but public holiday → allow
-    this.selectedDateInfo = 'PublicHoliday';
-    this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0; // optional, can have special fee
-    console.log(this.deliveryFee)
-  } else {
-    // Normal weekday → still block
-    this.selectedDateInfo = 'Invalid';
-    this.orderForm.get('delivery_date')?.setErrors({ invalidDate: true });
-    this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0; // optional
+    this.processCouponApplication(couponCode);
   }
 
-  if (this.selectedDateInfo !== 'Invalid') {
-    localStorage.setItem('selectedDeliveryDate', formattedDate);
+  processCouponApplication(couponCode: string) {
+    this.isLoading = true;
+    this.dataService.applyCoupon(couponCode, this.userId).subscribe(
+      (response: any) => {
+        this.isLoading = false;
+        if (response.status) {
+
+          // Try to find the coupon in the available list to get the precise type
+          const foundCoupon = this.availableCoupons.find(c => c.couponcode === couponCode);
+          if (foundCoupon && foundCoupon.type) {
+            this.couponType = foundCoupon.type;
+          } else {
+            this.couponType = response.approve;
+          }
+
+          this.couponApplied = true;
+          this.orderForm.patchValue({ coupon_code: couponCode });
+
+          // Handle different coupon types
+          if (this.couponType === 'Geldgutschein(Benutzerspezifisch)') {
+            // Flat discount (User specific money voucher)
+            this.discountPercentage = 0;
+            this.discountAmount = parseFloat(response.discount_percentage) || 0;
+          } else if (this.couponType === 'Prozentrabatt' || this.couponType === 'uservoucher') {
+            // Percentage discount or user voucher - apply to item total
+            this.discountPercentage = parseFloat(response.discount_percentage) || 0;
+            const itemTotalNum = parseFloat(this.itemTotal) || 0;
+            this.discountAmount = (itemTotalNum * this.discountPercentage) / 100;
+          } else if (this.couponType === 'Versandkostenfrei') {
+            // Free delivery - set delivery fee discount
+            this.discountAmount = 0;
+            this.discountPercentage = 0;
+          }
+
+          this.updateTotal();
+          Swal.fire('Success', 'Coupon applied successfully!', 'success');
+        } else {
+          Swal.fire('Error', response.message || 'Invalid coupon code', 'error');
+        }
+      },
+      (error: any) => {
+        this.isLoading = false;
+        Swal.fire('Error', 'Failed to apply coupon. Please try again.', 'error');
+      }
+    );
   }
 
-  this.updateTotal();
-  console.log(`Selected Date Info: ${this.selectedDateInfo}, DeliveryFee: ${this.deliveryFee}`);
-}
+  loadAvailableCoupons() {
+    this.dataService.getAvailableCoupons(this.userId).subscribe(
+      (response: any) => {
+        if (response.status) {
+          this.availableCoupons = response.coupons;
+        }
+      },
+      (error) => {
+        console.log("Error fetching available coupons:", error);
+      }
+    );
+  }
+
+  toggleCouponModal() {
+    this.showCouponModal = !this.showCouponModal;
+  }
+
+  selectCoupon(code: string) {
+    this.toggleCouponModal();
+    this.processCouponApplication(code);
+  }
 
 
-// Helper function to update total including tips + delivery fee
-updateTotal() {
-  let itemTotalNum = parseFloat(this.itemTotal) || 0;
-  let tipsNum = parseFloat(this.tips) || 0;
-  if (isNaN(tipsNum)) tipsNum = 0;
+  // Helper function to update total including tips + delivery fee
+  updateTotal() {
+    let itemTotalNum = parseFloat(this.itemTotal) || 0;
+    let tipsNum = parseFloat(this.tips) || 0;
+    if (isNaN(tipsNum)) tipsNum = 0;
 
-  const total = itemTotalNum + tipsNum + this.deliveryFee;
+    let actualDeliveryFee = this.deliveryFee;
 
-  this.ngZone.run(() => {
-    this.totalAmount = total.toFixed(2);
-    this.cdr.detectChanges();
-  });
-}
+    // If free delivery coupon is applied, set delivery fee to 0
+    if (this.couponType === 'Versandkostenfrei') {
+      actualDeliveryFee = 0;
+    }
 
+    const total = itemTotalNum + tipsNum + actualDeliveryFee - this.discountAmount;
 
-
-
-// validateDate(event?: any) {
-//   let inputDate: Date | null = null;
-
-//   // If event exists, use its value; otherwise, don't set a date
-//   if (event && event.target?.value) {
-//       inputDate = new Date(event.target.value);
-//   }
-
-//   const formattedDate = inputDate ? inputDate.toISOString().split('T')[0] : null;
-//   const currentDate = new Date();
-//   const currentDay = currentDate.getDay();
-//   const currentHour = currentDate.getHours();
-//   const currentMinutes = currentDate.getMinutes();
-
-//   // Reset values before validation
-//   this.selectedDateInfo = '';
-//   this.deliveryFee = 0;
-//   this.orderForm.get('delivery_date')?.setErrors(null);
-
-//   // Calculate total cost
-//   let itemTotalNum = parseFloat(this.itemTotal) || 0;
-//   let tipsNum = this.tips ? parseFloat(this.tips) : 0;
-//   console.log(tipsNum)
-//   if (isNaN(tipsNum)) {
-//       tipsNum = 0;
-//   }
-//   let newTotal = itemTotalNum + tipsNum;
-
-//   // Check if it's after Friday 4 PM
-//   const isAfterFriday4PM = 
-//       (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) ||
-//       currentDay > 5;
-
-//   if (isAfterFriday4PM) {
-//       this.selectedDateInfo = 'Invalid';
-//       this.orderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
-//   }
-
-//   if (inputDate) {
-//       const day = inputDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-//       if (day === 6 || day === 0) { 
-//           // If it's a weekend, apply weekend fee
-//           this.selectedDateInfo = 'Weekend';
-//           this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
-//       } else if (this.holidays.includes(formattedDate!)) { 
-//           // If it's a holiday on a weekday, apply weekday fee
-//           this.selectedDateInfo = 'Holiday';
-//           this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0;
-//       } else {
-//           // If it's a normal weekday, no extra fee
-//           this.selectedDateInfo = 'Valid';
-//           this.deliveryFee = 0; 
-//       }
-//   }
-
-//   // Ensure tips and delivery fee are added even if after Friday 4 PM
-//   newTotal += this.deliveryFee;
-
-//   // Update total price in Angular Zone
-//   this.ngZone.run(() => {
-//       this.totalAmount = newTotal.toFixed(2);
-//       this.cdr.detectChanges();
-//   });
-
-//   // Save selected delivery date in localStorage
-//   if (formattedDate) {
-//       localStorage.setItem('selectedDeliveryDate', formattedDate);
-//   }
-
-//   console.log(`Final Total Amount: ${this.totalAmount}`);
-// }
+    this.ngZone.run(() => {
+      this.totalAmount = total.toFixed(2);
+      this.cdr.detectChanges();
+    });
+  }
 
 
 
 
+  // validateDate(event?: any) {
+  //   let inputDate: Date | null = null;
+
+  //   // If event exists, use its value; otherwise, don't set a date
+  //   if (event && event.target?.value) {
+  //       inputDate = new Date(event.target.value);
+  //   }
+
+  //   const formattedDate = inputDate ? inputDate.toISOString().split('T')[0] : null;
+  //   const currentDate = new Date();
+  //   const currentDay = currentDate.getDay();
+  //   const currentHour = currentDate.getHours();
+  //   const currentMinutes = currentDate.getMinutes();
+
+  //   // Reset values before validation
+  //   this.selectedDateInfo = '';
+  //   this.deliveryFee = 0;
+  //   this.orderForm.get('delivery_date')?.setErrors(null);
+
+  //   // Calculate total cost
+  //   let itemTotalNum = parseFloat(this.itemTotal) || 0;
+  //   let tipsNum = this.tips ? parseFloat(this.tips) : 0;
+  //   console.log(tipsNum)
+  //   if (isNaN(tipsNum)) {
+  //       tipsNum = 0;
+  //   }
+  //   let newTotal = itemTotalNum + tipsNum;
+
+  //   // Check if it's after Friday 4 PM
+  //   const isAfterFriday4PM = 
+  //       (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) ||
+  //       currentDay > 5;
+
+  //   if (isAfterFriday4PM) {
+  //       this.selectedDateInfo = 'Invalid';
+  //       this.orderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+  //   }
+
+  //   if (inputDate) {
+  //       const day = inputDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  //       if (day === 6 || day === 0) { 
+  //           // If it's a weekend, apply weekend fee
+  //           this.selectedDateInfo = 'Weekend';
+  //           this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
+  //       } else if (this.holidays.includes(formattedDate!)) { 
+  //           // If it's a holiday on a weekday, apply weekday fee
+  //           this.selectedDateInfo = 'Holiday';
+  //           this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0;
+  //       } else {
+  //           // If it's a normal weekday, no extra fee
+  //           this.selectedDateInfo = 'Valid';
+  //           this.deliveryFee = 0; 
+  //       }
+  //   }
+
+  //   // Ensure tips and delivery fee are added even if after Friday 4 PM
+  //   newTotal += this.deliveryFee;
+
+  //   // Update total price in Angular Zone
+  //   this.ngZone.run(() => {
+  //       this.totalAmount = newTotal.toFixed(2);
+  //       this.cdr.detectChanges();
+  //   });
+
+  //   // Save selected delivery date in localStorage
+  //   if (formattedDate) {
+  //       localStorage.setItem('selectedDeliveryDate', formattedDate);
+  //   }
+
+  //   console.log(`Final Total Amount: ${this.totalAmount}`);
+  // }
 
 
 
@@ -549,30 +637,34 @@ updateTotal() {
 
 
 
-  
+
+
+
+
+
   generateAlphaNumericOTP() {
     const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#~$%^&*()-_+=|\?/>.,<[]{}';
     let otp = '';
     for (let i = 0; i < 17; i++) {
-        otp += chars[Math.floor(Math.random() * chars.length)];
+      otp += chars[Math.floor(Math.random() * chars.length)];
     }
     return otp;
-}
+  }
 
 
-loadDeliveryAreas() {
-  this.dataService.getDeliveryAreasData().subscribe(
-    (response) => {
-      if (response.status) {
-        this.postcodes = response.area;
-        console.log(this.postcodes);
+  loadDeliveryAreas() {
+    this.dataService.getDeliveryAreasData().subscribe(
+      (response) => {
+        if (response.status) {
+          this.postcodes = response.area;
+          console.log(this.postcodes);
+        }
+      },
+      (error) => {
+        console.log("Error fetching data in delivery areas: " + error);
       }
-    },
-    (error)=>{
-      console.log("Error fetching data in delivery areas: "+error);
-    }
-  )
-}
+    )
+  }
 
   // confirmOrder() {
   //   this.orderData = {
@@ -600,7 +692,7 @@ loadDeliveryAreas() {
 
   //   console.log(this.orderData);
 
-   
+
 
 
 
@@ -608,11 +700,11 @@ loadDeliveryAreas() {
   //     (response) => {
   //       if (response.status) {
   //         var orderid=response.orders.order.order_id
-         
+
   //         window.location.href = `https://api.frischfuersie.de/checkout/${this.totalAmount + this.tips}/${orderid}/${localStorage.getItem('userId')}`;
 
 
-         
+
   //       }
   //     },
   //     (error) => {
@@ -622,7 +714,7 @@ loadDeliveryAreas() {
 
   // }
 
-confirmOrder() {
+  confirmOrder() {
     this.isLoading = true;
     // Ensure postcodes are loaded before checking
     if (!this.postcodes || this.postcodes.length === 0) {
@@ -630,66 +722,71 @@ confirmOrder() {
       Swal.fire('Fehler!', 'Liefergebiete konnten nicht geladen werden. Bitte versuchen Sie es später erneut.', 'error');
       return;
     }
-  
+
     // Get the entered zipcode
     const enteredZipcode = this.orderForm.value.zipcode;
-  
+
     // Check if enteredZipcode exists in the postcodes list
     const isZipcodeAvailable = this.postcodes.some((area: any) => area.zipcode.toString() === enteredZipcode.toString());
-  
+
     if (!isZipcodeAvailable) {
       this.isLoading = false;
       Swal.fire('Fehler!', 'Lieferung an diese Postleitzahl ist nicht verfügbar!', 'warning');
       return; // Stop execution
     }
-  
+
     // Proceed with order if zipcode is valid
-  this.orderData = {
-  user_id: localStorage.getItem('userId'),
-  username: this.userData.username,
-  email: this.userData.email,
-  deliveryFee: this.deliveryFee,
-  delivery_date: this.orderForm.value.delivery_date,
-  // address: 
-  //   (this.orderForm.value.address || this.orderForm.value.zipcode || this.userData.ort)
-  //     ? `${this.orderForm.value.address || ''}, ${this.orderForm.value.zipcode || ''}, ${this.userData.ort || ''}`
-  //     : this.userData.address,
-  address:
-  (this.orderForm.value.street && this.orderForm.value.address &&
-   this.orderForm.value.zipcode &&
-   this.userData.ort)
-    ? `${this.orderForm.value.street} ${this.orderForm.value.address},${this.orderForm.value.zipcode},${this.userData.ort}`
-    : `${this.userData.street || ''} ${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
+    this.orderData = {
+      user_id: localStorage.getItem('userId'),
+      username: this.userData.username,
+      email: this.userData.email,
+      deliveryFee: this.deliveryFee,
+      delivery_date: this.orderForm.value.delivery_date,
+      // address: 
+      //   (this.orderForm.value.address || this.orderForm.value.zipcode || this.userData.ort)
+      //     ? `${this.orderForm.value.address || ''}, ${this.orderForm.value.zipcode || ''}, ${this.userData.ort || ''}`
+      //     : this.userData.address,
+      address:
+        (this.orderForm.value.street && this.orderForm.value.address &&
+          this.orderForm.value.zipcode &&
+          this.userData.ort)
+          ? `${this.orderForm.value.street} ${this.orderForm.value.address},${this.orderForm.value.zipcode},${this.userData.ort}`
+          : `${this.userData.street || ''} ${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
 
-  contact: this.userData.phone,
-  instruction: this.orderForm.value.instruction,
-  price: this.itemTotal,
-  tips: this.tips || 0,
-  productDetails: this.products,
-  lat: this.orderForm.value.lat,
-  lng: this.orderForm.value.lng,
-  zipcode: enteredZipcode,
-  ort: this.userData.ort
-};
+      contact: this.userData.phone,
+      instruction: this.orderForm.value.instruction,
+      price: this.itemTotal,
+      tips: this.tips || 0,
+      productDetails: this.products,
+      lat: this.orderForm.value.lat,
+      lng: this.orderForm.value.lng,
+      zipcode: enteredZipcode,
+      ort: this.userData.ort,
+      // Coupon information (if applied)
+      couponCode: this.couponApplied ? this.orderForm.value.coupon_code : null,
+      couponType: this.couponApplied ? this.couponType : null,
+      discountPercentage: this.couponApplied ? this.discountPercentage : 0,
+      discountAmount: this.couponApplied ? this.discountAmount : 0
+    };
 
-  
+
     console.log(this.orderData);
-  
+
     this.dataService.confirmOrder(this.orderData).subscribe(
-      (response:any) => {
-        
+      (response: any) => {
+
         this.isLoading = false;
         if (response.status) {
-           var orderid = response.orders.order.order_id;
+          var orderid = response.orders.order.order_id;
 
-  // ✅ Navigate to new pay-now component
-  this.router.navigate(['/pay-now'], {
-    queryParams: {
-      orderId: orderid,
-      amount: this.totalAmount,
-      userId: localStorage.getItem('userId')
-    }
-  });
+          // ✅ Navigate to new pay-now component
+          this.router.navigate(['/pay-now'], {
+            queryParams: {
+              orderId: orderid,
+              amount: this.totalAmount,
+              userId: localStorage.getItem('userId')
+            }
+          });
           // var orderid = response.orders.order.order_id;
           // window.location.href = https://api.frischfuersie.de/checkout/${this.totalAmount}/${orderid}/${localStorage.getItem('userId')};
         }
@@ -701,11 +798,9 @@ confirmOrder() {
     );
   }
 
-  
+
 
 }
-
-  
 
 
 

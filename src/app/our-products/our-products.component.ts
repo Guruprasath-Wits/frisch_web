@@ -112,11 +112,7 @@ export class OurProductsComponent implements OnInit {
     console.log("Filtered Products:", this.filteredProducts);
   }
 
-        return productCategories.some(catId =>
-          this.selectedCategories.includes(catId)
-        );
-      });
-    }
+
 
   updateTotalPages(): void {
     this.totalPages = Math.ceil(this.enabledPaginatedProducts.length / this.itemsPerPage);
@@ -167,7 +163,7 @@ export class OurProductsComponent implements OnInit {
   // ---------- DATA FETCH ----------
   loadProductData() {
     this.dataService.getProductsData().subscribe(
-      (response) => {
+      (response: any) => {
         if (response.status) {
           this.products = response.product
             .filter((item: any) => item.price !== '0')
@@ -187,7 +183,7 @@ export class OurProductsComponent implements OnInit {
           }
         }
       },
-      (error) => {
+      (error: any) => {
         console.log('Error fetching data in Product', error);
       }
     );
@@ -195,14 +191,14 @@ export class OurProductsComponent implements OnInit {
 
   loadCategoryData() {
     this.dataService.getCategoryData().subscribe(
-      (response) => {
+      (response: any) => {
         if (response.status) {
           this.categories = response.category.filter(
             (item: any) => item.category_type !== 'free_trial'
           );
         }
       },
-      (error) => {
+      (error: any) => {
         console.log('Error fetching data in category', error);
       }
     );
@@ -213,7 +209,7 @@ export class OurProductsComponent implements OnInit {
     if (!this.userId) return;
 
     this.dataService.getCartData(this.userId).subscribe(
-      (response) => {
+      (response: any) => {
         if (response?.status && response.card?.length) {
           this.cartData = response.card;
           this.syncProductQuantities();
@@ -231,8 +227,8 @@ export class OurProductsComponent implements OnInit {
 
   syncProductQuantities() {
     if (!this.products.length) return;
-    this.products.forEach(product => {
-      const cartItem = this.cartData.find(item => item.product_id === product.id);
+    this.products.forEach((product: any) => {
+      const cartItem = this.cartData.find((item: any) => item.product_id === product.id);
       product.quantity = cartItem ? cartItem.quantity : 1;
     });
     this.filteredProducts = [...this.products];
@@ -250,7 +246,7 @@ export class OurProductsComponent implements OnInit {
       };
 
       this.dataService.addToCart(cart_data).subscribe(
-        (response) => {
+        (response: any) => {
           if (response.status) {
             this.dataService.cartLoad?.next("true");
             this.dataService.cartLoad1.next(true);
@@ -365,7 +361,7 @@ export class OurProductsComponent implements OnInit {
             this.loadFromLocalStorage();
           }
         },
-        (error) => {
+        (error: any) => {
           console.error('Error fetching user data from API:', error);
           this.loadFromLocalStorage();
         }
@@ -433,7 +429,7 @@ export class OurProductsComponent implements OnInit {
     };
 
     this.dataService.postMissingProduct(payload).subscribe(
-      (response) => {
+      (response: any) => {
         if (response.status) {
           Swal.fire({
             title: 'Vielen Dank!',
@@ -447,7 +443,7 @@ export class OurProductsComponent implements OnInit {
           Swal.fire('Fehler', 'Etwas ist schief gelaufen. Bitte versuchen Sie es später erneut.', 'error');
         }
       },
-      (error) => {
+      (error: any) => {
         console.error('Error submitting missing product:', error);
         Swal.fire({
           title: 'Fehler!',

@@ -268,6 +268,15 @@ export class DataService {
     return this.http.post(this.apiUrl + "missingProduct/create", data);
   }
 
+   public applyCoupon(couponCode: string, userId: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}coupon/validate`, { couponCode, userId });
+  }
+
+  public getAvailableCoupons(userId: any): Observable<any> {
+    return this.http.get(`${this.apiUrl}coupon/available/${userId}`);
+  }
+
+
 }
 
 
