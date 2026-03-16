@@ -412,34 +412,40 @@ export class OrderComponent implements OnInit {
     }
 
     const day = inputDate.getDay();
-    const formattedDate = inputDate.toISOString().split('T')[0];
+    const formatDateObj = (date: Date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    };
+    const formattedDate = formatDateObj(inputDate);
 
     const currentDate = new Date();
-    const todayFormatted = currentDate.toISOString().split('T')[0];
-    const currentDay = currentDate.getDay();
-    const currentHour = currentDate.getHours();
-    const currentMinutes = currentDate.getMinutes();
-
-
-    this.selectedDateInfo = '';
-    this.orderForm.get('delivery_date')?.setErrors(null);
-    this.deliveryFee = 0;
-
     const formatDate = (date: Date) => {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');
       const d = String(date.getDate()).padStart(2, '0');
       return `${y}-${m}-${d}`;
     };
+
+    const todayFormatted = formatDate(currentDate);
     const tomorrowFormattedNew = formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1));
 
 
 
+    const currentDay = currentDate.getDay();
+    const currentHour = currentDate.getHours();
+    const currentMinutes = currentDate.getMinutes();
+
+    this.selectedDateInfo = '';
+    this.orderForm.get('delivery_date')?.setErrors(null);
+    this.deliveryFee = 0;
+
     const blockedDates =
       currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))
         ? [
-          formatDate(currentDate),
-          formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)),
+          todayFormatted,
+          tomorrowFormattedNew,
           formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)),
         ]
         : [];
@@ -450,8 +456,42 @@ export class OrderComponent implements OnInit {
       this.updateTotal();
       return;
     }
-    // ❌ Block today
-    if (formattedDate === todayFormatted || formattedDate === tomorrowFormattedNew || formattedDate === '2026-01-01') {
+
+    // Product Availability check
+    const availabilityMap: { [key: string]: number } = {
+      'So': 0, 'Mo': 1, 'Di': 2, 'Mi': 3, 'Do': 4, 'Fr': 5, 'Sa': 6
+    };
+
+    let unavailableProductName = '';
+    const isAvailable = this.cartData.every(item => {
+      if (item.productDetails && item.productDetails.availability) {
+        try {
+          const productAvail = typeof item.productDetails.availability === 'string'
+            ? JSON.parse(item.productDetails.availability)
+            : item.productDetails.availability;
+          if (Array.isArray(productAvail) && productAvail.length > 0) {
+            const allowedDays = productAvail.map((d: string) => availabilityMap[d]);
+            if (!allowedDays.includes(day)) {
+              unavailableProductName = item.productDetails.product_name;
+              return false;
+            }
+          }
+        } catch (e) {
+          console.error("Error parsing availability", e);
+        }
+      }
+      return true;
+    });
+
+    if (!isAvailable) {
+      this.selectedDateInfo = 'Invalid';
+      this.orderForm.get('delivery_date')?.setErrors({ productNotAvailable: unavailableProductName });
+      this.updateTotal();
+      return;
+    }
+
+    // ❌ Block today (Allow tomorrow and onwards unless it's a special lockout)
+    if (formattedDate === todayFormatted || formattedDate === '2026-01-01') {
       this.selectedDateInfo = 'Invalid';
       this.orderForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
       this.updateTotal();
@@ -521,23 +561,51 @@ export class OrderComponent implements OnInit {
     if (day === 6 || day === 0) {
       // Saturday or Sunday
       if (isHoliday) {
-        // Weekend + public holiday → still weekend fee
+        // Weekend + public holiday
         this.selectedDateInfo = 'Weekend/PublicHoliday';
-        this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0;
       } else {
         this.selectedDateInfo = 'Weekend';
-        this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
       }
     } else if (isHoliday) {
       // Weekday but public holiday → allow
       this.selectedDateInfo = 'PublicHoliday';
-      this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0; // optional, can have special fee
-      console.log(this.deliveryFee)
     } else {
-      // Normal weekday → still block
-      this.selectedDateInfo = 'Invalid';
-      this.orderForm.get('delivery_date')?.setErrors({ invalidDate: true });
-      this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0; // optional
+      // Normal weekday
+      this.selectedDateInfo = 'Valid';
+    }
+
+    // Dynamic Delivery Fee calculation based on cart products
+    if (this.selectedDateInfo !== 'Invalid') {
+      let maxFee = 0;
+      const isWeekend = day === 0 || day === 6;
+
+      this.cartData.forEach(item => {
+        if (item.productDetails) {
+          let itemFee = 0;
+          if (isHoliday) {
+            itemFee = parseFloat(item.productDetails.holiday_fee) || 0;
+          } else if (day === 0) { // Sunday ONLY uses weekend fee
+            itemFee = parseFloat(item.productDetails.delivery_fee_weekend) || 0;
+          } else { // Weekdays and Saturday use weekday fee
+            itemFee = parseFloat(item.productDetails.delivery_fee_weekday) || 0;
+          }
+          if (itemFee > maxFee) maxFee = itemFee;
+        }
+      });
+
+      // Fallback to settings if no category-specific fee is found or if it's 0 but settings have a value
+      if (maxFee === 0 && this.settings) {
+        if (isHoliday) {
+          maxFee = parseFloat(this.settings.weekday_fee) || 0;
+        } else if (day === 0) { // Sunday ONLY
+          maxFee = parseFloat(this.settings.weekend_fee) || 0;
+        } else { // Weekdays and Saturday
+          maxFee = parseFloat(this.settings.weekday_fee) || 0;
+        }
+      }
+      this.deliveryFee = maxFee;
+    } else {
+      this.deliveryFee = 0;
     }
 
     if (this.selectedDateInfo !== 'Invalid') {

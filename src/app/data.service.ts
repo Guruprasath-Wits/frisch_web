@@ -7,16 +7,12 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class DataService {
-  getSettings() {
-    throw new Error('Method not implemented.');
-  }
+  cartLoad = new BehaviorSubject<boolean>(false);
 
-  cartLoad = new BehaviorSubject("false")
-
-  // public apiUrl = 'https://api.frischfuersie.de/';
-  // public fileUrl = 'https://api.frischfuersie.de';
-  public apiUrl = 'http://localhost:4001/';
-  public fileUrl = 'http://localhost:4001';
+  public apiUrl = 'https://api.frischfuersie.de/';
+  public fileUrl = 'https://api.frischfuersie.de';
+  // public apiUrl = 'http://localhost:4001/';
+  // public fileUrl = 'http://localhost:4001';
   stripe: any;
   private cartCleared = new BehaviorSubject<boolean>(false);
   cartCleared$ = new BehaviorSubject<boolean>(false);
@@ -28,7 +24,7 @@ export class DataService {
   // public isLogged: boolean = false;
 
   constructor(private http: HttpClient) {
-    this.cartLoad?.next("false")
+    this.cartLoad?.next(false)
   }
 
   //  getCartDatas(userId: string) {

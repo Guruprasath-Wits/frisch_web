@@ -34,7 +34,7 @@ export class SubscriptionOrderComponent implements OnInit {
   i: number = 0
   postcodes: any[] = []
   isLoading = false;
-  itemTotal: any = localStorage.getItem('total');
+  itemTotal: any = localStorage.getItem('total') || '0.00';
   totalAmount: any = parseFloat(localStorage.getItem('totalAmount') ?? '0').toFixed(2).toString();
   tips: any = localStorage.getItem('tips');
 
@@ -59,21 +59,23 @@ export class SubscriptionOrderComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.inialTotal(); // Call without arguments
+      this.inialTotal();
     });
     this.loadSettingsData();
-    this.loadCartData()
     this.loadUserData()
     this.fetchSubscriptionData()
     this.loadDeliveryAreas();
     this.initializeForms();
-    this.fetchGermanHolidays();
-    // this.route.queryParams.subscribe(params => {
-    //   this.houseNo = params['houseNo'] || '';
-    //   this.address = params['address'] || '';
-    //   this.city = params['city'] || '';
-    //   console.log('Address Details:', this.houseNo, this.address, this.city);
-    // });
+    this.loadCartData();
+  }
+
+  inialTotal() {
+    let itemTotalNum = parseFloat(this.itemTotal) || 0;
+    let tipsNum = this.tips ? parseFloat(this.tips) : 0;
+    if (isNaN(tipsNum)) {
+      tipsNum = 0;
+    }
+    this.totalAmount = (itemTotalNum + tipsNum).toFixed(2).toString();
   }
 
   verifyIban() {
@@ -293,6 +295,7 @@ export class SubscriptionOrderComponent implements OnInit {
   }
 
   fetchProductDetails() {
+    this.i = 0;
     let loadedProducts = 0;
 
     this.cartData.forEach(cartItem => {
@@ -304,10 +307,12 @@ export class SubscriptionOrderComponent implements OnInit {
 
           this.products[this.i++] = [cartItem.productDetails.product_name, cartItem.quantity, cartItem.productDetails.price];
           console.log(this.products);
+          this.cdr.detectChanges();
         },
         (error) => {
           console.log("Error fetching product details for product_id " + cartItem.product_id + ":", error);
           loadedProducts++;
+          this.cdr.detectChanges();
         }
       );
     });
@@ -327,14 +332,7 @@ export class SubscriptionOrderComponent implements OnInit {
       }
     )
   }
-  inialTotal() {
-    let itemTotalNum = parseFloat(this.itemTotal) || 0;
-    let tipsNum = this.tips ? parseFloat(this.tips) : 0;
-    if (isNaN(tipsNum)) {
-      tipsNum = 0;
-    }
-    this.totalAmount = (itemTotalNum + tipsNum).toFixed(2).toString();
-  }
+
 
   formatDate(date: Date): string {
     const y = date.getFullYear();
@@ -355,7 +353,6 @@ export class SubscriptionOrderComponent implements OnInit {
 
     if (!inputDate) return;
 
-    // Helper to format date as YYYY-MM-DD
     const formatDate = (date: Date) => {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -364,108 +361,18 @@ export class SubscriptionOrderComponent implements OnInit {
     };
 
     const formattedDate = formatDate(inputDate);
-    const currentDate = new Date();
-    const todayFormatted = formatDate(currentDate);
-    const tomorrowFormatted = formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1));
-    const currentDay = currentDate.getDay();
-    const currentHour = currentDate.getHours();
-    const currentMinutes = currentDate.getMinutes();
-
-    // Reset before validation
-    this.selectedDateInfo = '';
-    this.deliveryFee = 0;
-    this.SubscriptionForm.get('delivery_date')?.setErrors(null);
-
-    // Calculate total
-    let itemTotalNum = parseFloat(this.itemTotal) || 0;
-    let tipsNum = this.tips ? parseFloat(this.tips) : 0;
-    if (isNaN(tipsNum)) tipsNum = 0;
-    let newTotal = itemTotalNum + tipsNum;
-
     const selectedDay = inputDate.getDay();
-    // dec 6 2025 guru
 
-    if (selectedDay === 6) { // Saturday
-      this.SubscriptionForm.get('delivery_day_option')?.setValue('saturday');
-      this.disableSunday = true;
-      this.disableSaturday = false;
-    } else if (selectedDay === 0) { // Sunday
-      this.SubscriptionForm.get('delivery_day_option')?.setValue('sunday');
-      this.disableSaturday = true;
-      this.disableSunday = false;
-    } else {
-      // Enable both if not weekend
-      this.disableSaturday = false;
-      this.disableSunday = false;
-    }
-
-    // ❌ Block Friday 4 PM onwards + next 2 days (Fri, Sat, Sun)
-    if (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) {
-      const blockedDates = [
-        todayFormatted, // Friday
-        formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)), // Saturday
-        formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)), // Sunday
-      ];
-
-      if (blockedDates.includes(formattedDate)) {
-        this.selectedDateInfo = 'Invalid';
-        this.SubscriptionForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
-        this.totalAmount = newTotal.toFixed(2);
-        return;
-      }
-    }
-
-    // ❌ Block today as selected date
-    if (formattedDate === todayFormatted || formattedDate === tomorrowFormatted) {
-      this.selectedDateInfo = 'Invalid';
-      this.SubscriptionForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
-      this.totalAmount = newTotal.toFixed(2);
-      return;
-    }
-
-    // ✅ Allow only weekends (Sat/Sun) as delivery dates
-    // const selectedDay = inputDate.getDay();
-    if (selectedDay === 6 || selectedDay === 0) {
-      this.selectedDateInfo = 'Weekend';
-      this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
+    if (selectedDay === 0) {
+      this.selectedDateInfo = 'Sunday';
+    } else if (selectedDay === 6) {
+      this.selectedDateInfo = 'Saturday';
     } else {
       this.selectedDateInfo = 'Invalid';
       this.SubscriptionForm.get('delivery_date')?.setErrors({ invalidDate: true });
-      this.deliveryFee = 0;
     }
 
-    // Add delivery fee
-    newTotal += this.deliveryFee;
-
-    // Handle total amount for subscription
-    // if (this.subscriptionData?.length > 20) {
-    this.totalAmount = (itemTotalNum + tipsNum + this.deliveryFee).toFixed(2).toString();
-    // } else {
-    //   this.totalAmount = (itemTotalNum + tipsNum).toFixed(2).toString();
-    //   this.settings.weekend_fee = '0';
-    //   this.showFirst20Popup = true;
-    // }
-
-    // Save selected delivery date
     localStorage.setItem('selectedSubscriptionDate', formattedDate);
-    // Auto-select delivery option based on selected date
-    // if (selectedDay === 6) { // Saturday
-    //   this.SubscriptionForm.get('delivery_day_option')?.setValue('saturday');
-    //   this.disableSunday = true;
-    //   this.disableSaturday = false;
-    // } else if (selectedDay === 0) { // Sunday
-    //   this.SubscriptionForm.get('delivery_day_option')?.setValue('sunday');
-    //   this.disableSaturday = true;
-    //   this.disableSunday = false;
-    // } else {
-    //   // Enable both if not weekend
-    //   this.disableSaturday = false;
-    //   this.disableSunday = false;
-    // }
-
-
-    // console.log(`Selected Date Info: ${this.selectedDateInfo}`);
-    // console.log(`Final Total Amount: ${this.totalAmount}`);
   }
 
   disableSaturday = false;

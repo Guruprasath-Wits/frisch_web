@@ -51,13 +51,10 @@
   <div class="row">
     <div class="subscription_order col-12 col-md-6 col-lg-6">
       <h3 class="bg-warning p-3">Bestellte Produkte</h3>
-      <div class="d-flex justify-content-around flex-wrap">
-        <div class="product_details card" style="width: 14rem;" *ngFor="let products of cartData">
-          <img class="card-img-top" [src]="fileUrl+products.productDetails?.product_img" alt="Card image cap">
-          <div class="card-body">
-            <p class="text-center text-dark">{{ products.productDetails?.product_name }} x {{
-              products.quantity }} - stk</p>
-          </div>
+      <div class="d-flex justify-content-center flex-wrap gap-2">
+        <div class="p-2 border rounded-pill bg-light" *ngFor="let products of cartData">
+          <p class="mb-0 px-3 text-dark">{{ products.productDetails?.product_name }} x {{
+            products.quantity }} - stk</p>
         </div>
       </div>
       <a routerLink="/ourProducts" class="btn btn-warning w-100">Entdecken Sie mehr <i
@@ -217,10 +214,16 @@
               <p *ngIf="tips != 0">{{ tips.split(".")[0] }} <sup>{{ tips.split(".")[1] }}</sup> €</p>
               <p *ngIf="tips == 0">0 <sup>00</sup> €</p>
               <p *ngIf="selectedDateInfo === 'Invalid' || selectedDateInfo === ''"> - €</p>
-              <p *ngIf="selectedDateInfo === 'Weekend' && settings.weekend_fee!=0">
+              <p *ngIf="selectedDateInfo === 'Sunday' && settings.weekend_fee!=0">
                 {{ settings.weekend_fee.split(".")[0] }} <sup>{{ settings.weekend_fee.split(".")[1] }}</sup> €
               </p>
-              <p *ngIf="selectedDateInfo === 'Weekend' && settings.weekend_fee==0">
+              <p *ngIf="selectedDateInfo === 'Sunday' && settings.weekend_fee==0">
+                0 <sup>00</sup> €
+              </p>
+              <p *ngIf="selectedDateInfo === 'Saturday' && settings.weekday_fee!=0">
+                {{ settings.weekday_fee.split(".")[0] }} <sup>{{ settings.weekday_fee.split(".")[1] }}</sup> €
+              </p>
+              <p *ngIf="selectedDateInfo === 'Saturday' && settings.weekday_fee==0">
                 0 <sup>00</sup> €
               </p>
               <hr>

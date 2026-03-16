@@ -23,6 +23,8 @@ export class CartComponent {
   totalAmount: any = 0
   totalAmounts: any = 0
   minOrderRequired: number = 0;
+  deliveryFee: number = 0;
+  holidays: any[] = [];
   selectedButton: { value: number, disabled: boolean } | null = null;
   tips: any = 0
   formattedTips: string = `${Math.floor(this.tips)} ⁰⁰`;
@@ -38,6 +40,30 @@ export class CartComponent {
     });
     this.loadTipAmt()
     this.loadCartData(); // ✅ This should be AFTER subscribing
+    this.loadHolidays();
+  }
+
+  loadHolidays() {
+    this.dataService.getHolidays().subscribe(
+      (response) => {
+        if (response?.status) {
+          this.holidays = response.data || [];
+          this.calculateTotalAmount();
+        }
+      },
+      (error) => {
+        console.error("Error fetching holidays:", error);
+      }
+    );
+  }
+
+  isHoliday(date: Date): boolean {
+    const dateString = date.toISOString().split('T')[0]; // YYYY-MM-DD
+    return this.holidays.some(h => {
+      if (!h.holiday_date) return false;
+      const hDate = new Date(h.holiday_date).toISOString().split('T')[0];
+      return hDate === dateString;
+    });
   }
 
 
@@ -199,7 +225,7 @@ export class CartComponent {
     this.dataService.deleteCartData(cartId).subscribe(
       (response) => {
         if (response.status) {
-          this.dataService.cartLoad?.next("true")
+          this.dataService.cartLoad?.next(true)
           this.dataService.cartLoad1.next(true);
           this.dataService.refreshCartCount(this.userId);
           Swal.fire({
@@ -234,23 +260,71 @@ export class CartComponent {
   calculateTotalAmount() {
     this.total = 0;
     this.minOrderRequired = 0;
+    this.deliveryFee = 0;
+
+    const today = new Date();
+    const isHolidayFlag = this.isHoliday(today);
+    const dayOfWeek = today.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
     if (this.cartData.length > 0) {
       this.cartData.forEach(item => {
         if (item.productDetails) {
-          this.total += item.productDetails.price * item.quantity;
+          const itemPrice = parseFloat(item.productDetails.price) || 0;
+          this.total += itemPrice * item.quantity;
 
           // Identify the highest minimum order requirement from all categories in the cart
           const itemMinOrder = parseFloat(item.productDetails.min_delivery_charge) || 0;
           if (itemMinOrder > this.minOrderRequired) {
             this.minOrderRequired = itemMinOrder;
           }
+
+          // Delivery fee calculation
+          let itemFee = 0;
+          if (isHolidayFlag) {
+            itemFee = parseFloat(item.productDetails.holiday_fee) || 0;
+          } else if (isWeekend) {
+            // Check if product is available on weekends
+            let isAvailOnWeekend = true;
+            if (item.productDetails.availability) {
+              try {
+                const avail = typeof item.productDetails.availability === 'string'
+                  ? JSON.parse(item.productDetails.availability)
+                  : item.productDetails.availability;
+                if (Array.isArray(avail) && !avail.includes('Sa') && !avail.includes('So')) {
+                  isAvailOnWeekend = false;
+                }
+              } catch (e) { }
+            }
+
+            if (isAvailOnWeekend) {
+              if (dayOfWeek === 0) { // Sunday
+                itemFee = parseFloat(item.productDetails.delivery_fee_weekend) || 0;
+              } else { // Saturday
+                itemFee = parseFloat(item.productDetails.delivery_fee_weekday) || 0;
+              }
+            } else {
+              // If not available on weekend, use the weekday fee as the actual delivery will be on a weekday
+              itemFee = parseFloat(item.productDetails.delivery_fee_weekday) || 0;
+            }
+          } else {
+            itemFee = parseFloat(item.productDetails.delivery_fee_weekday) || 0;
+          }
+
+          if (itemFee > this.deliveryFee) {
+            this.deliveryFee = itemFee;
+          }
         }
       });
-      this.total = parseFloat(this.total.toFixed(2))
-      this.totalAmount = parseFloat(this.total.toFixed(2));
+      this.total = parseFloat(this.total.toFixed(2));
+      // totalAmount should include delivery fee and tips
+      this.totalAmount = this.total + parseFloat(this.tips || 0);
+      this.totalAmount = parseFloat(this.totalAmount.toFixed(2));
     }
     console.log("Total Amount: " + this.total);
     console.log("Minimum Order Required: " + this.minOrderRequired);
+    console.log("Delivery Fee: " + this.deliveryFee);
+    console.log("Final Total Amount (incl. tips & delivery): " + this.totalAmount);
   }
 
 
@@ -412,6 +486,9 @@ export class CartComponent {
 
     // Store selected button
     this.selectedButton = clickedButton;
+
+    // Recalculate totalAmount whenever tip is selected
+    this.calculateTotalAmount();
   }
 
   resetButtons(): void {

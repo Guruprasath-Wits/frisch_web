@@ -124,6 +124,12 @@
                         An diesem Feiertag erfolgt keine Lieferung für diese Produkte.
                     </div>
 
+                    <div class="error text-danger"
+                        *ngIf="orderForm.get('delivery_date')?.hasError('productNotAvailable')">
+                        Das Produkt '{{ orderForm.get('delivery_date')?.getError('productNotAvailable') }}' ist an
+                        diesem Tag nicht verfügbar.
+                    </div>
+
 
 
                     <br>
@@ -148,33 +154,10 @@
                             <p *ngIf="tips == 0">0 <sup>00</sup> €</p>
 
                             <p *ngIf="selectedDateInfo === '' || selectedDateInfo === 'Invalid'">- €</p>
-
-                            <!-- Weekend delivery fee -->
-                            <p *ngIf="selectedDateInfo === 'Weekend'">
-                                {{ settings.weekend_fee.split(".")[0] }} <sup>{{ settings.weekend_fee.split(".")[1]
+                            <p *ngIf="selectedDateInfo !== '' && selectedDateInfo !== 'Invalid'">
+                                {{ deliveryFee.toFixed(2).split(".")[0] }} <sup>{{ deliveryFee.toFixed(2).split(".")[1]
                                     }}</sup> €
                             </p>
-
-                            <!-- Public Holiday delivery fee -->
-                            <p *ngIf="selectedDateInfo === 'PublicHoliday'">
-                                {{ settings.weekday_fee.split(".")[0] }} <sup>{{ settings.weekday_fee.split(".")[1]
-                                    }}</sup> €
-                            </p>
-
-                            <!-- Weekend + Public Holiday -->
-                            <p
-                                *ngIf="selectedDateInfo.includes('Weekend') && selectedDateInfo.includes('PublicHoliday')">
-                                {{ settings.weekday_fee.split('.')[0] }} <sup>{{ settings.weekday_fee.split('.')[1]
-                                    }}</sup> €
-                            </p>
-
-
-
-
-
-
-
-                            <p *ngIf="selectedDateInfo === 'Valid'">0 <sup>00</sup> €</p>
 
                             <!-- Percentage/Flat discount display -->
                             <p *ngIf="discountAmount > 0 && (couponType === 'Prozentrabatt' || couponType === 'uservoucher' || couponType === 'Geldgutschein(Benutzerspezifisch)')"
@@ -204,7 +187,7 @@
                     <!-- <div id="card-element"></div>
                     <br> -->
                     <button type="submit"
-                        [disabled]="orderForm.invalid || selectedDateInfo === '' || selectedDateInfo === 'Valid'"
+                        [disabled]="orderForm.invalid || selectedDateInfo === '' || selectedDateInfo === 'Invalid'"
                         class="p-2 rounded btn btn-warning w-100">
                         Bezahlen
                     </button>
