@@ -194,90 +194,92 @@ button {
     border-radius: 10px;
     background: #fff;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  
-    .input-card {
-      background: #f9f9f9;
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 12px;
-      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  
-      label {
-        display: block;
-        font-size: 14px;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 5px;
-      }
-  
-      input, textarea {
-        width: 100%;
-        padding: 8px;
-        border: none;
-        font-size: 16px;
-        background: transparent;
-        outline: none;
-        border-bottom: 2px solid #ddd;
-        transition: 0.3s ease;
-  
-        &:focus {
-          border-bottom: 2px solid #007bff;
-        }
-      }
-  
-      textarea {
-        resize: none;
-        height: 60px;
-      }
-  
-      small {
-        color: red;
-        font-size: 12px;
-      }
-    }
-  
-    .button-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 15px 0;
-  
-      .btn {
-        border: 2px solid #ff9800;
-        color: #ff9800;
-        padding: 8px 15px;
-        border-radius: 5px;
-        font-weight: bold;
-        cursor: pointer;
-        background: transparent;
-        transition: 0.3s;
-  
-        &:hover {
-          background: #ff9800;
-          color: white;
-        }
-      }
-    }
-  
-    .confirm-button {
-      width: 100%;
-      background: #ff9800;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-  
-      &:hover {
-        background: #ff9800;
-      }
-  
-      &:disabled {
-        background: #ccc;
-        cursor: not-allowed;
-      }
-    }
-  }
+}
+
+.address-container .input-card {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.address-container .input-card label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.address-container .input-card input,
+.address-container .input-card textarea {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    font-size: 16px;
+    background: transparent;
+    outline: none;
+    border-bottom: 2px solid #ddd;
+    transition: 0.3s ease;
+}
+
+.address-container .input-card input:focus,
+.address-container .input-card textarea:focus {
+    border-bottom: 2px solid #007bff;
+}
+
+.address-container .input-card textarea {
+    resize: none;
+    height: 60px;
+}
+
+.address-container .input-card small {
+    color: red;
+    font-size: 12px;
+}
+
+.address-container .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.address-container .button-group .btn {
+    border: 2px solid #ff9800;
+    color: #ff9800;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    background: transparent;
+    transition: 0.3s;
+}
+
+.address-container .button-group .btn:hover {
+    background: #ff9800;
+    color: white;
+}
+
+.address-container .confirm-button {
+    width: 100%;
+    background: #ff9800;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.address-container .confirm-button:hover {
+    background: #ff9800;
+}
+
+.address-container .confirm-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
   

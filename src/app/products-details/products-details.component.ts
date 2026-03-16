@@ -254,7 +254,7 @@ export class ProductsDetailsComponent implements OnInit {
         this.dataService.addToCart(cart_data).subscribe(
             (response) => {
                 if (response.status) {
-                    this.dataService.cartLoad?.next("true");
+                    this.dataService.cartLoad?.next(true);
                     this.dataService.cartLoad1.next(true);
                     Swal.fire({
                         position: 'top-end',

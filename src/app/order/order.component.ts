@@ -918,7 +918,7 @@ export class OrderComponent implements OnInit {
             }
 
             // Notify other components (like Navbar) that the cart has changed
-            this.dataService.cartLoad?.next("true");
+            this.dataService.cartLoad?.next(true);
             this.dataService.cartLoad1.next(true);
             this.dataService.refreshCartCount(this.userId);
 
