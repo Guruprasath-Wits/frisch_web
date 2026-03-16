@@ -18,8 +18,7 @@ export class SubscriptionOrderComponent implements OnInit {
   constructor(private authService: AuthService, private dataService: DataService,
     private fb: FormBuilder, private route: ActivatedRoute, private router: Router,
     public dialog: MatDialog, private ngZone: NgZone, private cdr: ChangeDetectorRef) {
-    const today = new Date();
-    this.minDate = today.toISOString().split('T')[0];
+    this.minDate = new Date().toISOString().split('T')[0];
   }
   isDialogOpen = false;
   SubscriptionForm!: FormGroup
@@ -52,8 +51,8 @@ export class SubscriptionOrderComponent implements OnInit {
   showFirst20Popup = false;
 
   ibanVerified: boolean = false;
-ibanError: string = '';
-ibanDetails: any = null;
+  ibanError: string = '';
+  ibanDetails: any = null;
   // setting = {
   //   declaration: "By accepting this SEPA mandate, you authorize us to collect payments from your bank account."
   // };
@@ -77,33 +76,43 @@ ibanDetails: any = null;
     // });
   }
 
-verifyIban() {
-  const iban = this.SubscriptionForm.get('iban')?.value;
-  const customerName = this.userData?.username || '';
-  this.ibanError = '';
-  this.ibanVerified = false;
-  this.ibanDetails = null;
+  verifyIban() {
+    const iban = this.SubscriptionForm.get('iban')?.value;
+    const customerName = this.userData?.username || '';
+    this.ibanError = '';
+    this.ibanVerified = false;
+    this.ibanDetails = null;
 
-  if (!iban || !customerName) {
-    this.ibanError = 'Bitte IBAN und Name eingeben.';
-    return;
-  }
+    if (!iban || !customerName) {
+      this.ibanError = 'Bitte IBAN und Name eingeben.';
+      return;
+    }
 
-  this.dataService.validateIban({ iban, customerName }).subscribe(
-    (res: any) => {
-      if (res?.validation?.valid) {
-        this.ibanVerified = true;
-        this.ibanDetails = res;
-        // Patch values into the form
-        this.SubscriptionForm.patchValue({
-          bankName: res.validation.bic.name || '',
-          bic: res.validation.bic.bic || '',
-          nationalBankCode: res.validation.bic.nationalBankCode || '',
-          formattedIban: res.validation.iban || ''
-        });
-      } else {
-        this.ibanError = 'IBAN ist ungültig.';
-        // Clear bank fields if invalid
+    this.dataService.validateIban({ iban, customerName }).subscribe(
+      (res: any) => {
+        if (res?.validation?.valid) {
+          this.ibanVerified = true;
+          this.ibanDetails = res;
+          // Patch values into the form
+          this.SubscriptionForm.patchValue({
+            bankName: res.validation.bic.name || '',
+            bic: res.validation.bic.bic || '',
+            nationalBankCode: res.validation.bic.nationalBankCode || '',
+            formattedIban: res.validation.iban || ''
+          });
+        } else {
+          this.ibanError = 'IBAN ist ungültig.';
+          // Clear bank fields if invalid
+          this.SubscriptionForm.patchValue({
+            bankName: '',
+            bic: '',
+            nationalBankCode: '',
+            formattedIban: ''
+          });
+        }
+      },
+      (error: any) => {
+        this.ibanError = 'Fehler bei der IBAN-Prüfung.';
         this.SubscriptionForm.patchValue({
           bankName: '',
           bic: '',
@@ -111,18 +120,8 @@ verifyIban() {
           formattedIban: ''
         });
       }
-    },
-    (error: any) => {
-      this.ibanError = 'Fehler bei der IBAN-Prüfung.';
-      this.SubscriptionForm.patchValue({
-        bankName: '',
-        bic: '',
-        nationalBankCode: '',
-        formattedIban: ''
-      });
-    }
-  );
-}
+    );
+  }
 
   ngAfterViewInit() {
     this.loadGooglePlacesAutocomplete();
@@ -246,34 +245,34 @@ verifyIban() {
 
 
   private initializeForms(): void {
-this.SubscriptionForm = this.fb.group({
-  paymentType: ['', Validators.required],
-  iban: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9]{22}$/)]],
-  declaration: [false, Validators.requiredTrue],
-  bankName: [''],
-  bic: [''],
-  nationalBankCode: [''],
-  formattedIban: [''],
-  address: [''],
-  zipcode: ['', Validators.required],
-  instruction: [''],
-  delivery_date: ['', Validators.required],
-  delivery_day_option: ['', Validators.required]
-}, { updateOn: 'change' });
+    this.SubscriptionForm = this.fb.group({
+      paymentType: ['', Validators.required],
+      iban: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9]{22}$/)]],
+      declaration: [false, Validators.requiredTrue],
+      bankName: [''],
+      bic: [''],
+      nationalBankCode: [''],
+      formattedIban: [''],
+      address: [''],
+      zipcode: ['', Validators.required],
+      instruction: [''],
+      delivery_date: ['', Validators.required],
+      delivery_day_option: ['', Validators.required]
+    }, { updateOn: 'change' });
   }
 
   weekendError = false;
 
-validateWeekend() {
-  const selectedOption = this.SubscriptionForm.get('delivery_day_option')?.value;
-  this.weekendError = !selectedOption;
-}
+  validateWeekend() {
+    const selectedOption = this.SubscriptionForm.get('delivery_day_option')?.value;
+    this.weekendError = !selectedOption;
+  }
 
 
-selectWeekend(option: string) {
-  this.SubscriptionForm.get('delivery_day_option')?.setValue(option);
-  this.weekendError = false;
-}
+  selectWeekend(option: string) {
+    this.SubscriptionForm.get('delivery_day_option')?.setValue(option);
+    this.weekendError = false;
+  }
 
 
   loadCartData() {
@@ -338,136 +337,139 @@ selectWeekend(option: string) {
   }
 
   formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
-  validateDate(event?: any) {
-  let inputDate: Date | null = null;
-
-  if (event && event.target?.value) {
-    inputDate = new Date(event.target.value);
-  }
-
-  if (!inputDate) return;
-
-  // Helper to format date as YYYY-MM-DD
-  const formatDate = (date: Date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
     const d = String(date.getDate()).padStart(2, '0');
     return `${y}-${m}-${d}`;
-  };
+  }
 
-  const formattedDate = formatDate(inputDate);
-  const currentDate = new Date();
-  const todayFormatted = formatDate(currentDate);
+  validateDate(event?: any) {
+    let inputDate: Date | null = null;
+
+    if (event?.target?.value) {
+      inputDate = new Date(event.target.value);
+    } else {
+      const formValue = this.SubscriptionForm.get('delivery_date')?.value;
+      if (formValue) inputDate = new Date(formValue);
+    }
+
+    if (!inputDate) return;
+
+    // Helper to format date as YYYY-MM-DD
+    const formatDate = (date: Date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    };
+
+    const formattedDate = formatDate(inputDate);
+    const currentDate = new Date();
+    const todayFormatted = formatDate(currentDate);
     const tomorrowFormatted = formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1));
-  const currentDay = currentDate.getDay();
-  const currentHour = currentDate.getHours();
-  const currentMinutes = currentDate.getMinutes();
+    const currentDay = currentDate.getDay();
+    const currentHour = currentDate.getHours();
+    const currentMinutes = currentDate.getMinutes();
 
-  // Reset before validation
-  this.selectedDateInfo = '';
-  this.deliveryFee = 0;
-  this.SubscriptionForm.get('delivery_date')?.setErrors(null);
+    // Reset before validation
+    this.selectedDateInfo = '';
+    this.deliveryFee = 0;
+    this.SubscriptionForm.get('delivery_date')?.setErrors(null);
 
-  // Calculate total
-  let itemTotalNum = parseFloat(this.itemTotal) || 0;
-  let tipsNum = this.tips ? parseFloat(this.tips) : 0;
-  if (isNaN(tipsNum)) tipsNum = 0;
-  let newTotal = itemTotalNum + tipsNum;
+    // Calculate total
+    let itemTotalNum = parseFloat(this.itemTotal) || 0;
+    let tipsNum = this.tips ? parseFloat(this.tips) : 0;
+    if (isNaN(tipsNum)) tipsNum = 0;
+    let newTotal = itemTotalNum + tipsNum;
 
-const selectedDay = inputDate.getDay();
-  // dec 6 2025 guru
+    const selectedDay = inputDate.getDay();
+    // dec 6 2025 guru
 
-  if (selectedDay === 6) { // Saturday
-  this.SubscriptionForm.get('delivery_day_option')?.setValue('saturday');
-  this.disableSunday = true;
-  this.disableSaturday = false;
-} else if (selectedDay === 0) { // Sunday
-  this.SubscriptionForm.get('delivery_day_option')?.setValue('sunday');
-  this.disableSaturday = true;
-  this.disableSunday = false;
-} else {
-  // Enable both if not weekend
-  this.disableSaturday = false;
-  this.disableSunday = false;
-}
+    if (selectedDay === 6) { // Saturday
+      this.SubscriptionForm.get('delivery_day_option')?.setValue('saturday');
+      this.disableSunday = true;
+      this.disableSaturday = false;
+    } else if (selectedDay === 0) { // Sunday
+      this.SubscriptionForm.get('delivery_day_option')?.setValue('sunday');
+      this.disableSaturday = true;
+      this.disableSunday = false;
+    } else {
+      // Enable both if not weekend
+      this.disableSaturday = false;
+      this.disableSunday = false;
+    }
 
-  // ❌ Block Friday 4 PM onwards + next 2 days (Fri, Sat, Sun)
-  if (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) {
-    const blockedDates = [
-      todayFormatted, // Friday
-      formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)), // Saturday
-      formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)), // Sunday
-    ];
+    // ❌ Block Friday 4 PM onwards + next 2 days (Fri, Sat, Sun)
+    if (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) {
+      const blockedDates = [
+        todayFormatted, // Friday
+        formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)), // Saturday
+        formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)), // Sunday
+      ];
 
-    if (blockedDates.includes(formattedDate)) {
+      if (blockedDates.includes(formattedDate)) {
+        this.selectedDateInfo = 'Invalid';
+        this.SubscriptionForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+        this.totalAmount = newTotal.toFixed(2);
+        return;
+      }
+    }
+
+    // ❌ Block today as selected date
+    if (formattedDate === todayFormatted || formattedDate === tomorrowFormatted) {
       this.selectedDateInfo = 'Invalid';
-      this.SubscriptionForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+      this.SubscriptionForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
       this.totalAmount = newTotal.toFixed(2);
       return;
     }
-  }
 
-  // ❌ Block today as selected date
-  if (formattedDate === todayFormatted || formattedDate === tomorrowFormatted) {
-    this.selectedDateInfo = 'Invalid';
-    this.SubscriptionForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
-    this.totalAmount = newTotal.toFixed(2);
-    return;
-  }
+    // ✅ Allow only weekends (Sat/Sun) as delivery dates
+    // const selectedDay = inputDate.getDay();
+    if (selectedDay === 6 || selectedDay === 0) {
+      this.selectedDateInfo = 'Weekend';
+      this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
+    } else {
+      this.selectedDateInfo = 'Invalid';
+      this.SubscriptionForm.get('delivery_date')?.setErrors({ invalidDate: true });
+      this.deliveryFee = 0;
+    }
 
-  // ✅ Allow only weekends (Sat/Sun) as delivery dates
-  // const selectedDay = inputDate.getDay();
-  if (selectedDay === 6 || selectedDay === 0) {
-    this.selectedDateInfo = 'Weekend';
-    this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
-  } else {
-    this.selectedDateInfo = 'Invalid';
-    this.SubscriptionForm.get('delivery_date')?.setErrors({ invalidDate: true });
-    this.deliveryFee = 0;
-  }
+    // Add delivery fee
+    newTotal += this.deliveryFee;
 
-  // Add delivery fee
-  newTotal += this.deliveryFee;
-
-  // Handle total amount for subscription
-  // if (this.subscriptionData?.length > 20) {
+    // Handle total amount for subscription
+    // if (this.subscriptionData?.length > 20) {
     this.totalAmount = (itemTotalNum + tipsNum + this.deliveryFee).toFixed(2).toString();
-  // } else {
-  //   this.totalAmount = (itemTotalNum + tipsNum).toFixed(2).toString();
-  //   this.settings.weekend_fee = '0';
-  //   this.showFirst20Popup = true;
-  // }
+    // } else {
+    //   this.totalAmount = (itemTotalNum + tipsNum).toFixed(2).toString();
+    //   this.settings.weekend_fee = '0';
+    //   this.showFirst20Popup = true;
+    // }
 
-  // Save selected delivery date
-  localStorage.setItem('selectedSubscriptionDate', formattedDate);
-  // Auto-select delivery option based on selected date
-// if (selectedDay === 6) { // Saturday
-//   this.SubscriptionForm.get('delivery_day_option')?.setValue('saturday');
-//   this.disableSunday = true;
-//   this.disableSaturday = false;
-// } else if (selectedDay === 0) { // Sunday
-//   this.SubscriptionForm.get('delivery_day_option')?.setValue('sunday');
-//   this.disableSaturday = true;
-//   this.disableSunday = false;
-// } else {
-//   // Enable both if not weekend
-//   this.disableSaturday = false;
-//   this.disableSunday = false;
-// }
+    // Save selected delivery date
+    localStorage.setItem('selectedSubscriptionDate', formattedDate);
+    // Auto-select delivery option based on selected date
+    // if (selectedDay === 6) { // Saturday
+    //   this.SubscriptionForm.get('delivery_day_option')?.setValue('saturday');
+    //   this.disableSunday = true;
+    //   this.disableSaturday = false;
+    // } else if (selectedDay === 0) { // Sunday
+    //   this.SubscriptionForm.get('delivery_day_option')?.setValue('sunday');
+    //   this.disableSaturday = true;
+    //   this.disableSunday = false;
+    // } else {
+    //   // Enable both if not weekend
+    //   this.disableSaturday = false;
+    //   this.disableSunday = false;
+    // }
 
 
-  // console.log(`Selected Date Info: ${this.selectedDateInfo}`);
-  // console.log(`Final Total Amount: ${this.totalAmount}`);
-}
+    // console.log(`Selected Date Info: ${this.selectedDateInfo}`);
+    // console.log(`Final Total Amount: ${this.totalAmount}`);
+  }
 
-disableSaturday = false;
-disableSunday = false;
+  disableSaturday = false;
+  disableSunday = false;
 
 
 
@@ -487,20 +489,20 @@ disableSunday = false;
       }
     )
   }
-   paymentType: 'sepa' | 'paypal' = 'sepa'; 
+  paymentType: 'sepa' | 'paypal' = 'sepa';
 
-    confirmSubscription() {
-      this.paymentType = this.SubscriptionForm.value.paymentType;
-       if (this.paymentType === 'sepa') {
+  confirmSubscription() {
+    this.paymentType = this.SubscriptionForm.value.paymentType;
+    if (this.paymentType === 'sepa') {
       this.confirmSubscriptionOrder();
     } else if (this.paymentType === 'paypal') {
       this.startPaypalSubscription();
     } else if (this.paymentType === 'Überweisung') {
       this.startBankTransferSubscription();
     }
-    }
+  }
 
-startBankTransferSubscription() {
+  startBankTransferSubscription() {
 
     this.isLoading = true;
 
@@ -525,22 +527,22 @@ startBankTransferSubscription() {
       email: this.userData.email,
       delivery_date: this.SubscriptionForm.value.delivery_date,
       iban: this.SubscriptionForm.value.iban,
-  bankName: this.SubscriptionForm.value.bankName,           // <-- add this
-  bic: this.SubscriptionForm.value.bic,                     // <-- add this
-  nationalBankCode: this.SubscriptionForm.value.nationalBankCode, // <-- add this
-  formattedIban: this.SubscriptionForm.value.formattedIban, // <-- add this
-  
-    //    address: 
-    // (this.SubscriptionForm.value.address || this.SubscriptionForm.value.zipcode || this.userData.ort)
-    //   ? `${this.SubscriptionForm.value.address || ''}, ${this.SubscriptionForm.value.zipcode || ''}, ${this.userData.ort || ''}`
-    //   : this.userData.address,
+      bankName: this.SubscriptionForm.value.bankName,           // <-- add this
+      bic: this.SubscriptionForm.value.bic,                     // <-- add this
+      nationalBankCode: this.SubscriptionForm.value.nationalBankCode, // <-- add this
+      formattedIban: this.SubscriptionForm.value.formattedIban, // <-- add this
 
-     address:
-  (this.SubscriptionForm.value.street && this.SubscriptionForm.value.address &&
-   this.SubscriptionForm.value.zipcode &&
-   this.userData.ort)
-    ? `${this.SubscriptionForm.value.street} ${this.SubscriptionForm.value.address},${this.SubscriptionForm.value.zipcode},${this.userData.ort}`
-    : `${this.userData.street || ''} ${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
+      //    address: 
+      // (this.SubscriptionForm.value.address || this.SubscriptionForm.value.zipcode || this.userData.ort)
+      //   ? `${this.SubscriptionForm.value.address || ''}, ${this.SubscriptionForm.value.zipcode || ''}, ${this.userData.ort || ''}`
+      //   : this.userData.address,
+
+      address:
+        (this.SubscriptionForm.value.street && this.SubscriptionForm.value.address &&
+          this.SubscriptionForm.value.zipcode &&
+          this.userData.ort)
+          ? `${this.SubscriptionForm.value.street} ${this.SubscriptionForm.value.address},${this.SubscriptionForm.value.zipcode},${this.userData.ort}`
+          : `${this.userData.street || ''} ${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
       contact: this.userData.phone,
       deliveryFee: this.deliveryFee,
       instruction: this.SubscriptionForm.value.instruction,
@@ -551,7 +553,7 @@ startBankTransferSubscription() {
       ort: this.userData.ort,
       declaration: this.SubscriptionForm.value.declaration,
       paymentType: this.SubscriptionForm.value.paymentType,
-      deliveryDayOption : this.SubscriptionForm.value.delivery_day_option
+      deliveryDayOption: this.SubscriptionForm.value.delivery_day_option
     };
 
     const notification = {
@@ -644,21 +646,21 @@ startBankTransferSubscription() {
       email: this.userData.email,
       delivery_date: this.SubscriptionForm.value.delivery_date,
       iban: this.SubscriptionForm.value.iban,
-  bankName: this.SubscriptionForm.value.bankName,           // <-- add this
-  bic: this.SubscriptionForm.value.bic,                     // <-- add this
-  nationalBankCode: this.SubscriptionForm.value.nationalBankCode, // <-- add this
-  formattedIban: this.SubscriptionForm.value.formattedIban, // <-- add this
-    //    address: 
-    // (this.SubscriptionForm.value.address || this.SubscriptionForm.value.zipcode || this.userData.ort)
-    //   ? `${this.SubscriptionForm.value.address || ''}, ${this.SubscriptionForm.value.zipcode || ''}, ${this.userData.ort || ''}`
-    //   : this.userData.address,
+      bankName: this.SubscriptionForm.value.bankName,           // <-- add this
+      bic: this.SubscriptionForm.value.bic,                     // <-- add this
+      nationalBankCode: this.SubscriptionForm.value.nationalBankCode, // <-- add this
+      formattedIban: this.SubscriptionForm.value.formattedIban, // <-- add this
+      //    address: 
+      // (this.SubscriptionForm.value.address || this.SubscriptionForm.value.zipcode || this.userData.ort)
+      //   ? `${this.SubscriptionForm.value.address || ''}, ${this.SubscriptionForm.value.zipcode || ''}, ${this.userData.ort || ''}`
+      //   : this.userData.address,
 
-     address:
-  (this.SubscriptionForm.value.address &&
-   this.SubscriptionForm.value.zipcode &&
-   this.userData.ort)
-    ? `${this.SubscriptionForm.value.address},${this.SubscriptionForm.value.zipcode},${this.userData.ort}`
-    : `${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
+      address:
+        (this.SubscriptionForm.value.address &&
+          this.SubscriptionForm.value.zipcode &&
+          this.userData.ort)
+          ? `${this.SubscriptionForm.value.address},${this.SubscriptionForm.value.zipcode},${this.userData.ort}`
+          : `${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
       contact: this.userData.phone,
       deliveryFee: this.deliveryFee,
       instruction: this.SubscriptionForm.value.instruction,
@@ -669,7 +671,7 @@ startBankTransferSubscription() {
       ort: this.userData.ort,
       declaration: this.SubscriptionForm.value.declaration,
       paymentType: this.SubscriptionForm.value.paymentType,
-      deliveryDayOption : this.SubscriptionForm.value.delivery_day_option
+      deliveryDayOption: this.SubscriptionForm.value.delivery_day_option
     };
 
     const notification = {
@@ -727,122 +729,122 @@ startBankTransferSubscription() {
     );
   }
 
-// Existing SEPA flow
-placeSepaSubscription() {
-  // console.log("Placing SEPA subscription with order data:", this.orderData);
-  // return
+  // Existing SEPA flow
+  placeSepaSubscription() {
+    // console.log("Placing SEPA subscription with order data:", this.orderData);
+    // return
 
-  this.dataService.subscriptionOrder(this.orderData).subscribe(
-    (response) => {
-      if (response.status) {
-        Swal.fire({
-          title: 'Erfolg!',
-          text: 'Ihre Dauerbestellung wurde erfolgreich aufgegeben.',
-          icon: 'success',
-          showConfirmButton: false,
-        });
-        this.clearSubscriptionCartAndNotify();
+    this.dataService.subscriptionOrder(this.orderData).subscribe(
+      (response) => {
+        if (response.status) {
+          Swal.fire({
+            title: 'Erfolg!',
+            text: 'Ihre Dauerbestellung wurde erfolgreich aufgegeben.',
+            icon: 'success',
+            showConfirmButton: false,
+          });
+          this.clearSubscriptionCartAndNotify();
+        }
+      },
+      (error) => {
+        Swal.fire('Fehler!', 'Bestellung fehlgeschlagen!!!', 'error');
       }
-    },
-    (error) => {
-      Swal.fire('Fehler!', 'Bestellung fehlgeschlagen!!!', 'error');
+    );
+  }
+
+  // New PayPal flow
+  startPaypalSubscription() {
+    this.isLoading = true;
+
+    if (!this.postcodes || this.postcodes.length === 0) {
+      this.isLoading = false;
+      Swal.fire('Fehler!', 'Liefergebiete konnten nicht geladen werden. Bitte versuchen Sie es später erneut.', 'error');
+      return;
     }
-  );
-}
 
-// New PayPal flow
-startPaypalSubscription() {
-  this.isLoading = true;
+    const enteredZipcode = this.SubscriptionForm.value.zipcode;
 
-  if (!this.postcodes || this.postcodes.length === 0) {
-    this.isLoading = false;
-    Swal.fire('Fehler!', 'Liefergebiete konnten nicht geladen werden. Bitte versuchen Sie es später erneut.', 'error');
-    return;
-  }
+    // Check if enteredZipcode exists in the postcodes list
+    const isZipcodeAvailable = this.postcodes.some(
+      (area: any) => area.zipcode.toString() === enteredZipcode.toString()
+    );
 
-  const enteredZipcode = this.SubscriptionForm.value.zipcode;
+    if (!isZipcodeAvailable) {
+      this.isLoading = false;
+      Swal.fire('Fehler!', 'Lieferung an diese Postleitzahl ist nicht verfügbar!', 'warning');
+      return; // Stop execution
+    }
 
-  // Check if enteredZipcode exists in the postcodes list
-  const isZipcodeAvailable = this.postcodes.some(
-    (area: any) => area.zipcode.toString() === enteredZipcode.toString()
-  );
+    this.orderData = {
+      user_id: localStorage.getItem('userId'),
+      username: this.userData.username,
+      email: this.userData.email,
+      delivery_date: this.SubscriptionForm.value.delivery_date,
+      address:
+        (this.SubscriptionForm.value.address &&
+          this.SubscriptionForm.value.zipcode &&
+          this.userData.ort)
+          ? `${this.SubscriptionForm.value.address},${this.SubscriptionForm.value.zipcode},${this.userData.ort}`
+          : `${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
+      contact: this.userData.phone,
+      deliveryFee: this.deliveryFee,
+      instruction: this.SubscriptionForm.value.instruction,
+      price: this.itemTotal,
+      tips: this.tips || 0,
+      productDetails: this.products,
+      zipcode: enteredZipcode,
+      ort: this.userData.ort,
+      paymentType: this.SubscriptionForm.value.paymentType,
+      deliveryDayOption: this.SubscriptionForm.value.delivery_day_option
+    };
 
-  if (!isZipcodeAvailable) {
-    this.isLoading = false;
-    Swal.fire('Fehler!', 'Lieferung an diese Postleitzahl ist nicht verfügbar!', 'warning');
-    return; // Stop execution
-  }
+    this.dataService.subscriptionCheck(this.orderData.user_id).subscribe(
+      (response) => {
+        this.isLoading = false; // ✅ Stop loading when user already has subscription
+        if (response.status) {
+          Swal.fire(
+            'Bitte beachten Sie!',
+            'Sie haben bereits eine Dauerbestellung angelegt.<br><br>' +
+            'Falls Sie etwas ändern möchten:<br>' +
+            'Gehen Sie zu <b>Mein Konto → Dauerbestellung</b> und klicken Sie auf das grüne Bearbeiten-Symbol, damit Sie Produkte hinzufügen oder löschen können.<br><br>' +
+            'Danke!',
+            'warning'
+          );
+        }
+      },
+      (error) => {
+        // ✅ Keep loading until PayPal request completes
+        localStorage.setItem("subscriptionOrderData", JSON.stringify(this.orderData));
 
-  this.orderData = {
-    user_id: localStorage.getItem('userId'),
-    username: this.userData.username,
-    email: this.userData.email,
-    delivery_date: this.SubscriptionForm.value.delivery_date,
-   address:
-  (this.SubscriptionForm.value.address &&
-   this.SubscriptionForm.value.zipcode &&
-   this.userData.ort)
-    ? `${this.SubscriptionForm.value.address},${this.SubscriptionForm.value.zipcode},${this.userData.ort}`
-    : `${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
-    contact: this.userData.phone,
-    deliveryFee: this.deliveryFee,
-    instruction: this.SubscriptionForm.value.instruction,
-    price: this.itemTotal,
-    tips: this.tips || 0,
-    productDetails: this.products,
-    zipcode: enteredZipcode,
-    ort: this.userData.ort,
-    paymentType: this.SubscriptionForm.value.paymentType,
-    deliveryDayOption : this.SubscriptionForm.value.delivery_day_option
-  };
+        const notification = {
+          title: "New Subscription Order!",
+          desc: `New Subscription Order By ${this.userData.username} from ${this.orderData.address}`,
+          status: 'unread'
+        };
+        const payload = { userId: localStorage.getItem("userId") };
 
-  this.dataService.subscriptionCheck(this.orderData.user_id).subscribe(
-    (response) => {
-      this.isLoading = false; // ✅ Stop loading when user already has subscription
-      if (response.status) {
-        Swal.fire(
-          'Bitte beachten Sie!',
-          'Sie haben bereits eine Dauerbestellung angelegt.<br><br>' +
-          'Falls Sie etwas ändern möchten:<br>' +
-          'Gehen Sie zu <b>Mein Konto → Dauerbestellung</b> und klicken Sie auf das grüne Bearbeiten-Symbol, damit Sie Produkte hinzufügen oder löschen können.<br><br>' +
-          'Danke!',
-          'warning'
+        this.dataService.createPaypalReference(payload).subscribe(
+          (res: any) => {
+            debugger
+            if (res.redirectUrl && res.typeId) {
+              localStorage.setItem("paypalTypeId", res.typeId);
+              // localStorage.setItem("paypalPaymentId", res.paymentId);
+
+              // 👉 Redirect full browser
+              debugger
+              window.location.href = res.redirectUrl;
+            } else {
+              Swal.fire('Fehler!', 'PayPal Initialisierung fehlgeschlagen!', 'error');
+            }
+          },
+          (error) => {
+            this.isLoading = false; // ✅ Stop here (failure)
+            Swal.fire('Fehler!', 'PayPal Anfrage fehlgeschlagen!', 'error');
+          }
         );
       }
-    },
-    (error) => {
-      // ✅ Keep loading until PayPal request completes
-      localStorage.setItem("subscriptionOrderData", JSON.stringify(this.orderData));
-
-      const notification = {
-        title: "New Subscription Order!",
-        desc: `New Subscription Order By ${this.userData.username} from ${this.orderData.address}`,
-        status: 'unread'
-      };
-      const payload = { userId: localStorage.getItem("userId") };
-
-      this.dataService.createPaypalReference(payload).subscribe(
-        (res: any) => {
-          debugger
-          if (res.redirectUrl && res.typeId ) {
-            localStorage.setItem("paypalTypeId", res.typeId);
-            // localStorage.setItem("paypalPaymentId", res.paymentId);
-
-            // 👉 Redirect full browser
-            debugger
-            window.location.href = res.redirectUrl;
-          } else {
-            Swal.fire('Fehler!', 'PayPal Initialisierung fehlgeschlagen!', 'error');
-          }
-        },
-        (error) => {
-          this.isLoading = false; // ✅ Stop here (failure)
-          Swal.fire('Fehler!', 'PayPal Anfrage fehlgeschlagen!', 'error');
-        }
-      );
-    }
-  );
-}
+    );
+  }
 
 
   clearSubscriptionCartAndNotify() {
@@ -941,7 +943,7 @@ startPaypalSubscription() {
 export class InlineDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<InlineDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any 
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   closeDialog() {

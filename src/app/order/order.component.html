@@ -104,21 +104,28 @@
                         </div>
                     </div>
 
-                    <div>
-                        <input type="date" formControlName="delivery_date"
-                            class="p-2 mt-2 rounded border border-warning w-100" [min]="minDate"
-                            (change)="validateDate($event)">
-
-                        <div class="error text-danger"
-                            *ngIf="orderForm.get('delivery_date')?.hasError('afterFriday4pm')">
-                            Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
-                        </div>
-
-
-                        <div class="text-danger">
-                            Bitte beachten Sie: Die Lieferung erfolgt nur an Wochenenden und Feiertagen!!!
-                        </div>
+                    <div class="mt-2 text-start">
+                        <label class="fw-bold">Lieferdatum</label>
+                        <input type="date" class="form-control border-warning" formControlName="delivery_date"
+                            [min]="minDate" (change)="validateDate($event)" style="background-color: #fff;">
                     </div>
+
+                    <div class="error text-danger" *ngIf="orderForm.get('delivery_date')?.hasError('afterFriday4pm')">
+                        Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
+                    </div>
+
+                    <div class="error text-danger"
+                        *ngIf="orderForm.get('delivery_date')?.hasError('holidayNotAllowedForAndere')">
+                        Die Lieferung für Produkte der Kategorie 'Andere/Sonstige' ist an Feiertagen nicht möglich.
+                    </div>
+
+                    <div class="error text-danger"
+                        *ngIf="orderForm.get('delivery_date')?.hasError('adminHolidayBlocked')">
+                        An diesem Feiertag erfolgt keine Lieferung für diese Produkte.
+                    </div>
+
+
+
                     <br>
                     <div class="billing-area row p-3">
                         <h4>Zahlungsinformationen</h4>

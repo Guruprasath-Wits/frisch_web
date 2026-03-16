@@ -6,3 +6,39 @@
 .cdk-overlay-backdrop {
     background-color: rgba(0, 0, 0, 0.5) !important;
 }
+
+/* Hide Material look but keep logic for Datepicker */
+.datepicker-logic-only.mat-mdc-form-field {
+    display: block !important;
+}
+
+.datepicker-logic-only .mat-mdc-text-field-wrapper {
+    background-color: transparent !important;
+    padding: 0 !important;
+}
+
+.datepicker-logic-only .mat-mdc-form-field-flex {
+    padding: 0 !important;
+}
+
+.datepicker-logic-only .mat-mdc-form-field-infix {
+    padding: 0 !important;
+    border: none !important;
+    min-height: auto !important;
+}
+
+.datepicker-logic-only .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+}
+
+.datepicker-logic-only .mdc-line-ripple {
+    display: none !important;
+}
+
+.datepicker-logic-only .mat-mdc-form-field-focus-overlay {
+    display: none !important;
+}
+
+.datepicker-logic-only .mat-mdc-input-element {
+    vertical-align: middle !important;
+}

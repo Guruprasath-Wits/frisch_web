@@ -22,6 +22,8 @@ export class DataService {
   cartCleared$ = new BehaviorSubject<boolean>(false);
 
   cartLoad1 = new Subject<boolean>();
+  private cartCount = new BehaviorSubject<number>(0);
+  cartCount$ = this.cartCount.asObservable();
 
   // public isLogged: boolean = false;
 
@@ -272,6 +274,14 @@ export class DataService {
     return this.http.post(this.apiUrl + "missingProduct/create", data);
   }
 
+  public verifyAge(userId: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}users/verifyAge/${userId}`, {});
+  }
+
+  public getHolidays(): Observable<any> {
+    return this.http.get(`${this.apiUrl}holiday/read`);
+  }
+
   public applyCoupon(couponCode: string, userId: any): Observable<any> {
     return this.http.post(`${this.apiUrl}coupon/validate`, { couponCode, userId });
   }
@@ -280,7 +290,20 @@ export class DataService {
     return this.http.get(`${this.apiUrl}coupon/available/${userId}`);
   }
 
-
+  public refreshCartCount(userId: any) {
+    if (!userId) {
+      this.cartCount.next(0);
+      return;
+    }
+    this.getCartData(userId).subscribe(
+      (response) => {
+        if (response?.status && response.card) {
+          this.cartCount.next(response.card.length);
+        } else {
+          this.cartCount.next(0);
+        }
+      },
+      () => this.cartCount.next(0)
+    );
+  }
 }
-
-

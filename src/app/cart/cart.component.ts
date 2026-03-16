@@ -22,6 +22,7 @@ export class CartComponent {
   total: any = 0
   totalAmount: any = 0
   totalAmounts: any = 0
+  minOrderRequired: number = 0;
   selectedButton: { value: number, disabled: boolean } | null = null;
   tips: any = 0
   formattedTips: string = `${Math.floor(this.tips)} ⁰⁰`;
@@ -46,18 +47,14 @@ export class CartComponent {
       return;
     }
 
-    if (!this.authService.isLoggedIn) {
-      console.warn("User is not logged in. Skipping cart fetch.");
-      return;
-    }
-
     this.userId = localStorage.getItem('userId');
-    console.log("Fetching cart data for userId:", this.userId);
-
     if (!this.userId) {
-      console.error("User ID is null or undefined!");
+      console.warn("User ID is null or undefined!");
+      this.cartData = [];
       return;
     }
+
+    console.log("Fetching cart data for userId:", this.userId);
 
     this.dataService.getCartData(this.userId).subscribe(
       (response) => {
@@ -67,9 +64,11 @@ export class CartComponent {
           this.cartData = response.card;
           console.log("Updated cartData:", this.cartData);
           this.fetchProductDetails();
+          this.dataService.refreshCartCount(this.userId);
         } else {
           console.warn("Cart is empty or response is invalid.");
           this.cartData = [];
+          this.dataService.refreshCartCount(this.userId);
         }
       },
       (error) => {
@@ -202,6 +201,7 @@ export class CartComponent {
         if (response.status) {
           this.dataService.cartLoad?.next("true")
           this.dataService.cartLoad1.next(true);
+          this.dataService.refreshCartCount(this.userId);
           Swal.fire({
             position: "top-end",
             icon: "success",
@@ -232,22 +232,40 @@ export class CartComponent {
   }
 
   calculateTotalAmount() {
-    this.total = 0
+    this.total = 0;
+    this.minOrderRequired = 0;
     if (this.cartData.length > 0) {
       this.cartData.forEach(item => {
         if (item.productDetails) {
           this.total += item.productDetails.price * item.quantity;
+
+          // Identify the highest minimum order requirement from all categories in the cart
+          const itemMinOrder = parseFloat(item.productDetails.min_delivery_charge) || 0;
+          if (itemMinOrder > this.minOrderRequired) {
+            this.minOrderRequired = itemMinOrder;
+          }
         }
       });
       this.total = parseFloat(this.total.toFixed(2))
       this.totalAmount = parseFloat(this.total.toFixed(2));
     }
     console.log("Total Amount: " + this.total);
+    console.log("Minimum Order Required: " + this.minOrderRequired);
   }
 
 
   moveToOrder() {
     if (this.cartData.length > 0) {
+      if (this.total < this.minOrderRequired) {
+        const remaining = this.minOrderRequired - this.total;
+        Swal.fire({
+          title: 'Mindestbestellwert nicht erreicht',
+          html: `Der Mindestbestellwert für diese Bestellung beträgt <b>${this.minOrderRequired.toFixed(2).replace('.', ',')} €</b>. Ihr aktueller Warenkorbwert beträgt <b>${this.total.toFixed(2).replace('.', ',')} €</b>.<br><br>Nur noch <b>${remaining.toFixed(2).replace('.', ',')} €</b> bis zum Mindestbestellwert.`,
+          icon: 'warning'
+        });
+        return;
+      }
+
       localStorage.setItem('total', this.total.toFixed(2));
       localStorage.setItem('totalAmount', this.totalAmount.toFixed(2));
 

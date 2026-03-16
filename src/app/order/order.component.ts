@@ -30,9 +30,7 @@ export class OrderComponent implements OnInit {
   stripe: Stripe | null = null; // Define stripe as a class property
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private ngZone: NgZone, private fb: FormBuilder, private dataService: DataService, private authService: AuthService, private route: ActivatedRoute, private router: Router) {
-
-    const today = new Date();
-    this.minDate = today.toISOString().split('T')[0];
+    this.minDate = new Date().toISOString().split('T')[0];
   }
 
   orderForm!: FormGroup
@@ -48,7 +46,7 @@ export class OrderComponent implements OnInit {
 
   userData: any = {}
   orderData: any = {}
-  minDate: string;
+  minDate: string = '';
 
   paymentHandler: any = null;
 
@@ -63,7 +61,8 @@ export class OrderComponent implements OnInit {
 
 
   selectedDateInfo: string = ''
-  holidays: any[] = []
+  holidays: any[] = [] // API Holidays
+  dbHolidays: any[] = [] // Admin defined holidays
   deliveryFee: number = 0;
   discountAmount: number = 0;
   couponApplied: boolean = false;
@@ -98,7 +97,11 @@ export class OrderComponent implements OnInit {
 
     this.initializeForms();
     this.fetchGermanHolidays();
+    this.fetchDbHolidays();
     this.loadAvailableCoupons();
+
+    const today = new Date();
+    this.minDate = today.toISOString().split('T')[0];
   }
 
   async makePayment() {
@@ -171,6 +174,22 @@ export class OrderComponent implements OnInit {
       console.error('Error fetching German holidays:', error);
       return [];
     }
+  }
+
+  fetchDbHolidays() {
+    this.dataService.getHolidays().subscribe(
+      (response: any) => {
+        if (response.status) {
+          this.dbHolidays = response.holidays;
+          console.log('Admin Holidays Loaded:', this.dbHolidays);
+          // Re-validate date now that we have the holiday list
+          this.validateDate();
+        }
+      },
+      (error) => {
+        console.error('Error fetching admin holidays:', error);
+      }
+    );
   }
 
 
@@ -270,6 +289,16 @@ export class OrderComponent implements OnInit {
 
   fetchProductDetails() {
     let loadedProducts = 0;
+    let computedItemTotal = 0;
+    this.products = [];
+    this.i = 0;
+
+    if (this.cartData.length === 0) {
+      this.itemTotal = "0.00";
+      this.updateTotal();
+      this.isLoading = false;
+      return;
+    }
 
     this.cartData.forEach(cartItem => {
       this.dataService.getProductById(cartItem.product_id).subscribe(
@@ -277,13 +306,30 @@ export class OrderComponent implements OnInit {
           cartItem.productDetails = productResponse.product;
           console.log(cartItem.productDetails)
           loadedProducts++;
-          // console.log(cartItem);
+
+          const price = parseFloat(cartItem.productDetails.price) || 0;
+          computedItemTotal += (price * cartItem.quantity);
+
           this.products[this.i++] = [cartItem.productDetails.product_name, cartItem.quantity, cartItem.productDetails.price];
-          console.log(this.products);
+
+          if (loadedProducts === this.cartData.length) {
+            this.itemTotal = computedItemTotal.toFixed(2);
+            localStorage.setItem('total', this.itemTotal);
+            this.updateTotal();
+            this.isLoading = false;
+            this.cdr.detectChanges();
+          }
         },
         (error) => {
           console.log("Error fetching product details for product_id " + cartItem.product_id + ":", error);
           loadedProducts++;
+          if (loadedProducts === this.cartData.length) {
+            this.itemTotal = computedItemTotal.toFixed(2);
+            localStorage.setItem('total', this.itemTotal);
+            this.updateTotal();
+            this.isLoading = false;
+            this.cdr.detectChanges();
+          }
         }
       );
     });
@@ -308,6 +354,13 @@ export class OrderComponent implements OnInit {
 
   totalQuantity = this.cartData.reduce((totalQuantity, item) => totalQuantity + item.quantity, 0);
   totalAmount$ = new BehaviorSubject<string>('0.00');
+
+  hasAndereProduct(): boolean {
+    return this.cartData.some(item =>
+      item.productDetails?.category_type === 'Andere' ||
+      item.productDetails?.category_type === 'Others'
+    );
+  }
 
 
 
@@ -406,6 +459,48 @@ export class OrderComponent implements OnInit {
     }
 
     const isHoliday = await this.checkPublicHoliday(formattedDate);
+    const hasAndere = this.hasAndereProduct();
+
+    // Check if it's an admin-defined holiday
+    const isDbHoliday = this.dbHolidays.some(h => {
+      try {
+        // Create date objects for comparison to avoid string format issues
+        const d1 = new Date(h.holiday_date);
+        const d2 = new Date(formattedDate);
+
+        return d1.getFullYear() === d2.getFullYear() &&
+          d1.getMonth() === d2.getMonth() &&
+          d1.getDate() === d2.getDate();
+      } catch (e) {
+        return false;
+      }
+    });
+
+    console.log('Holiday Check:', {
+      formattedDate,
+      isApiHoliday: isHoliday,
+      isAdminHoliday: isDbHoliday,
+      hasAndere
+    });
+
+    // ❌ Block holidays based on category
+    if (hasAndere) {
+      // "Andere" category products are blocked on API Public Holidays
+      if (isHoliday) {
+        this.selectedDateInfo = 'Invalid';
+        this.orderForm.get('delivery_date')?.setErrors({ holidayNotAllowedForAndere: true });
+        this.updateTotal();
+        return;
+      }
+    } else {
+      // Normal products are blocked on Admin Defined Holidays
+      if (isDbHoliday) {
+        this.selectedDateInfo = 'Invalid';
+        this.orderForm.get('delivery_date')?.setErrors({ adminHolidayBlocked: true });
+        this.updateTotal();
+        return;
+      }
+    }
 
     const tomorrow = new Date(currentDate);
     tomorrow.setDate(currentDate.getDate() + 1);
@@ -716,6 +811,67 @@ export class OrderComponent implements OnInit {
 
   confirmOrder() {
     this.isLoading = true;
+
+    // Check product availability for selected date
+    const deliveryDate = this.orderForm.get('delivery_date')?.value;
+    if (deliveryDate) {
+      const dateObj = new Date(deliveryDate);
+      const dayIndex = dateObj.getDay();
+      const dayMap = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+      const selectedDay = dayMap[dayIndex];
+
+      const unavailableItems = this.cartData.filter(item => {
+        if (!item.productDetails?.availability) return false;
+        try {
+          let availability = item.productDetails.availability;
+          if (typeof availability === 'string') {
+            availability = JSON.parse(availability);
+          }
+          return Array.isArray(availability) && !availability.includes(selectedDay);
+        } catch (e) {
+          return !item.productDetails.availability.includes(selectedDay);
+        }
+      });
+
+      if (unavailableItems.length > 0) {
+        this.isLoading = false;
+        const productNames = unavailableItems.map(item => item.productDetails.product_name).join(', ');
+        Swal.fire({
+          title: 'Produkt nicht verfügbar',
+          text: `Die folgenden Produkte sind am gewählten Lieferdatum (${selectedDay}) nicht verfügbar: ${productNames}. Sie werden aus dem Warenkorb entfernt.`,
+          icon: 'warning',
+          showConfirmButton: true,
+          confirmButtonText: 'OK'
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            this.isLoading = true;
+            for (const item of unavailableItems) {
+              await this.dataService.deleteCartData(item.id).toPromise();
+            }
+
+            // Notify other components (like Navbar) that the cart has changed
+            this.dataService.cartLoad?.next("true");
+            this.dataService.cartLoad1.next(true);
+            this.dataService.refreshCartCount(this.userId);
+
+            if (unavailableItems.length === this.cartData.length) {
+              this.router.navigate(['/ourProducts']);
+            } else {
+              this.loadCartData();
+              Swal.fire({
+                title: 'Warenkorb aktualisiert',
+                text: 'Nicht verfügbare Produkte wurden entfernt. Sie können nun mit den verbleibenden Artikeln fortfahren.',
+                icon: 'info',
+                timer: 3000,
+                showConfirmButton: false
+              });
+            }
+          }
+        });
+        return;
+      }
+    }
+
     // Ensure postcodes are loaded before checking
     if (!this.postcodes || this.postcodes.length === 0) {
       this.isLoading = false;
@@ -766,7 +922,8 @@ export class OrderComponent implements OnInit {
       couponCode: this.couponApplied ? this.orderForm.value.coupon_code : null,
       couponType: this.couponApplied ? this.couponType : null,
       discountPercentage: this.couponApplied ? this.discountPercentage : 0,
-      discountAmount: this.couponApplied ? this.discountAmount : 0
+      discountAmount: this.couponApplied ? this.discountAmount : 0,
+      is_age_verified: localStorage.getItem('isAgeVerified') === 'true' ? 1 : 0
     };
 
 
