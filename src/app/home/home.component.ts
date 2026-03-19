@@ -7,7 +7,7 @@ import { DataService } from '../data.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService) { }
 
   fileurl: string = this.dataService.fileUrl;
   bannerImages: string[] = [];
@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       (response) => {
         if (response.status) {
           this.categories = response.category.filter(
-            (item: any) => item.category_type !== 'free_trial'
+            (item: any) => item.category_type !== 'free_trial' && item.category_img && item.category_img !== '' && item.category_img !== 'null'
           );
         }
       },
@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         img.onerror = () => resolve();
       });
     });
-    return Promise.all(promises).then(() => {});
+    return Promise.all(promises).then(() => { });
   }
 
   startBannerRotation() {
@@ -123,5 +123,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       this.filteredAreas = [];
     }
+  }
+  handleImageError(categoryToRemove: any): void {
+    this.categories = this.categories.filter(cat => cat.id !== categoryToRemove.id);
   }
 }

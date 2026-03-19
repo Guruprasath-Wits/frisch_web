@@ -56,11 +56,11 @@
     .cus-h1 {
         font-size: 30px;
         /* padding-left: 40px; */
-        padding-top:100px; 
+        padding-top: 100px;
         line-height: 55px;
         letter-spacing: 1.5px;
         margin-left: 5%;
-        
+
         color: white;
         /* text-align: right; */
     }
@@ -80,11 +80,11 @@
     }
 
     @media (max-width: 450px) {
-    .cus-head {
-        width: 260px;
-        font-size: 28px;
+        .cus-head {
+            width: 260px;
+            font-size: 28px;
+        }
     }
-}
 
     .cus-con {
         text-align: center !important;
@@ -96,7 +96,7 @@
         margin-left: 5%;
     }
 
-    @media(max-width:450px){
+    @media(max-width:450px) {
         .cus-con {
             text-align: center !important;
             margin-left: 20%;
@@ -104,9 +104,9 @@
         }
     }
 
-    @media(min-width:1920px){
+    @media(min-width:1920px) {
         .cus-con {
-        /* margin-left: 40%; */
+            /* margin-left: 40%; */
         }
     }
 
@@ -119,7 +119,7 @@
         margin-left: 5%;
     }
 
-    @media(max-width:450px){
+    @media(max-width:450px) {
         .cus-h3 {
             margin-left: 20%;
             font-size: 18px;
@@ -127,9 +127,9 @@
     }
 
 
-    @media(min-width:1920px){
+    @media(min-width:1920px) {
         .cus-h3 {
-        /* margin-left: 40%; */
+            /* margin-left: 40%; */
         }
     }
 
@@ -164,7 +164,7 @@
         font-weight: 700;
         letter-spacing: 1px;
     }
-    
+
 
     .cus-view-btn {
         margin-left: 70px;
@@ -239,17 +239,17 @@
         }
 
         .cus-head {
-                    background-color: #c4a484;
-        color: whitesmoke;
-        width: 259px;
-        height: 60px;
-        font-size: 32px;
-        font-weight: 800;
-        margin-left: 47px !important;
-        padding-left: 8px;
-        padding-top: 7px;
-        letter-spacing: 1px;
-        border-radius: 20px;
+            background-color: #c4a484;
+            color: whitesmoke;
+            width: 259px;
+            height: 60px;
+            font-size: 32px;
+            font-weight: 800;
+            margin-left: 47px !important;
+            padding-left: 8px;
+            padding-top: 7px;
+            letter-spacing: 1px;
+            border-radius: 20px;
         }
 
         .cus-btn {
@@ -331,8 +331,8 @@
     @media(max-width:376px) {
         .cus-head {
             width: 218px;
-        font-size: 27px;
-        height: 48px;
+            font-size: 27px;
+            height: 48px;
         }
     }
 
@@ -344,29 +344,21 @@
     }
 </style>
 
-<section
-  class="section home-banner row-middle"
-  id="home-banner1"
-  [ngStyle]="{'background-image': imageLoaded ? 'url(' + bannerImage + ')' : 'none'}"
->
-  <img
-    [src]="bannerImage"
-    (load)="imageLoaded = true"
-    alt="banner"
-    style="display:none;"
-  />
-  <div class="overlay" *ngIf="imageLoaded"></div>
+<section class="section home-banner row-middle" id="home-banner1"
+    [ngStyle]="{'background-image': imageLoaded ? 'url(' + bannerImage + ')' : 'none'}">
+    <img [src]="bannerImage" (load)="imageLoaded = true" alt="banner" style="display:none;" />
+    <div class="overlay" *ngIf="imageLoaded"></div>
 
-  <div class="container">
-    <h1 class="cus-h1" id="cus-h1-new">
-      Möchtet ihr euren <br> Morgen <br> verzaubern?
-    </h1>
-    <div class="breaking-news-container">
-      <div class="breaking-news-text">
-        {{ settings.breaking_news }}
-      </div>
+    <div class="container">
+        <h1 class="cus-h1" id="cus-h1-new">
+            Möchtet ihr euren <br> Morgen <br> verzaubern?
+        </h1>
+        <div class="breaking-news-container">
+            <div class="breaking-news-text">
+                {{ settings.breaking_news }}
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 
 
@@ -384,7 +376,7 @@
                 </h2>
             </div>
 
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
                 <h3 class="cus-h3">
                     Zögern Sie nicht länger!<br>
                     Ihre Kostenlose Probetüte inklusive liefergebühr wartet schon auf Sie
@@ -393,7 +385,7 @@
             </div>
             <div class="freetrail">
                 <button class="btn cus-btn" [routerLink]="'/free-trail'">Jetzt Klicken</button>
-            </div>            
+            </div>             -->
         </div>
     </div>
 </section>
@@ -401,20 +393,23 @@
 <section class="section ml-5">
     <div class="container">
         <div class="row">
-            <div class="col-md-5 col-sm-12 cus-map" >
+            <div class="col-md-5 col-sm-12 cus-map">
                 <img class="img-fluid" src="../../assets/img/dormunt.png" alt="dor">
             </div>
 
             <div class="col-md-7 col-sm-12 cus-map-con">
                 <div class="col-md-11">
-                    <h1 class="cus-search" id="cursh">Finden Sie schnell heraus, ob die Lieferung von <span class="com-name">{{
-                            settings.company_name }}</span> in Ihrer Nähe möglich ist.<small>(Unten sehen Sie die Postleitzahlen, in die wir liefern)</small></h1>
+                    <h1 class="cus-search" id="cursh">Finden Sie schnell heraus, ob die Lieferung von <span
+                            class="com-name">{{
+                            settings.company_name }}</span> in Ihrer Nähe möglich ist.<small>(Unten sehen Sie die
+                            Postleitzahlen, in die wir liefern)</small></h1>
                 </div>
 
                 <div>
                     <i class="fa-solid fa-location-dot fa-xl text-danger position-absolute zip-code-icon p-2 pt-1"></i>
-                    <input type="text" [(ngModel)]="zipcode" (input)="checkZipCode()" placeholder="Bitte geben Sie Ihre Postleitzahl ein"
-                        class="form-control cus-input" maxlength="6" />
+                    <input type="text" [(ngModel)]="zipcode" (input)="checkZipCode()"
+                        placeholder="Bitte geben Sie Ihre Postleitzahl ein" class="form-control cus-input"
+                        maxlength="6" />
                 </div>
 
 
@@ -471,16 +466,18 @@
                     </h1>
                 </div>
                 <div class="cardrows">
-                <div class="category d-flex flex-row flex-wrap align-items-center justify-content-center">
-                    <div class="col-4 col-lg-2 col-md-2 position-relative" *ngFor="let category of categories">
-                        <a [routerLink]="['/ourProducts']" [queryParams]="{category: category.id}" class="category-link">
-                            <img class="img-fluid category-img" [src]="fileurl + category.category_img" [alt]="category.category_name">
-                            <div class="category-overlay">
-                                <span class="category-text">{{ category.category_name }}</span>
-                            </div>
-                        </a>
+                    <div class="category d-flex flex-row flex-wrap align-items-center justify-content-center">
+                        <div class="col-4 col-lg-2 col-md-2 position-relative" *ngFor="let category of categories">
+                            <a [routerLink]="['/ourProducts']" [queryParams]="{category: category.id}"
+                                class="category-link">
+                                <img class="img-fluid category-img" [src]="fileurl + category.category_img"
+                                    (error)="handleImageError(category)" [alt]="category.category_name">
+                                <div class="category-overlay">
+                                    <span class="category-text">{{ category.category_name }}</span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
@@ -488,35 +485,35 @@
 </section>
 
 <section>
-  <div class="container">
-    <div class="section-header text-center" data-aos="fade-up">
-      <div class="section-line"></div>
-      <h1 class="header-title custom-h1">
-        Setzen Sie sich bitte mit uns in Verbindung
-      </h1>
-    </div>
-    <br>
-    <div class="cardrow">
-      <div class="row justify-content-center" id="box-col">
-        <div class="announce col-12 col-md-5 col-xl-4 mb-3 me-lg-4 text-center">
-          <img src="../../assets/img/icon/bell.png" alt="" class="announce-img mx-auto d-block">
-          <h1 class="announce_title">Webshop</h1>
-          <br>
-          <p class="text-justify">
-            {{settings.webshop}}
-          </p>
+    <div class="container">
+        <div class="section-header text-center" data-aos="fade-up">
+            <div class="section-line"></div>
+            <h1 class="header-title custom-h1">
+                Setzen Sie sich bitte mit uns in Verbindung
+            </h1>
         </div>
-        <div class="announce col-12 col-md-5 col-xl-4 mb-3 text-center">
-          <img src="../../assets/img/icon/telephone-2.png" alt="" class="announce-img mx-auto d-block">
-          <h1 class="announce_title">Telefon</h1>
-          <br>
-          <p class="text-justify">
-            {{settings.telephone}}
-          </p>
+        <br>
+        <div class="cardrow">
+            <div class="row justify-content-center" id="box-col">
+                <div class="announce col-12 col-md-5 col-xl-4 mb-3 me-lg-4 text-center">
+                    <img src="../../assets/img/icon/bell.png" alt="" class="announce-img mx-auto d-block">
+                    <h1 class="announce_title">Webshop</h1>
+                    <br>
+                    <p class="text-justify">
+                        {{settings.webshop}}
+                    </p>
+                </div>
+                <div class="announce col-12 col-md-5 col-xl-4 mb-3 text-center">
+                    <img src="../../assets/img/icon/telephone-2.png" alt="" class="announce-img mx-auto d-block">
+                    <h1 class="announce_title">Telefon</h1>
+                    <br>
+                    <p class="text-justify">
+                        {{settings.telephone}}
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
 
 <br><br>

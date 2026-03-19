@@ -648,15 +648,15 @@ export class OurProductsComponent implements OnInit {
 
   // ---------- FORMATTERS ----------
   formatDescription(desc: string): string {
-    return desc.replace(/\n/g, '<br>');
+    return desc ? desc.replace(/\n/g, '<br>') : '';
   }
 
   formatDescriptions(nutri_inform: string): string {
-    return nutri_inform.replace(/\n/g, '<br>');
+    return nutri_inform ? nutri_inform.replace(/\n/g, '<br>') : '';
   }
 
   formatDescriptionss(ingredients: string): string {
-    return ingredients.replace(/\n/g, '<br>');
+    return ingredients ? ingredients.replace(/\n/g, '<br>') : '';
   }
 
 

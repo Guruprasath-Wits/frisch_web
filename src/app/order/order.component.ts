@@ -357,7 +357,7 @@ export class OrderComponent implements OnInit {
 
   hasAndereProduct(): boolean {
     return this.cartData.some(item =>
-      item.productDetails?.category_type === 'Andere' ||
+      item.productDetails?.category_type === 'Getränke und Sonstiges - Lieferzeiten (Mo-Sa): ca. 16:30 bis 20:30 Uhr' ||
       item.productDetails?.category_type === 'Others'
     );
   }

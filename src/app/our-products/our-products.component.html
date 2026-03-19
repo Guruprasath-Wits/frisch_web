@@ -251,38 +251,198 @@
     justify-content: center;
   }
 
-  /* === POPUP BOX === */
+  /* === POPUP BOX (Redesigned) === */
   .popup-box {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999;
+    z-index: 1050;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
 
   .popup-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    height: auto;
-    overflow-y: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background: #ffffff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    position: relative;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .close-btn {
-    background: #954535;
-    color: #fff;
+  @keyframes slideUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .popup-header {
+    padding: 20px 24px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .popup-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #954535;
+  }
+
+  .close-icon-btn {
+    background: #eee;
     border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+  }
+
+  .close-icon-btn:hover {
+    background: #e4a484;
+    color: white;
+    transform: rotate(90deg);
+  }
+
+  .popup-body {
+    padding: 24px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ffb74d #f1f1f1;
+  }
+
+  .popup-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .popup-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .popup-body::-webkit-scrollbar-thumb {
+    background: #ffb74d;
+    border-radius: 10px;
+  }
+
+  .info-section {
+    margin-bottom: 24px;
+  }
+
+  .info-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    border-bottom: 2px solid #ffb74d;
+    padding-bottom: 5px;
+    width: fit-content;
+  }
+
+  .info-section-title i {
+    color: #ffb74d;
+  }
+
+  .info-content {
+    color: #555;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .weight-badge {
+    background: #fff8e1;
+    color: #954535;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #ffb74d;
+    margin-bottom: 15px;
+  }
+
+  .nutri-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .nutri-table tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+
+  .nutri-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .popup-footer {
+    padding: 16px 24px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    text-align: right;
+  }
+
+  .btn-close-modal {
+    background: #954535;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-close-modal:hover {
+    background: #7a382b;
+    box-shadow: 0 4px 12px rgba(149, 69, 53, 0.3);
   }
 
   /* === RESPONSIVE FIX === */
@@ -337,7 +497,9 @@
                 <i *ngIf="cartData.length > 0" class="fas fa-lock text-muted" title="Locked by cart items"></i>
               </h4>
               <p *ngIf="cartData.length > 0" class="small text-muted mb-2">
-                Ihre Auswahl ist auf den Bereich im Warenkorb fixiert.
+                Mischbestellungen sind leider nicht möglich. Da Backwaren und Getränke unterschiedliche Lieferzeiten
+                haben, müssen diese getrennt bestellt werden. Bitte leeren Sie Ihren Warenkorb, um die Kategorie zu
+                wechseln.
               </p>
               <div class="checkbox-container" *ngFor="let main of mainCategories">
                 <label class="checkbox-label" [class.disabled]="cartData.length > 0">
@@ -370,7 +532,7 @@
             <div class="filter-widget mt-4">
               <h4 class="font-weight-bold">Fehlendes Produkt</h4>
               <div class="p-2">
-                <textarea class="form-control mb-2" rows="3" placeholder="Beschreibung..."
+                <textarea class="form-control mb-2" rows="3" placeholder="Dein Wunsch-Produkt ist nicht dabei? Schreib uns!."
                   [(ngModel)]="missingProductText" style="font-size: 14px; background: #f9f9f9;"></textarea>
                 <div class="d-flex justify-content-end">
                   <button class="btn btn-sm btn-secondary me-2" (click)="clearMissingProduct()">Leeren</button>
@@ -383,38 +545,51 @@
         </div>
       </div>
 
-      <!-- POPUP INFO -->
-      <div class="popup-box" *ngIf="showProductDescribe">
-        <div class="popup-content">
-          <h1 class="text-warning text-center">Artikel Info</h1>
-          <p class="text-center fw-bold">{{ productDescribeData?.product_name }}</p>
-          <p>{{ productDescribeData?.description }}</p>
-          <table class="table">
-            <tr *ngIf="productDescribeData?.weight">
-              <th>Gewicht</th>
-              <td>{{ productDescribeData?.weight }}</td>
-            </tr>
-            <tr *ngIf="productDescribeData?.ingredients">
-              <th>Zutaten</th>
-              <td>
-                <p [innerHTML]="formatDescriptionss(productDescribeData?.ingredients)"></p>
-              </td>
-            </tr>
-            <tr *ngIf="productDescribeData?.nutri_inform">
-              <th>Nährwert</th>
-              <td>
-                <p [innerHTML]="formatDescriptions(productDescribeData?.nutri_inform)"></p>
-              </td>
-            </tr>
-            <tr *ngIf="productDescribeData?.desc">
-              <th>Beschreibung und weitere Informationen</th>
-              <td>
-                <p [innerHTML]="formatDescription(productDescribeData?.desc)"></p>
-              </td>
-            </tr>
-          </table>
-          <div class="text-end">
-            <button class="close-btn" (click)="closePopup()">Schließen</button>
+      <!-- POPUP INFO (Redesigned) -->
+      <div class="popup-box" *ngIf="showProductDescribe" (click)="closePopup()">
+        <div class="popup-content" (click)="$event.stopPropagation()">
+          <div class="popup-header">
+            <h2>Artikel Info</h2>
+            <button class="close-icon-btn" (click)="closePopup()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="popup-body">
+            <h3 class="fw-bold mb-1" style="color: #333;">{{ productDescribeData?.product_name }}</h3>
+            <div class="weight-badge" *ngIf="productDescribeData?.weight">
+              <i class="fas fa-weight-hanging"></i> {{ productDescribeData?.weight }}
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.description">
+              <div class="info-content" [innerHTML]="formatDescription(productDescribeData?.description)">
+              </div>
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.ingredients">
+              <div class="info-section-title">
+                <i class="fas fa-leaf"></i> Zutaten
+              </div>
+              <div class="info-content" [innerHTML]="formatDescriptionss(productDescribeData?.ingredients)"></div>
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.nutri_inform">
+              <div class="info-section-title">
+                <i class="fas fa-chart-pie"></i> Nährwert
+              </div>
+              <div class="info-content" [innerHTML]="formatDescriptions(productDescribeData?.nutri_inform)"></div>
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.desc">
+              <div class="info-section-title">
+                <i class="fas fa-info-circle"></i> Weitere Informationen
+              </div>
+              <div class="info-content" [innerHTML]="formatDescription(productDescribeData?.desc)"></div>
+            </div>
+          </div>
+
+          <div class="popup-footer">
+            <button class="btn-close-modal" (click)="closePopup()">Schließen</button>
           </div>
         </div>
       </div>
