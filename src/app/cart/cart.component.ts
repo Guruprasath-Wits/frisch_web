@@ -225,6 +225,8 @@ export class CartComponent {
     this.dataService.deleteCartData(cartId).subscribe(
       (response) => {
         if (response.status) {
+          this.cartData = this.cartData.filter(item => item.id !== cartId);
+          this.calculateTotalAmount();
           this.dataService.cartLoad?.next(true)
           this.dataService.cartLoad1.next(true);
           this.dataService.refreshCartCount(this.userId);
@@ -316,11 +318,12 @@ export class CartComponent {
           }
         }
       });
-      this.total = parseFloat(this.total.toFixed(2));
-      // totalAmount should include delivery fee and tips
-      this.totalAmount = this.total + parseFloat(this.tips || 0);
-      this.totalAmount = parseFloat(this.totalAmount.toFixed(2));
     }
+    this.total = parseFloat(this.total.toFixed(2));
+    // totalAmount should include delivery fee and tips
+    this.totalAmount = this.total + parseFloat(this.tips || 0);
+    this.totalAmount = parseFloat(this.totalAmount.toFixed(2));
+
     console.log("Total Amount: " + this.total);
     console.log("Minimum Order Required: " + this.minOrderRequired);
     console.log("Delivery Fee: " + this.deliveryFee);
@@ -467,6 +470,7 @@ export class CartComponent {
       localStorage.removeItem('tips');  // Remove tip from localStorage
       this.resetButtons();
       this.selectedButton = null;
+      this.calculateTotalAmount();
       return;
     }
 
@@ -489,6 +493,12 @@ export class CartComponent {
 
     // Recalculate totalAmount whenever tip is selected
     this.calculateTotalAmount();
+  }
+
+  hasAndereCategory(): boolean {
+    return this.cartData.some(item =>
+      item.productDetails && item.productDetails.category_type === 'Getränke und Sonstiges - Lieferzeiten (Mo-Sa): ca. 16:30 bis 20:30 Uhr'
+    );
   }
 
   resetButtons(): void {

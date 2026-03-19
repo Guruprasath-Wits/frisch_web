@@ -119,9 +119,17 @@
 
 
                     <div class="mt-5">
-                        <button class="w-100 btn border border-2"
-                            (click)="subscribe_order()">Dauerbestellung</button><br><br>
+                        <ng-container *ngIf="!hasAndereCategory()">
+                            <button class="w-100 btn border border-2"
+                                (click)="subscribe_order()">Dauerbestellung</button><br><br>
+                        </ng-container>
                         <button class="w-100 btn btn-secondary" (click)="moveToOrder()">Zur Kasse</button>
+                        <div *ngIf="hasAndereCategory()" class="mt-4 text-start font-weight-bold"
+                            style="font-size: 14px; line-height: 1.6;">
+                            <span class="text-danger">Wichtiger Lieferhinweis:</span> <br>
+                            Bestellungen bis 13:59 Uhr werden noch am selben Tag geliefert.<br><br>
+                            Bei Bestellungen ab 14:00 Uhr erfolgt die Lieferung automatisch am nächsten Liefertag.
+                        </div>
                     </div>
                 </div>
             </div>
