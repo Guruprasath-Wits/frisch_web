@@ -83,7 +83,7 @@
                     <div>
                         <textarea formControlName="instruction" rows="2"
                             class="p-2 mt-2 rounded border border-warning w-100"
-                            placeholder="Bitte geben Sie einen Sicheren Abstellort an (Optional)"></textarea>
+                            [placeholder]="hasAndereProduct() ? 'Hinterlassen Sie einen Lieferhinweis (Optional)' : 'Bitte geben Sie einen Sicheren Abstellort an (Optional)'"></textarea>
                         <!-- <div class="text-danger">Bitte geben Sie einen Hinweis zu Ihrer Bestellung an.</div> -->
                     </div>
 
@@ -117,7 +117,7 @@
                     <div class="error text-danger"
                         *ngIf="orderForm.get('delivery_date')?.hasError('holidayNotAllowedForAndere')">
                         Die Lieferung für Produkte der Kategorie 'Getränke und Sonstiges - Lieferzeiten (Mo-Sa): ca.
-                        16:30 bis 20:30 Uhr' ist an Feiertagen nicht möglich.
+                        16:30 bis 20:30 Uhr' ist an Sonn- und Feiertagen nicht möglich.
                     </div>
 
                     <div class="error text-danger"

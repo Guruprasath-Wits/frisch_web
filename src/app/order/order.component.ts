@@ -525,8 +525,8 @@ export class OrderComponent implements OnInit {
 
     // ❌ Block holidays based on category
     if (hasAndere) {
-      // "Andere" category products are blocked on API Public Holidays
-      if (isHoliday) {
+      // "Andere" category products are blocked on Sundays (day 0) and API Public Holidays
+      if (isHoliday || day === 0) {
         this.selectedDateInfo = 'Invalid';
         this.orderForm.get('delivery_date')?.setErrors({ holidayNotAllowedForAndere: true });
         this.updateTotal();

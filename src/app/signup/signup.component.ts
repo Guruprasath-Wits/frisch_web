@@ -268,7 +268,6 @@ export class SignupComponent implements OnInit {
 
   onOtpSubmit(): void {
     this.isLoading = true;
-
     if (this.otpForm.valid) {
       this.dataService.VerifyOtp(this.otpForm.value).subscribe({
         next: (res: any) => {

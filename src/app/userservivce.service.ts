@@ -10,7 +10,7 @@ export class UserservivceService {
   url = "http://localhost:4200/api/"
   fileurl = "http://localhost:4200/"
 
-  
+
 
   constructor(public http: HttpClient) { }
 
@@ -49,11 +49,11 @@ export class UserservivceService {
     return this.http.post(this.url + "address/create", data)
   }
 
-  getAddress(){
+  getAddress() {
     return this.http.get(this.url + "address/read")
   }
 
-  deleteAddress(id: any){
+  deleteAddress(id: any) {
     return this.http.delete(this.url + "address/delete/" + id)
   }
 
