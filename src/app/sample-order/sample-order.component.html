@@ -1,8 +1,6 @@
-
-
 <div *ngIf="isLoading" class="loading-overlay">
     <div class="spinner"></div>
-  </div>
+</div>
 <div class="bread-crumb-bar">
     <div class="container">
         <!-- <div class="row align-items-center inner-banner">
@@ -30,7 +28,8 @@
             <h3 class="bg-warning p-3">Bestellte Produkte</h3>
             <div class="d-flex justify-content-around flex-wrap">
                 <div class="product_details" style="width: 18rem;">
-                    <img class="card-img-top" [src]="fileUrl  + '/uploads/products/' + product.product_img" alt="Card image cap">
+                    <img class="card-img-top" [src]="fileUrl  + '/uploads/products/' + product.product_img"
+                        alt="Card image cap">
                     <div class="mt-2">
                         <p class="text-center text-dark">{{ product.product_name }}</p>
                     </div>
@@ -44,31 +43,27 @@
             <div class="p-3">
                 <div class="container">
                     <div class="row text-dark">
-                        <div >
+                        <div>
                             <p style="font-size: 16px;"><i class="fa-solid fa-user"></i> {{ userData.username }}</p>
                             <p style="font-size: 16px;"><i class="fa-solid fa-envelope"></i> {{ userData.email }}</p>
                             <p style="font-size: 16px;"><i class="fa-solid fa-phone"></i> {{ userData.phone }}</p>
-                            <p style="font-size: 16px;"><i class="fa-solid fa-location-dot"></i> {{ userData.street }} {{ userData.address }}, {{ userData.zipcode }},{{ userData.ort }}</p>
-                        </div>  
+                            <p style="font-size: 16px;"><i class="fa-solid fa-location-dot"></i> {{ userData.street }}
+                                {{ userData.address }}, {{ userData.zipcode }},{{ userData.ort }}</p>
+                        </div>
                     </div>
                 </div>
 
                 <form *ngIf="isLogin" [formGroup]="SampleOrderForm" (ngSubmit)="confirmOrder()">
-                   
+
                     <div>
-                        <input
-                          #zipcodeInput
-                          type="number"
-                          class="p-2 mt-2 rounded border border-warning w-100"
-                          placeholder="PLZ widerholen"
-                          formControlName="zipcode"
-                        />
-                      
+                        <input #zipcodeInput type="number" class="p-2 mt-2 rounded border border-warning w-100"
+                            placeholder="PLZ widerholen" formControlName="zipcode" />
+
                         <div class="error text-danger"
-                          *ngIf="SampleOrderForm.get('zipcode')?.invalid && SampleOrderForm.get('zipcode')?.touched">
-                          Bitte geben Sie Ihre Postleitzahl ein.
+                            *ngIf="SampleOrderForm.get('zipcode')?.invalid && SampleOrderForm.get('zipcode')?.touched">
+                            Bitte geben Sie Ihre Postleitzahl ein.
                         </div>
-                      </div>
+                    </div>
 
                     <div>
                         <textarea formControlName="instruction" rows="2"
@@ -84,26 +79,29 @@
 
                         <div class="error text-danger"
                             *ngIf="SampleOrderForm.get('delivery_date')?.hasError('afterFriday4pm')">
-                           Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
-                            
+                            Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
+
                         </div>
                         <!-- Error for invalid delivery dates -->
-                        <div class="error text-danger" *ngIf="SampleOrderForm.get('delivery_date')?.hasError('publicHoliday')">
+                        <div class="error text-danger"
+                            *ngIf="SampleOrderForm.get('delivery_date')?.hasError('publicHoliday')">
                             Wir liefern Probelieferungen nur am Wochenende und nicht an Feiertagen.
                         </div>
 
-                        <div class="text-danger" *ngIf="!SampleOrderForm.get('delivery_date')?.hasError('publicHoliday')">
-                            Bitte beachten Sie: Die Lieferung erfolgt nur samstags 
+                        <div class="text-danger"
+                            *ngIf="!SampleOrderForm.get('delivery_date')?.hasError('publicHoliday')">
+                            Bitte beachten Sie: Die Lieferung erfolgt nur samstags
                             <!-- und Feiertagen!!! -->
                         </div>
-                    </div>
-                    <br>
+                        <br>
 
-                    <br>
-                    <button type="submit" [disabled]="SampleOrderForm.invalid"
-                        class="p-2 rounded btn btn-warning w-100">Jetzt gratis anfordern</button>
+                        <br>
+                        <button type="submit" [disabled]="SampleOrderForm.invalid"
+                            class="p-2 rounded btn btn-warning w-100">Jetzt gratis anfordern</button>
+                    </div>
                 </form>
                 <br><br>
             </div>
         </div>
     </div>
+</div>

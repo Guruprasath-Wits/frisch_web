@@ -532,8 +532,9 @@
             <div class="filter-widget mt-4">
               <h4 class="font-weight-bold">Fehlendes Produkt</h4>
               <div class="p-2">
-                <textarea class="form-control mb-2" rows="3" placeholder="Dein Wunsch-Produkt ist nicht dabei? Schreib uns!."
-                  [(ngModel)]="missingProductText" style="font-size: 14px; background: #f9f9f9;"></textarea>
+                <textarea class="form-control mb-2" rows="3"
+                  placeholder="Dein Wunsch-Produkt ist nicht dabei? Schreib uns!" [(ngModel)]="missingProductText"
+                  style="font-size: 14px; background: #f9f9f9;"></textarea>
                 <div class="d-flex justify-content-end">
                   <button class="btn btn-sm btn-secondary me-2" (click)="clearMissingProduct()">Leeren</button>
                   <button class="btn btn-sm btn-warning" (click)="submitMissingProduct()">Absenden</button>
