@@ -793,4 +793,28 @@ export class OurProductsComponent implements OnInit {
     );
   }
 
+  getAvailability(availability: any): string[] {
+    if (!availability) return [];
+    if (typeof availability === 'string') {
+      try {
+        if (availability.trim().startsWith('[') && availability.trim().endsWith(']')) {
+          const parsed = JSON.parse(availability);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {
+        // Fallback to comma-separated
+      }
+      if (availability.includes(',')) {
+        return availability.split(',').map(s => s.trim());
+      }
+      return [availability.trim()];
+    }
+    return Array.isArray(availability) ? availability : [availability];
+  }
+
+  cleanProductName(name: string): string {
+    if (!name) return '';
+    return name.split('(')[0].trim();
+  }
+
 }
