@@ -148,9 +148,12 @@
           </div>
           <div>
             <label class="fw-bold">Startdatum der Dauerbestellung</label>
-            <input type="date" class="form-control p-2 mt-2 rounded border border-warning w-100"
-              formControlName="delivery_date" [min]="minDate" (change)="validateDate($event)"
-              style="background-color: #fff;">
+            <mat-form-field appearance="fill" class="custom-datepicker-field">
+              <input matInput [matDatepicker]="picker" [min]="minDateObj" (dateChange)="validateDate($event)"
+                formControlName="delivery_date" placeholder="Wählen Sie ein Startdatum">
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
             <div class="error text-danger" *ngIf="SubscriptionForm.get('delivery_date')?.hasError('afterFriday4pm')">
               Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
             </div>
@@ -200,6 +203,10 @@
           <br>
           <!-- Billing area and summary (unchanged) -->
           <div class="billing-area row p-3">
+            <div *ngIf="+itemTotal < minOrderRequired" class="col-12 text-center text-danger mb-2 font-weight-bold">
+              <i class="fa-solid fa-triangle-exclamation"></i> Mindestbestellwert von {{
+              minOrderRequired.toFixed(2).replace('.', ',') }} € nicht erreicht.
+            </div>
             <h4>Zahlungsinformationen</h4>
             <div class="col-6 text-start">
               <p>Artikelsumme</p>
@@ -214,17 +221,8 @@
               <p *ngIf="tips != 0">{{ tips.split(".")[0] }} <sup>{{ tips.split(".")[1] }}</sup> €</p>
               <p *ngIf="tips == 0">0 <sup>00</sup> €</p>
               <p *ngIf="selectedDateInfo === 'Invalid' || selectedDateInfo === ''"> - €</p>
-              <p *ngIf="selectedDateInfo === 'Sunday' && settings.weekend_fee!=0">
-                {{ settings.weekend_fee.split(".")[0] }} <sup>{{ settings.weekend_fee.split(".")[1] }}</sup> €
-              </p>
-              <p *ngIf="selectedDateInfo === 'Sunday' && settings.weekend_fee==0">
-                0 <sup>00</sup> €
-              </p>
-              <p *ngIf="selectedDateInfo === 'Saturday' && settings.weekday_fee!=0">
-                {{ settings.weekday_fee.split(".")[0] }} <sup>{{ settings.weekday_fee.split(".")[1] }}</sup> €
-              </p>
-              <p *ngIf="selectedDateInfo === 'Saturday' && settings.weekday_fee==0">
-                0 <sup>00</sup> €
+              <p *ngIf="selectedDateInfo !== 'Invalid' && selectedDateInfo !== ''">
+                {{ deliveryFee.toFixed(2).split(".")[0] }} <sup>{{ deliveryFee.toFixed(2).split(".")[1] }}</sup> €
               </p>
               <hr>
               <p class="h4" *ngIf="totalAmount && totalAmount !== '0.00'">
@@ -243,6 +241,7 @@
     || SubscriptionForm.get('delivery_date')?.invalid
     || selectedDateInfo === 'Invalid'
     || selectedDateInfo === ''
+    || +itemTotal < minOrderRequired
   ">
               Jetzt zum genannten Preis bestellen
             </button>
