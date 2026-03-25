@@ -31,6 +31,8 @@ export class OrderComponent implements OnInit {
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private ngZone: NgZone, private fb: FormBuilder, private dataService: DataService, private authService: AuthService, private route: ActivatedRoute, private router: Router) {
     this.minDate = new Date().toISOString().split('T')[0];
+    this.minDateObj = new Date();
+    this.minDateObj.setHours(0, 0, 0, 0);
   }
 
   orderForm!: FormGroup
@@ -47,6 +49,7 @@ export class OrderComponent implements OnInit {
   userData: any = {}
   orderData: any = {}
   minDate: string = '';
+  minDateObj: Date;
 
   paymentHandler: any = null;
 
@@ -64,6 +67,7 @@ export class OrderComponent implements OnInit {
   holidays: any[] = [] // API Holidays
   dbHolidays: any[] = [] // Admin defined holidays
   deliveryFee: number = 0;
+  minOrderRequired: number = 0;
   discountAmount: number = 0;
   couponApplied: boolean = false;
   couponType: string = '';
@@ -217,6 +221,11 @@ export class OrderComponent implements OnInit {
       return;
     }
 
+    if (!this.addressInputRef) {
+      console.warn("addressInput placeholder not found in the template!");
+      return;
+    }
+
     const autocomplete = new google.maps.places.Autocomplete(
       this.addressInputRef.nativeElement,
       {
@@ -301,32 +310,39 @@ export class OrderComponent implements OnInit {
     }
 
     this.cartData.forEach(cartItem => {
-      this.dataService.getProductById(cartItem.product_id).subscribe(
-        (productResponse) => {
-          cartItem.productDetails = productResponse.product;
+      // Check if it's a combo or a regular product
+      const fetchObservable = cartItem.is_combo
+        ? this.dataService.getComboById(cartItem.product_id)
+        : this.dataService.getProductById(cartItem.product_id);
+
+      fetchObservable.subscribe(
+        (response) => {
+          cartItem.productDetails = cartItem.is_combo ? response.combo : response.product;
           console.log(cartItem.productDetails)
           loadedProducts++;
 
           const price = parseFloat(cartItem.productDetails.price) || 0;
           computedItemTotal += (price * cartItem.quantity);
 
-          this.products[this.i++] = [cartItem.productDetails.product_name, cartItem.quantity, cartItem.productDetails.price];
+          this.products[this.i++] = [cartItem.productDetails.product_name || cartItem.productDetails.name, cartItem.quantity, cartItem.productDetails.price];
 
           if (loadedProducts === this.cartData.length) {
             this.itemTotal = computedItemTotal.toFixed(2);
             localStorage.setItem('total', this.itemTotal);
             this.updateTotal();
+            this.validateDate();
             this.isLoading = false;
             this.cdr.detectChanges();
           }
         },
         (error) => {
-          console.log("Error fetching product details for product_id " + cartItem.product_id + ":", error);
+          console.log("Error fetching details for product_id " + cartItem.product_id + ":", error);
           loadedProducts++;
           if (loadedProducts === this.cartData.length) {
             this.itemTotal = computedItemTotal.toFixed(2);
             localStorage.setItem('total', this.itemTotal);
             this.updateTotal();
+            this.validateDate();
             this.isLoading = false;
             this.cdr.detectChanges();
           }
@@ -396,7 +412,11 @@ export class OrderComponent implements OnInit {
     // 1️⃣ Get selected date
     let inputDate: Date | null = null;
 
-    if (event?.target?.value) {
+    if (event?.value) {
+      // Angular Material Datepicker event
+      inputDate = new Date(event.value);
+    } else if (event?.target?.value) {
+      // Native input event
       inputDate = new Date(event.target.value);
     } else {
       const formValue = this.orderForm.get('delivery_date')?.value;
@@ -574,13 +594,15 @@ export class OrderComponent implements OnInit {
       this.selectedDateInfo = 'Valid';
     }
 
-    // Dynamic Delivery Fee calculation based on cart products
+    // Dynamic Delivery Fee and Minimum Order calculation based on cart products
     if (this.selectedDateInfo !== 'Invalid') {
       let maxFee = 0;
+      let maxMinOrder = 0;
       const isWeekend = day === 0 || day === 6;
 
       this.cartData.forEach(item => {
         if (item.productDetails) {
+          // Delivery Fee logic
           let itemFee = 0;
           if (isHoliday) {
             itemFee = parseFloat(item.productDetails.holiday_fee) || 0;
@@ -590,6 +612,10 @@ export class OrderComponent implements OnInit {
             itemFee = parseFloat(item.productDetails.delivery_fee_weekday) || 0;
           }
           if (itemFee > maxFee) maxFee = itemFee;
+
+          // Minimum Order logic
+          let itemMinOrder = parseFloat(item.productDetails.min_delivery_charge) || 0;
+          if (itemMinOrder > maxMinOrder) maxMinOrder = itemMinOrder;
         }
       });
 
@@ -604,8 +630,10 @@ export class OrderComponent implements OnInit {
         }
       }
       this.deliveryFee = maxFee;
+      this.minOrderRequired = maxMinOrder;
     } else {
       this.deliveryFee = 0;
+      this.minOrderRequired = 0;
     }
 
     if (this.selectedDateInfo !== 'Invalid') {

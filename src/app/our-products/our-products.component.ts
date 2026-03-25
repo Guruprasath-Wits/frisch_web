@@ -111,13 +111,13 @@ export class OurProductsComponent implements OnInit {
         const targetCat = this.allCategories.find(c => c.id === firstCatId);
         if (targetCat && targetCat.category_type) {
           // Select the Sub-Category Type (top checkboxes)
+          // This keeps the context (e.g. Backwaren) without forcing a specific Unterkategorie filter
           this.selectedCategoryType = targetCat.category_type;
           this.filterCategoriesByType();
 
-          // Also check the specific Kategorie box to show related products
-          if (!this.selectedCategories.includes(firstCatId)) {
-            this.selectedCategories.push(firstCatId);
-          }
+          // ❌ Removed the automatic checking of the Unterkategorie (firstCatId)
+          // this.selectedCategories.push(firstCatId);
+
           this.applyFilters();
         }
       }
@@ -413,18 +413,8 @@ export class OurProductsComponent implements OnInit {
         this.selectedCategoryType = category.category_type;
         this.filterCategoriesByType();
 
-        // Check the individual category boxes for all items in the cart
-        this.cartData.forEach(item => {
-          const cartProduct = this.products.find(p => p.id === item.product_id);
-          if (cartProduct && cartProduct.category_id) {
-            const ids = String(cartProduct.category_id).split(',').map(id => Number(id.trim()));
-            ids.forEach(id => {
-              if (!this.selectedCategories.includes(id)) {
-                this.selectedCategories.push(id);
-              }
-            });
-          }
-        });
+        // ❌ Removed the loop that automatically checked Unterkategorie (subcategory) boxes
+        // Based on your cart items. Now subcategories only get selected if you click them manually.
       }
     }
     this.applyFilters();

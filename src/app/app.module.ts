@@ -159,6 +159,7 @@ import { MissingProductDialogComponent } from './dialog/missing-product-dialog/m
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     MatDialogModule, MatExpansionModule, MatFormFieldModule,
     MatDatepickerModule, MatNativeDateModule, MatInputModule,
     RouterModule.forRoot([

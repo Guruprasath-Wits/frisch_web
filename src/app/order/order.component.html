@@ -106,8 +106,15 @@
 
                     <div class="mt-2 text-start">
                         <label class="fw-bold">Lieferdatum</label>
-                        <input type="date" class="form-control border-warning" formControlName="delivery_date"
-                            [min]="minDate" (change)="validateDate($event)" style="background-color: #fff;">
+                        <!-- <input type="date" class="form-control border-warning" formControlName="delivery_date"
+                            [min]="minDate" (change)="validateDate($event)" style="background-color: #fff;"> -->
+                        <mat-form-field appearance="fill" class="custom-datepicker-field">
+                            <input matInput [matDatepicker]="picker" [min]="minDateObj"
+                                (dateChange)="validateDate($event)" formControlName="delivery_date"
+                                placeholder="Wählen Sie ein Lieferdatum">
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
                     </div>
 
                     <div class="error text-danger" *ngIf="orderForm.get('delivery_date')?.hasError('afterFriday4pm')">
@@ -135,6 +142,11 @@
 
                     <br>
                     <div class="billing-area row p-3">
+                        <div *ngIf="+itemTotal < minOrderRequired"
+                            class="col-12 text-center text-danger mb-2 font-weight-bold">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Mindestbestellwert von {{
+                            minOrderRequired.toFixed(2).replace('.', ',') }} € nicht erreicht.
+                        </div>
                         <h4>Zahlungsinformationen</h4>
                         <div class="col-6 text-start">
                             <p>Produktsumme</p>
@@ -188,7 +200,7 @@
                     <!-- <div id="card-element"></div>
                     <br> -->
                     <button type="submit"
-                        [disabled]="orderForm.invalid || selectedDateInfo === '' || selectedDateInfo === 'Invalid'"
+                        [disabled]="orderForm.invalid || selectedDateInfo === '' || selectedDateInfo === 'Invalid' || +itemTotal < minOrderRequired"
                         class="p-2 rounded btn btn-warning w-100">
                         Bezahlen
                     </button>

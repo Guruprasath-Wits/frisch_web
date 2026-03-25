@@ -28,6 +28,7 @@ export class CartComponent {
   selectedButton: { value: number, disabled: boolean } | null = null;
   tips: any = 0
   formattedTips: string = `${Math.floor(this.tips)} ⁰⁰`;
+  settings: any = {};
 
   ngOnInit() {
     console.log("🔄 Subscribing to cartCleared$ event...");
@@ -41,6 +42,21 @@ export class CartComponent {
     this.loadTipAmt()
     this.loadCartData(); // ✅ This should be AFTER subscribing
     this.loadHolidays();
+    this.loadSettings();
+  }
+
+  loadSettings() {
+    this.dataService.getSettingsData().subscribe(
+      (response) => {
+        if (response?.status) {
+          this.settings = response.setting[0] || {};
+          this.calculateTotalAmount();
+        }
+      },
+      (error) => {
+        console.error("Error fetching settings:", error);
+      }
+    );
   }
 
   loadHolidays() {
@@ -320,8 +336,24 @@ export class CartComponent {
       });
     }
     this.total = parseFloat(this.total.toFixed(2));
+
+    // Fallback to settings if no category-specific values are found
+    if (this.deliveryFee === 0 && this.settings) {
+      if (isHolidayFlag) {
+        this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0;
+      } else if (dayOfWeek === 0) { // Sunday
+        this.deliveryFee = parseFloat(this.settings.weekend_fee) || 0;
+      } else { // Monday - Saturday
+        this.deliveryFee = parseFloat(this.settings.weekday_fee) || 0;
+      }
+    }
+
+    if (this.minOrderRequired === 0 && this.settings) {
+      this.minOrderRequired = parseFloat(this.settings.minimumorder) || 0;
+    }
+
     // totalAmount should include delivery fee and tips
-    this.totalAmount = this.total + parseFloat(this.tips || 0);
+    this.totalAmount = this.total + parseFloat(this.tips || 0) + this.deliveryFee;
     this.totalAmount = parseFloat(this.totalAmount.toFixed(2));
 
     console.log("Total Amount: " + this.total);

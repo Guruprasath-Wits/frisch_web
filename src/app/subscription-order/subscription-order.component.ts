@@ -19,6 +19,8 @@ export class SubscriptionOrderComponent implements OnInit {
     private fb: FormBuilder, private route: ActivatedRoute, private router: Router,
     public dialog: MatDialog, private ngZone: NgZone, private cdr: ChangeDetectorRef) {
     this.minDate = new Date().toISOString().split('T')[0];
+    this.minDateObj = new Date();
+    this.minDateObj.setHours(0, 0, 0, 0);
   }
   isDialogOpen = false;
   SubscriptionForm!: FormGroup
@@ -40,8 +42,10 @@ export class SubscriptionOrderComponent implements OnInit {
 
   selectedDateInfo: string = ''
   deliveryFee: number = 0;
+  minOrderRequired: number = 0;
   orderData: any = {}
   minDate: string;
+  minDateObj: Date;
 
   subscribeData: any = {}
   subscriptionData: any[] = []
@@ -75,7 +79,11 @@ export class SubscriptionOrderComponent implements OnInit {
     if (isNaN(tipsNum)) {
       tipsNum = 0;
     }
-    this.totalAmount = (itemTotalNum + tipsNum).toFixed(2).toString();
+    this.totalAmount = (itemTotalNum + tipsNum + this.deliveryFee).toFixed(2).toString();
+  }
+
+  updateTotal() {
+    this.inialTotal();
   }
 
   verifyIban() {
@@ -299,19 +307,31 @@ export class SubscriptionOrderComponent implements OnInit {
     let loadedProducts = 0;
 
     this.cartData.forEach(cartItem => {
-      this.dataService.getProductById(cartItem.product_id).subscribe(
-        (productResponse) => {
-          cartItem.productDetails = productResponse.product;
-          loadedProducts++;
-          // console.log(cartItem);
+      // Check if it's a combo or a regular product
+      const fetchObservable = cartItem.is_combo
+        ? this.dataService.getComboById(cartItem.product_id)
+        : this.dataService.getProductById(cartItem.product_id);
 
-          this.products[this.i++] = [cartItem.productDetails.product_name, cartItem.quantity, cartItem.productDetails.price];
+      fetchObservable.subscribe(
+        (response) => {
+          cartItem.productDetails = cartItem.is_combo ? response.combo : response.product;
+          loadedProducts++;
+
+          const name = cartItem.productDetails.product_name || cartItem.productDetails.name;
+          this.products[this.i++] = [name, cartItem.quantity, cartItem.productDetails.price];
           console.log(this.products);
+
+          if (loadedProducts === this.cartData.length) {
+            this.validateDate();
+          }
           this.cdr.detectChanges();
         },
         (error) => {
-          console.log("Error fetching product details for product_id " + cartItem.product_id + ":", error);
+          console.log("Error fetching details for product_id " + cartItem.product_id + ":", error);
           loadedProducts++;
+          if (loadedProducts === this.cartData.length) {
+            this.validateDate();
+          }
           this.cdr.detectChanges();
         }
       );
@@ -344,7 +364,11 @@ export class SubscriptionOrderComponent implements OnInit {
   validateDate(event?: any) {
     let inputDate: Date | null = null;
 
-    if (event?.target?.value) {
+    if (event?.value) {
+      // Angular Material Datepicker event
+      inputDate = new Date(event.value);
+    } else if (event?.target?.value) {
+      // Native input event
       inputDate = new Date(event.target.value);
     } else {
       const formValue = this.SubscriptionForm.get('delivery_date')?.value;
@@ -372,7 +396,50 @@ export class SubscriptionOrderComponent implements OnInit {
       this.SubscriptionForm.get('delivery_date')?.setErrors({ invalidDate: true });
     }
 
+    // Dynamic Delivery Fee calculation based on cart products
+    if (this.selectedDateInfo !== 'Invalid') {
+      let maxFee = 0;
+      let maxMinOrder = 0;
+
+      this.cartData.forEach(item => {
+        if (item.productDetails) {
+          // Delivery Fee logic
+          let itemFee = 0;
+          if (selectedDay === 0) { // Sunday
+            itemFee = parseFloat(item.productDetails.delivery_fee_weekend) || 0;
+          } else { // Weekdays and Saturday
+            itemFee = parseFloat(item.productDetails.delivery_fee_weekday) || 0;
+          }
+          if (itemFee > maxFee) maxFee = itemFee;
+
+          // Minimum Order logic
+          let itemMinOrder = parseFloat(item.productDetails.min_delivery_charge) || 0;
+          if (itemMinOrder > maxMinOrder) maxMinOrder = itemMinOrder;
+        }
+      });
+
+      // Fallback to settings if no category-specific fee is found
+      if (maxFee === 0 && this.settings) {
+        if (selectedDay === 0) { // Sunday
+          maxFee = parseFloat(this.settings.weekend_fee) || 0;
+        } else { // Saturday or Weekdays
+          maxFee = parseFloat(this.settings.weekday_fee) || 0;
+        }
+      }
+
+      if (maxMinOrder === 0 && this.settings) {
+        maxMinOrder = parseFloat(this.settings.minimumorder) || 0;
+      }
+
+      this.deliveryFee = maxFee;
+      this.minOrderRequired = maxMinOrder;
+    } else {
+      this.deliveryFee = 0;
+      this.minOrderRequired = 0;
+    }
+
     localStorage.setItem('selectedSubscriptionDate', formattedDate);
+    this.updateTotal(); // Ensure total is updated with new fee
   }
 
   disableSaturday = false;

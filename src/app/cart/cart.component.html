@@ -81,6 +81,22 @@
                 </div>
             </div>
 
+            <div class="row card-footer text-center total border-0">
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>Liefergebühr (geschätzt)</p>
+                </div>
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>{{ deliveryFee.toFixed(2).split(".")[0] }} <sup>{{ deliveryFee.toFixed(2).split(".")[1] }}</sup>
+                        €</p>
+                </div>
+            </div>
+
+            <div *ngIf="total < minOrderRequired" class="row card-footer text-center border-0 py-0">
+                <div class="col-12 text-danger small">
+                    <p>Mindestbestellwert: {{ minOrderRequired.toFixed(2).replace('.', ',') }} €</p>
+                </div>
+            </div>
+
 
 
             <hr>
