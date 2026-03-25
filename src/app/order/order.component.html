@@ -135,7 +135,7 @@
                     <div class="error text-danger"
                         *ngIf="orderForm.get('delivery_date')?.hasError('productNotAvailable')">
                         Das Produkt '{{ orderForm.get('delivery_date')?.getError('productNotAvailable') }}' ist an
-                        diesem Tag nicht verfügbar.
+                        diesem Tag nicht verfügbar. Bitte entfernen Sie das Produkt aus dem Warenkorb.
                     </div>
 
 
