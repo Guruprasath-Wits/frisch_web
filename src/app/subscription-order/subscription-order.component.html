@@ -154,11 +154,11 @@
               <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
-            <div class="error text-danger" *ngIf="SubscriptionForm.get('delivery_date')?.hasError('afterFriday4pm')">
-              Sie können montags bis freitags bestellen, freitags bis 16 Uhr.
+            <div class="error text-danger" *ngIf="SubscriptionForm.get('delivery_date')?.hasError('afterFriday130pm')">
+              Sie können montags bis freitags bestellen, freitags bis 13:30 Uhr.
             </div>
             <div class="error text-danger" *ngIf="SubscriptionForm.get('delivery_date')?.hasError('weekendOrder')">
-              Bestellungen können nur von Montag bis Freitag vor 16:00 Uhr aufgegeben werden.
+              Bestellungen können nur von Montag bis Freitag vor 13:30 Uhr aufgegeben werden.
             </div>
             <div class="text-danger">
               Bitte beachten Sie: Die Lieferung erfolgt nur an Wochenenden
