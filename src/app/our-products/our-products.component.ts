@@ -204,7 +204,8 @@ export class OurProductsComponent implements OnInit {
   }
 
 
-  applyFilters(): void {
+  applyFilters(resetPage: boolean = true): void {
+    const savedPage = this.currentPage;
     let result = [...this.products];
 
     // 1. Primary Filter: By Sub-Category Type (Main Category)
@@ -237,13 +238,24 @@ export class OurProductsComponent implements OnInit {
     }
 
     this.filteredProducts = result;
-    this.currentPage = 1;
     this.updateTotalPages();
+
+    if (resetPage) {
+      this.currentPage = 1;
+    } else {
+      // Preserve current page, but clamp to totalPages if they decreased
+      if (savedPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = this.totalPages;
+      } else {
+        this.currentPage = savedPage;
+      }
+    }
 
     console.log("Filter Result:", {
       type: this.selectedCategoryType,
       selected: this.selectedCategories,
-      count: this.filteredProducts.length
+      count: this.filteredProducts.length,
+      page: this.currentPage
     });
   }
 
@@ -310,13 +322,15 @@ export class OurProductsComponent implements OnInit {
           this.filteredProducts = [...this.products];
           this.updateTotalPages();
 
-          // ✅ Apply proper priority filter after products are loaded
+          // Apply proper priority filter after products are loaded
+          // If we are already on a page (> 1), don't reset it (e.g. if products reload)
+          const preservePage = this.currentPage > 1;
           if (this.cartData.length > 0) {
-            this.refreshViewFromCart();
+            this.refreshViewFromCart(!preservePage);
           } else if (this.initialCategoryId) {
             this.setCategoryFilter(this.initialCategoryId, true);
           } else {
-            this.applyFilters();
+            this.applyFilters(!preservePage);
           }
         }
       },
@@ -346,9 +360,9 @@ export class OurProductsComponent implements OnInit {
           this.filterCategoriesByType();
 
           if (this.cartData.length > 0) {
-            this.refreshViewFromCart();
+            this.refreshViewFromCart(this.currentPage === 1);
           } else {
-            this.applyFilters(); // Ensure products match the synced state
+            this.applyFilters(this.currentPage === 1); // Ensure products match the synced state
           }
         }
       },
@@ -370,7 +384,7 @@ export class OurProductsComponent implements OnInit {
     );
   }
 
-  loadCartData() {
+  loadCartData(resetPage: boolean = true) {
     if (!this.authService.isLoggedIn) return;
     this.userId = localStorage.getItem('userId');
     if (!this.userId) return;
@@ -380,23 +394,23 @@ export class OurProductsComponent implements OnInit {
         if (response?.status && response.card?.length) {
           this.cartData = response.card;
           // Synchronize view based on the new cart contents
-          this.refreshViewFromCart();
+          this.refreshViewFromCart(resetPage);
           this.syncProductQuantities();
         } else {
           this.cartData = [];
           this.syncProductQuantities();
-          this.applyFilters();
+          this.applyFilters(resetPage);
         }
       },
       () => {
         this.cartData = [];
         this.syncProductQuantities();
-        this.applyFilters();
+        this.applyFilters(resetPage);
       }
     );
   }
 
-  refreshViewFromCart(): void {
+  refreshViewFromCart(resetPage: boolean = true): void {
     if (!this.cartData || this.cartData.length === 0 || this.products.length === 0 || this.allCategories.length === 0) {
       return;
     }
@@ -417,7 +431,7 @@ export class OurProductsComponent implements OnInit {
         // Based on your cart items. Now subcategories only get selected if you click them manually.
       }
     }
-    this.applyFilters();
+    this.applyFilters(resetPage);
   }
 
   syncProductQuantities() {
@@ -593,7 +607,7 @@ export class OurProductsComponent implements OnInit {
         if (response.status) {
           this.dataService.cartLoad?.next(true);
           this.dataService.cartLoad1.next(true);
-          this.loadCartData();
+          this.loadCartData(false);
           Swal.fire({
             position: 'top-end',
             icon: 'success',
