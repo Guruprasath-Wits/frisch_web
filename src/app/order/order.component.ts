@@ -689,9 +689,9 @@ export class OrderComponent implements OnInit {
           }
 
           this.updateTotal();
-          Swal.fire('Success', 'Coupon applied successfully!', 'success');
+          Swal.fire('', 'Gutschein erfolgreich eingelöst!', 'success');
         } else {
-          Swal.fire('Error', response.message || 'Invalid coupon code', 'error');
+          Swal.fire('', response.message || 'Ungültiger Gutschein', 'error');
         }
       },
       (error: any) => {
