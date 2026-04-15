@@ -701,6 +701,24 @@ export class OrderComponent implements OnInit {
     );
   }
 
+  clearDate(event: MouseEvent) {
+    event.stopPropagation();
+    this.orderForm.get('delivery_date')?.setValue(null);
+    this.selectedDateInfo = '';
+    this.deliveryFee = 0;
+    this.updateTotal();
+  }
+
+  removeCoupon() {
+    this.couponApplied = false;
+    this.couponType = '';
+    this.discountAmount = 0;
+    this.discountPercentage = 0;
+    this.orderForm.get('coupon_code')?.setValue(null);
+    this.updateTotal();
+    Swal.fire('', 'Gutschein entfernt', 'info');
+  }
+
   loadAvailableCoupons() {
     this.dataService.getAvailableCoupons(this.userId).subscribe(
       (response: any) => {
