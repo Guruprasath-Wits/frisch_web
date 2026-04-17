@@ -499,7 +499,7 @@ export class SubscriptionOrderComponent implements OnInit {
       user_id: localStorage.getItem('userId'),
       username: this.userData.username,
       email: this.userData.email,
-      delivery_date: this.SubscriptionForm.value.delivery_date,
+      delivery_date: this.formatDate(new Date(this.SubscriptionForm.value.delivery_date)),
       iban: this.SubscriptionForm.value.iban,
       bankName: this.SubscriptionForm.value.bankName,           // <-- add this
       bic: this.SubscriptionForm.value.bic,                     // <-- add this
@@ -618,7 +618,7 @@ export class SubscriptionOrderComponent implements OnInit {
       user_id: localStorage.getItem('userId'),
       username: this.userData.username,
       email: this.userData.email,
-      delivery_date: this.SubscriptionForm.value.delivery_date,
+      delivery_date: this.formatDate(new Date(this.SubscriptionForm.value.delivery_date)),
       iban: this.SubscriptionForm.value.iban,
       bankName: this.SubscriptionForm.value.bankName,           // <-- add this
       bic: this.SubscriptionForm.value.bic,                     // <-- add this
@@ -753,7 +753,7 @@ export class SubscriptionOrderComponent implements OnInit {
       user_id: localStorage.getItem('userId'),
       username: this.userData.username,
       email: this.userData.email,
-      delivery_date: this.SubscriptionForm.value.delivery_date,
+      delivery_date: this.formatDate(new Date(this.SubscriptionForm.value.delivery_date)),
       address:
         (this.SubscriptionForm.value.address &&
           this.SubscriptionForm.value.zipcode &&

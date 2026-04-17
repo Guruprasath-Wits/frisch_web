@@ -419,9 +419,15 @@ export class SampleOrderComponent implements OnInit {
     //   console.error('Invalid delivery_date:', rawDate);
     // }
 
+    const rawDate = this.SampleOrderForm.get('delivery_date')?.value;
+    const dateObj = new Date(rawDate);
+    const formattedDate = !isNaN(dateObj.getTime()) 
+      ? `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`
+      : rawDate;
+
     this.sampleOrderData = {
       user_id: localStorage.getItem('userId'),
-      delivery_date: this.SampleOrderForm.value.delivery_date,
+      delivery_date: formattedDate,
       // address: this.SampleOrderForm.value.address || this.userData.address,
       address:
         (this.SampleOrderForm.value.street && this.SampleOrderForm.value.address &&

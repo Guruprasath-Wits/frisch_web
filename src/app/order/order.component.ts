@@ -1005,13 +1005,19 @@ export class OrderComponent implements OnInit {
       return; // Stop execution
     }
 
+    const rawDate = this.orderForm.get('delivery_date')?.value;
+    const dateObj = new Date(rawDate);
+    const formattedDate = !isNaN(dateObj.getTime()) 
+      ? `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`
+      : rawDate;
+
     // Proceed with order if zipcode is valid
     this.orderData = {
       user_id: localStorage.getItem('userId'),
       username: this.userData.username,
       email: this.userData.email,
       deliveryFee: this.deliveryFee,
-      delivery_date: this.orderForm.value.delivery_date,
+      delivery_date: formattedDate,
       // address: 
       //   (this.orderForm.value.address || this.orderForm.value.zipcode || this.userData.ort)
       //     ? `${this.orderForm.value.address || ''}, ${this.orderForm.value.zipcode || ''}, ${this.userData.ort || ''}`
