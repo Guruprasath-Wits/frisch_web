@@ -4,6 +4,7 @@ import { ActivatedRoute, Route } from '@angular/router';
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-products-details',
@@ -12,7 +13,7 @@ import { AuthService } from '../auth.service';
 })
 export class ProductsDetailsComponent implements OnInit {
 
-    constructor(private route: ActivatedRoute, private dataService: DataService, private router: Router, private authService: AuthService) { }
+    constructor(private route: ActivatedRoute, private dataService: DataService, private router: Router, private authService: AuthService, private titleService: Title, private metaService: Meta) { }
 
     fileUrl = this.dataService.fileUrl;
     CartData: any[] = [];
@@ -46,6 +47,7 @@ export class ProductsDetailsComponent implements OnInit {
             (response) => {
                 if (response.status) {
                     this.product = response.product;
+                    this.updateSEO();
                     console.log(this.product);
 
                 }
@@ -54,6 +56,23 @@ export class ProductsDetailsComponent implements OnInit {
                 console.log('Error fetching data in Product by Id: ', error);
             }
         )
+    }
+
+    updateSEO() {
+        if (this.product && this.product.product_name) {
+            const title = `${this.product.product_name} - Frisch für Sie`;
+            const description = this.product.product_describe 
+                ? this.product.product_describe.substring(0, 155) + '...'
+                : `Bestellen Sie ${this.product.product_name} online bei Frisch für Sie.`;
+            
+            this.titleService.setTitle(title);
+            this.metaService.updateTag({ name: 'description', content: description });
+            this.metaService.updateTag({ property: 'og:title', content: title });
+            this.metaService.updateTag({ property: 'og:description', content: description });
+            if (this.product.product_img) {
+                this.metaService.updateTag({ property: 'og:image', content: this.fileUrl + this.product.product_img });
+            }
+        }
     }
 
     loadUserData() {

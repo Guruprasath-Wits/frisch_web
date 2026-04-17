@@ -635,7 +635,7 @@
       <!-- PRODUCT LIST -->
       <div class="col-12 col-md-8 col-lg-8 col-xl-9">
         <div class="product-result w-100 bg-warning p-3 text-dark fw-bold">
-          {{ enabledPaginatedProducts.length }} Produkte
+          <h2 class="h5 mb-0 d-inline-block">{{ enabledPaginatedProducts.length }} Produkte gefunden</h2>
         </div>
 
         <div *ngIf="paginatedProducts.length > 0">
@@ -643,16 +643,16 @@
             <div class="col-lg-3 col-md-6 col-xl-3" *ngFor="let product of paginatedProducts">
               <div class="product_card text-center">
                 <div class="product_img">
-                  <img [src]="fileUrl + product.product_img" alt="author" class="img-fluid">
+                  <img [src]="fileUrl + product.product_img" [alt]="product.product_name" class="img-fluid">
                 </div>
                 <div class="product_info mt-2 d-flex flex-column text-start">
                   <div class="d-flex justify-content-between align-items-center w-100">
-                    <p (click)="selectProductFilter(product)"
-                      style="cursor: pointer; text-decoration: underline; color: #954535; font-size: 1.1rem; font-weight: 600;">
+                    <h3 (click)="selectProductFilter(product)"
+                      style="cursor: pointer; text-decoration: underline; color: #954535; font-size: 1.1rem; font-weight: 600; margin-bottom: 0;">
                       {{ cleanProductName(product.product_name) }}
-                    </p>
+                    </h3>
                     <img src="../../assets/img/icon/information.png" width="30" height="30" style="cursor: pointer;"
-                      (click)="showProductDescription(product)">
+                      (click)="showProductDescription(product)" alt="Produktinformationen anzeigen">
                   </div>
 
                   <div class="availability-container d-flex gap-2 mt-2">
