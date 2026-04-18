@@ -346,13 +346,10 @@
 
 <section class="section home-banner row-middle" id="home-banner1"
     [ngStyle]="{'background-image': imageLoaded ? 'url(' + bannerImage + ')' : 'none'}">
-    <img [src]="bannerImage" (load)="imageLoaded = true" alt="banner" style="display:none;" />
+    <img [src]="bannerImage" (load)="imageLoaded = true" alt="Frische Backwaren Banner" style="display:none;" />
     <div class="overlay" *ngIf="imageLoaded"></div>
 
     <div class="container">
-        <!-- <h1 class="cus-h1" id="cus-h1-new">
-            Möchtet ihr euren <br> Morgen <br> verzaubern?
-        </h1> -->
         <div class="breaking-news-container">
             <div class="breaking-news-text">
                 {{ settings.breaking_news }}
@@ -361,33 +358,17 @@
     </div>
 </section>
 
-
-
 <section class="section row-middle">
     <div class="container ">
         <div class="row">
             <div class="col-md-12 mt-2">
-                <h2 class="cus-con">Möchtet ihr euren Morgen verzaubern?
-                </h2>
-                <h2 class="cus-con">Dann Haben wir genau das Richtige für euch !
-                </h2>
+                <h2 class="cus-con">Möchtet ihr euren Morgen verzaubern?</h2>
+                <h2 class="cus-con">Dann haben wir genau das Richtige für euch!</h2>
                 <div class="name-text">
                     <h1 class="cus-head">{{ settings.company_name }}</h1>
                 </div>
-                <h2 class="cus-con">Ist da, um eure Frühstücksroutine zu Revolutionieren
-                </h2>
+                <h2 class="cus-con">Ist da, um eure Frühstücksroutine zu revolutionieren</h2>
             </div>
-
-            <!-- <div class="col-md-12">
-                <h3 class="cus-h3">
-                    Zögern Sie nicht länger!<br>
-                    Ihre Kostenlose Probetüte inklusive liefergebühr wartet schon auf Sie
-
-                </h3>
-            </div>
-            <div class="freetrail">
-                <button class="btn cus-btn" [routerLink]="'/free-trail'">Jetzt Klicken</button>
-            </div>             -->
         </div>
     </div>
 </section>
@@ -396,15 +377,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-5 col-sm-12 cus-map">
-                <img class="img-fluid" src="../../assets/img/dormunt.png" alt="dor">
+                <img class="img-fluid" src="../../assets/img/dormunt.png" alt="Liefergebiete Dortmund">
             </div>
 
             <div class="col-md-7 col-sm-12 cus-map-con">
                 <div class="col-md-11">
-                    <h1 class="cus-search" id="cursh">Finden Sie schnell heraus, ob die Lieferung von <span
+                    <h2 class="cus-search" id="cursh">Finden Sie schnell heraus, ob die Lieferung von <span
                             class="com-name">{{
                             settings.company_name }}</span> in Ihrer Nähe möglich ist.<small>(Unten sehen Sie die
-                            Postleitzahlen, in die wir liefern)</small></h1>
+                            Postleitzahlen, in die wir liefern)</small></h2>
                 </div>
 
                 <div>
@@ -430,14 +411,13 @@
     <div class="container">
         <div class="section-header text-center">
             <div class="section-line"></div>
-            <h1 class="custom-h1">Ihre Vorteile durch uns
-            </h1>
+            <h2 class="custom-h1">Ihre Vorteile durch uns</h2>
         </div>
         <div class="roadmap-container" *ngFor="let advantage of userBenefit; let i=index">
             <div *ngIf="i%2==0" #align_right class="roadmap-item right">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title ad-head">{{ advantage.adv_qns }}</h2>
+                        <h3 class="card-title ad-head">{{ advantage.adv_qns }}</h3>
                         <p class="ad-content">{{ advantage.adv_ans }}</p>
                     </div>
                 </div>
@@ -446,7 +426,7 @@
             <div *ngIf="i%2==1" #align_left class="roadmap-item left">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="card-title ad-head">{{ advantage.adv_qns }}</h2>
+                        <h3 class="card-title ad-head">{{ advantage.adv_qns }}</h3>
                         <p class="ad-content">{{ advantage.adv_ans }}</p>
                     </div>
                 </div>
@@ -463,9 +443,9 @@
             <div class="col-12 col-md-12 mx-auto">
                 <div class="section-header text-center aos" data-aos="fade-up">
                     <div class="section-line1"></div>
-                    <h1 class="header-title custom-h2">
+                    <h2 class="header-title custom-h2">
                         Bestellen Sie jetzt unsere große Auswahl an frischen Backwaren und weiteren Produkten
-                    </h1>
+                    </h2>
                 </div>
                 <div class="cardrows">
                     <div class="category d-flex flex-row flex-wrap align-items-center justify-content-center">
@@ -490,24 +470,24 @@
     <div class="container">
         <div class="section-header text-center" data-aos="fade-up">
             <div class="section-line"></div>
-            <h1 class="header-title custom-h1">
+            <h2 class="header-title custom-h1">
                 Setzen Sie sich bitte mit uns in Verbindung
-            </h1>
+            </h2>
         </div>
         <br>
         <div class="cardrow">
             <div class="row justify-content-center" id="box-col">
                 <div class="announce col-12 col-md-5 col-xl-4 mb-3 me-lg-4 text-center">
-                    <img src="../../assets/img/icon/bell.png" alt="" class="announce-img mx-auto d-block">
-                    <h1 class="announce_title">Webshop</h1>
+                    <img src="../../assets/img/icon/bell.png" alt="Webshop Icon" class="announce-img mx-auto d-block">
+                    <h3 class="announce_title">Webshop</h3>
                     <br>
                     <p class="text-justify">
                         {{settings.webshop}}
                     </p>
                 </div>
                 <div class="announce col-12 col-md-5 col-xl-4 mb-3 text-center">
-                    <img src="../../assets/img/icon/telephone-2.png" alt="" class="announce-img mx-auto d-block">
-                    <h1 class="announce_title">Telefon</h1>
+                    <img src="../../assets/img/icon/telephone-2.png" alt="Telefon Icon" class="announce-img mx-auto d-block">
+                    <h3 class="announce_title">Telefon</h3>
                     <br>
                     <p class="text-justify">
                         {{settings.telephone}}

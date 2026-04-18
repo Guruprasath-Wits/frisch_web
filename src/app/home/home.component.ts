@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DataService } from '../data.service';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,7 @@ import { DataService } from '../data.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private titleService: Title, private metaService: Meta) { }
 
   fileurl: string = this.dataService.fileUrl;
   bannerImages: string[] = [];
@@ -24,10 +25,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   categories: any[] = [];
 
   ngOnInit() {
+    this.setSEO();
     this.loadCategoryData();
     this.loadSettingsData();
     this.loadDeliveryAreas();
     this.loadUserAdvantages();
+  }
+
+  setSEO() {
+    this.titleService.setTitle('Brötchen Lieferservice & Frühstücksservice - Frisch für Sie');
+    this.metaService.updateTag({ name: 'description', content: 'Ihr regionaler Lieferservice für frische Brötchen und Backwaren. Starten Sie stressfrei in den Tag – wir liefern Ihr Frühstück direkt an die Haustür!' });
+    this.metaService.updateTag({ property: 'og:title', content: 'Brötchen Lieferservice & Frühstücksservice - Frisch für Sie' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Ihr regionaler Lieferservice für frische Brötchen und Backwaren direkt an die Haustür.' });
   }
 
   ngOnDestroy() {

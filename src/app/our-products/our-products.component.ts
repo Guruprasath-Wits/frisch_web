@@ -6,6 +6,7 @@ import { MissingProductDialogComponent } from '../dialog/missing-product-dialog/
 import { NoopScrollStrategy } from '@angular/cdk/overlay';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-our-products',
@@ -20,7 +21,9 @@ export class OurProductsComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private titleService: Title,
+    private metaService: Meta
   ) { }
 
   isLogin = localStorage.getItem('isLoggedIn');
@@ -49,6 +52,7 @@ export class OurProductsComponent implements OnInit {
   isAgeVerified: boolean = false;
 
   ngOnInit() {
+    this.updateSEO();
     this.route.queryParams.subscribe((params) => {
       const categoryId = Number(params['category']);
       if (categoryId) {
@@ -204,7 +208,31 @@ export class OurProductsComponent implements OnInit {
   }
 
 
+  updateSEO() {
+    let title = 'Unsere Produkte - Frisch für Sie';
+    let description = 'Entdecken Sie unsere große Auswahl an frischen Brötchen, Broten, Kuchen und mehr.';
+
+    if (this.selectedCategoryType !== 'all') {
+      title = `${this.selectedCategoryType} - Frisch für Sie`;
+      description = `Frische Produkte aus der Kategorie ${this.selectedCategoryType} online bestellen bei Frisch für Sie.`;
+    }
+
+    if (this.selectedCategories.length > 0) {
+      const cat = this.allCategories.find(c => c.id === this.selectedCategories[0]);
+      if (cat) {
+        title = `${cat.category_name} online bestellen - Frisch für Sie`;
+        description = `Kaufen Sie frische ${cat.category_name} und weitere Backwaren online bei Ihrem lokalen Lieferservice.`;
+      }
+    }
+
+    this.titleService.setTitle(title);
+    this.metaService.updateTag({ name: 'description', content: description });
+    this.metaService.updateTag({ property: 'og:title', content: title });
+    this.metaService.updateTag({ property: 'og:description', content: description });
+  }
+
   applyFilters(resetPage: boolean = true): void {
+    this.updateSEO();
     const savedPage = this.currentPage;
     let result = [...this.products];
 
