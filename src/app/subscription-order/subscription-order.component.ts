@@ -377,6 +377,20 @@ export class SubscriptionOrderComponent implements OnInit {
 
     if (!inputDate) return;
 
+    const currentDate = new Date();
+    const currentDay = currentDate.getDay(); // 5 = Friday
+    const currentHour = currentDate.getHours();
+    const currentMinutes = currentDate.getMinutes();
+
+    // Friday 1:30 PM (13:30) cutoff enforcement
+    if (currentDay === 5 && (currentHour > 13 || (currentHour === 13 && currentMinutes >= 30))) {
+      this.SubscriptionForm.get('delivery_date')?.setErrors({ afterFriday130pm: true });
+    } else if (currentDay === 0 || currentDay === 6) {
+      // Also block orders on weekends if that was the intended "not able to accept order"
+      this.SubscriptionForm.get('delivery_date')?.setErrors({ weekendOrder: true });
+    }
+
+
     const formatDate = (date: Date) => {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');

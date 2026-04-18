@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { DataService } from '../data.service';
 
@@ -9,7 +9,8 @@ import { DataService } from '../data.service';
   styleUrls: ['./unzer-success.component.css']
 })
 export class UnzerSuccessComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private http: HttpClient, private dataService: DataService) {}
+  isLoading: boolean = true;
+  constructor(private route: ActivatedRoute, private http: HttpClient, private dataService: DataService, private router: Router) { }
 
   // ngOnInit(): void {
   //   const orderId = this.route.snapshot.queryParamMap.get('orderId');
@@ -36,21 +37,39 @@ export class UnzerSuccessComponent implements OnInit {
   // }
 
   ngOnInit(): void {
-  const orderId = this.route.snapshot.queryParamMap.get('orderId');
-  const paymentId = this.route.snapshot.queryParamMap.get('paymentId');
+    const orderId = this.route.snapshot.queryParamMap.get('orderId');
+    const paymentId = this.route.snapshot.queryParamMap.get('paymentId');
 
-  // ✅ If Unzer did not provide paymentId, fallback from localStorage
-  const finalPaymentId = paymentId || localStorage.getItem('paymentId');
+    // ✅ If Unzer did not provide paymentId, fallback from localStorage
+    const finalPaymentId = paymentId || localStorage.getItem('paymentId');
 
-  if (orderId && finalPaymentId) {
-    this.http.post(`${this.dataService.apiUrl}api/verify-payment`, {
-      orderId,
-      paymentId: finalPaymentId
-    }).subscribe(
-      () => {},
-      err => console.error('Verification failed', err)
-    );
+    if (orderId && finalPaymentId) {
+      this.http.post<any>(`${this.dataService.apiUrl}api/verify-payment`, {
+        orderId,
+        paymentId: finalPaymentId
+      }).subscribe(
+        (res) => {
+          // If the backend verification confirms the payment was successful
+          if (res.success) {
+            console.log("✅ Payment Verified as Successful!");
+            this.isLoading = false;
+            localStorage.removeItem('paymentId');
+
+            // This alerts the UI components (like header cart icon) that cart is cleared
+            if (this.dataService.cartCleared$) {
+              this.dataService.cartCleared$.next(true);
+            }
+          } else {
+            // Payment verified as Failed or Pending. Redirect to failure page.
+            console.warn("⚠️ Payment verification not successful:", res.msg);
+            this.router.navigate(['unzer-failure'], { queryParams: { orderId } });
+          }
+        },
+        err => {
+          console.error('❌ Verification API call failed', err);
+          this.router.navigate(['unzer-failure'], { queryParams: { orderId } });
+        }
+      );
+    }
   }
-
-}
 }
