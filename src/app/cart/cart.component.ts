@@ -529,7 +529,8 @@ export class CartComponent {
 
   hasAndereCategory(): boolean {
     return this.cartData.some(item =>
-      item.productDetails && item.productDetails.category_type === 'Getränke und Sonstiges - Lieferzeiten (Mo-Sa): ca. 16:30 bis 20:30 Uhr'
+      item.productDetails?.category_type?.includes('Getränke und Sonstiges') ||
+      item.productDetails?.category_type === 'Others'
     );
   }
 
