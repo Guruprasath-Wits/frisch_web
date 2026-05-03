@@ -219,10 +219,16 @@ export class SignupComponent implements OnInit {
 
     // Check zipcode availability
     const enteredZipcode = this.signupForm.value.zipcode;
+    if (!enteredZipcode) {
+      this.isLoading = false;
+      this.signupForm.get('zipcode')?.markAsTouched();
+      return;
+    }
+    
     this.signupForm.get('zipcode')?.setValue(enteredZipcode);
 
     const isZipcodeAvailable = this.postcodes.some((area: any) =>
-      area.zipcode.toString() === enteredZipcode.toString()
+      area.zipcode?.toString() === enteredZipcode.toString()
     );
 
     if (!isZipcodeAvailable) {
@@ -233,6 +239,7 @@ export class SignupComponent implements OnInit {
 
     // Validate form
     if (this.signupForm.invalid) {
+      this.isLoading = false;
       this.signupForm.markAllAsTouched();
       return;
     }
@@ -326,6 +333,7 @@ export class SignupComponent implements OnInit {
     localStorage.setItem('loginData', JSON.stringify(this.loginForm.value));
 
     if (!this.loginForm.valid) {
+      this.isLoading = false;
       Swal.fire('Fehler!', 'Bitte geben Sie gültige Anmeldedaten ein.', 'error');
       return;
     }

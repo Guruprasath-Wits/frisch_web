@@ -254,7 +254,7 @@
 
 
                             <div class="field">
-                              <button type="submit" [disabled]=" !SignPasswordValid">Registrieren</button>
+                              <button type="submit" [disabled]="signupForm.invalid || !SignPasswordValid">Registrieren</button>
                             </div>
                             <!-- signupForm.invalid || -->
                             <div class="signup-link">
