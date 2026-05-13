@@ -11,7 +11,7 @@ export class UnzerFailureComponent {
   fileUrl = this.dataService.fileUrl;
   apiUrl = this.dataService.apiUrl
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private dataService: DataService) {}
+  constructor(private route: ActivatedRoute, private http: HttpClient, private dataService: DataService) { }
 
   ngOnInit(): void {
     const order_id = this.route.snapshot.queryParams['order_id'];

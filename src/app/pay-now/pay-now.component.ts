@@ -101,25 +101,31 @@ export class PayNowComponent implements OnInit {
         try {
 
           // [MODIFIED BY CO-PILOT 2026-02-01]: Changed returnUrl to backend redirect
-          /*
-          // OLD LOGIC (Direct to Frontend)
-          const response: any = await this.http.post(`${this.apiUrl}api/init-payment`, {
-              customerData,
-              basketData,
-              returnUrl: `https://frischfuersie.de/unzer-success?orderId=${this.orderId}`,
-              redirectUrl: `https://frischfuersie.de/unzer-failure?orderId=${this.orderId}`,
-            })
-            .toPromise();
-          */
 
-          // NEW LOGIC (Via Backend Redirect)
+          // OLD LOGIC (Direct to Frontend)
           const response: any = await this.http.post(`${this.apiUrl}api/init-payment`, {
             customerData,
             basketData,
-            returnUrl: `${this.apiUrl}api/payment-redirect?orderId=${this.orderId}`,
-            redirectUrl: `${this.apiUrl}api/payment-redirect?orderId=${this.orderId}&status=cancelled`,
+            returnUrl: `https://frischfuersie.de/unzer-success?orderId=${this.orderId}`,
+            redirectUrl: `https://frischfuersie.de/unzer-failure?orderId=${this.orderId}`,
+            // returnUrl: `http://localhost:4200/unzer-success?orderId=${this.orderId}`,
+            // redirectUrl: `http://localhost:4200/unzer-failure?orderId=${this.orderId}`,
           })
             .toPromise();
+
+
+          // NEW LOGIC (Via Backend Redirect)
+          // const response: any = await this.http.post(`${this.apiUrl}api/init-payment`, {
+          //   customerData,
+          //   basketData,
+          //   // returnUrl: `${this.apiUrl}api/payment-redirect?orderId=${this.orderId}`,
+          //   // redirectUrl: `${this.apiUrl}api/payment-redirect?orderId=${this.orderId}&status=cancelled`,
+          //   returnUrl: `https://frischfuersie.de/unzer-success?orderId=${this.orderId}`,
+          //   redirectUrl: `https://frischfuersie.de/unzer-failure?orderId=${this.orderId}`,
+          //   // returnUrl: `http://localhost:4200/unzer-success?orderId=${this.orderId}`,
+          //   // redirectUrl: `http://localhost:4200/unzer-failure?orderId=${this.orderId}`,
+          // })
+          //   .toPromise();
 
           this.payPageId = response.payPageId;
 

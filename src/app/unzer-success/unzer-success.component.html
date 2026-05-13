@@ -1,27 +1,22 @@
-<p>unzer-sucess works!</p>
-<div class="bread-crumb-bar">
-    <div class="container">
-        <!-- <div class="row align-items-center inner-banner">
-            <div class="col-md-12 col-12 text-center">
-                <div class="breadcrumb-list">
-                    <nav aria-label="breadcrumb" class="page-breadcrumb">
-                       
-                    </nav>
-                </div>
-            </div>
-        </div> -->
+<div class="bread-crumb-bar" style="height: 50px;">
+    <!-- Spacer for navbar if needed -->
+</div>
+<div class="success-container" *ngIf="isLoading">
+    <div style="text-align: center; padding: 50px;">
+        <div class="spinner-border text-success" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h3 class="mt-3">Überprüfung der Zahlung...</h3>
+        <p>Bitte warten Sie einen Moment.</p>
     </div>
 </div>
-<div class="success-container">
-    <img
-      src="https://png.pngtree.com/png-vector/20191104/ourmid/pngtree-checkmark-icon-green-color-png-image_1952984.jpg"
-      alt="Success Tick Mark"
-      class="success-img"
-    />
+
+<div class="success-container" *ngIf="!isLoading">
+    <img src="https://png.pngtree.com/png-vector/20191104/ourmid/pngtree-checkmark-icon-green-color-png-image_1952984.jpg"
+        alt="Success Tick Mark" class="success-img" />
     <h3>Transaktion erfolgreich</h3>
     <p>Ihre Zahlung wurde erfolgreich verarbeitet.</p>
     <a routerLink="/manageOrders" class="btn">Gehen Sie zu „Meine Bestellung“</a>
-  </div>
-  <br><br>
-  <app-footer></app-footer>
- 
+</div>
+<br><br>
+<app-footer></app-footer>

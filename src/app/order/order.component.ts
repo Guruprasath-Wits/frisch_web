@@ -407,6 +407,13 @@ export class OrderComponent implements OnInit {
   }
 
 
+  private formatToYYYYMMDD(date: Date): string {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
   // Make validateDate async
   async validateDate(event?: any) {
     // 1️⃣ Get selected date
@@ -432,24 +439,11 @@ export class OrderComponent implements OnInit {
     }
 
     const day = inputDate.getDay();
-    const formatDateObj = (date: Date) => {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, '0');
-      const d = String(date.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
-    };
-    const formattedDate = formatDateObj(inputDate);
+    const formattedDate = this.formatToYYYYMMDD(inputDate);
 
     const currentDate = new Date();
-    const formatDate = (date: Date) => {
-      const y = date.getFullYear();
-      const m = String(date.getMonth() + 1).padStart(2, '0');
-      const d = String(date.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
-    };
-
-    const todayFormatted = formatDate(currentDate);
-    const tomorrowFormattedNew = formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1));
+    const todayFormatted = this.formatToYYYYMMDD(currentDate);
+    const tomorrowFormattedNew = this.formatToYYYYMMDD(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1));
 
 
 
@@ -466,7 +460,7 @@ export class OrderComponent implements OnInit {
         ? [
           todayFormatted,
           tomorrowFormattedNew,
-          formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)),
+          this.formatToYYYYMMDD(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)),
         ]
         : [];
 
@@ -564,7 +558,7 @@ export class OrderComponent implements OnInit {
 
     const tomorrow = new Date(currentDate);
     tomorrow.setDate(currentDate.getDate() + 1);
-    const tomorrowFormatted = formatDate(tomorrow);
+    const tomorrowFormatted = this.formatToYYYYMMDD(tomorrow);
 
 
     if (
@@ -1011,7 +1005,7 @@ export class OrderComponent implements OnInit {
       username: this.userData.username,
       email: this.userData.email,
       deliveryFee: this.deliveryFee,
-      delivery_date: this.orderForm.value.delivery_date,
+      delivery_date: this.formatToYYYYMMDD(new Date(this.orderForm.value.delivery_date)),
       // address: 
       //   (this.orderForm.value.address || this.orderForm.value.zipcode || this.userData.ort)
       //     ? `${this.orderForm.value.address || ''}, ${this.orderForm.value.zipcode || ''}, ${this.userData.ort || ''}`
