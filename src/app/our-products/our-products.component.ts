@@ -497,7 +497,7 @@ export class OurProductsComponent implements OnInit {
       console.log('--- 18+ PRODUCT CHECK ---');
       console.log('Product:', product.product_name, '| Verified:', isUserVerified);
 
-      if (is18Plus && !isUserVerified) {
+      if (is18Plus) {
         this.showAgeVerification(product);
         return;
       }

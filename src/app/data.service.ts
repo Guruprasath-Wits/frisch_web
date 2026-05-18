@@ -9,10 +9,10 @@ import { Subject } from 'rxjs';
 export class DataService {
   cartLoad = new BehaviorSubject<boolean>(false);
 
-  // public apiUrl = 'https://api.frischfuersie.de/';
-  // public fileUrl = 'https://api.frischfuersie.de';
-  public apiUrl = 'http://localhost:4001/';
-  public fileUrl = 'http://localhost:4001';
+  public apiUrl = 'https://api.frischfuersie.de/';
+  public fileUrl = 'https://api.frischfuersie.de';
+  // public apiUrl = 'http://localhost:4001/';
+  // public fileUrl = 'http://localhost:4001';
   stripe: any;
   private cartCleared = new BehaviorSubject<boolean>(false);
   cartCleared$ = new BehaviorSubject<boolean>(false);

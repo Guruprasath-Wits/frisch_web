@@ -331,6 +331,14 @@ export class OrderComponent implements OnInit {
             localStorage.setItem('total', this.itemTotal);
             this.updateTotal();
             this.validateDate();
+            
+            if (this.has18PlusProduct()) {
+              this.orderForm.get('instruction')?.setValidators([Validators.required]);
+            } else {
+              this.orderForm.get('instruction')?.clearValidators();
+            }
+            this.orderForm.get('instruction')?.updateValueAndValidity();
+
             this.isLoading = false;
             this.cdr.detectChanges();
           }
@@ -343,6 +351,14 @@ export class OrderComponent implements OnInit {
             localStorage.setItem('total', this.itemTotal);
             this.updateTotal();
             this.validateDate();
+
+            if (this.has18PlusProduct()) {
+              this.orderForm.get('instruction')?.setValidators([Validators.required]);
+            } else {
+              this.orderForm.get('instruction')?.clearValidators();
+            }
+            this.orderForm.get('instruction')?.updateValueAndValidity();
+
             this.isLoading = false;
             this.cdr.detectChanges();
           }
@@ -375,6 +391,12 @@ export class OrderComponent implements OnInit {
     return this.cartData.some(item =>
       item.productDetails?.category_type?.includes('Getränke und Sonstiges') ||
       item.productDetails?.category_type === 'Others'
+    );
+  }
+
+  has18PlusProduct(): boolean {
+    return this.cartData.some(item =>
+      Number(item.productDetails?.is_18_plus) === 1
     );
   }
 

@@ -567,7 +567,7 @@
 
             <!-- MISSING PRODUCT WIDGET -->
             <div class="filter-widget mt-4">
-              <h4 class="font-weight-bold">Fehlendes Produkt</h4>
+              <h4 class="font-weight-bold" style="font-size: 16px; line-height: 1.4;">Fehlt dir etwas in unserem Sortiment? Wir freuen uns über dein Feedback!</h4>
               <div class="p-2">
                 <textarea class="form-control mb-2" rows="3"
                   placeholder="Dein Wunsch-Produkt ist nicht dabei? Schreib uns!" [(ngModel)]="missingProductText"
@@ -634,8 +634,21 @@
 
       <!-- PRODUCT LIST -->
       <div class="col-12 col-md-8 col-lg-8 col-xl-9">
-        <div class="product-result w-100 bg-warning p-3 text-dark fw-bold">
-          <h2 class="h5 mb-0 d-inline-block">{{ enabledPaginatedProducts.length }} Produkte gefunden</h2>
+        <div class="product-result w-100 bg-warning p-3 text-dark fw-bold position-relative">
+          <div class="d-flex flex-column flex-md-row align-items-md-center">
+            <h2 class="h5 mb-0 position-relative" style="z-index: 1;">{{ enabledPaginatedProducts.length }} Produkte gefunden</h2>
+            
+            <span *ngIf="selectedCategoryType && selectedCategoryType.includes('Getränke und Sonstiges')" 
+                  class="fw-normal d-block d-md-none mt-2" style="font-size: 14px;">
+              Alle Preise verstehen sich inklusive gesetzlicher MwSt. und Pfand, zuzüglich Versandkosten.
+            </span>
+          </div>
+          
+          <span *ngIf="selectedCategoryType && selectedCategoryType.includes('Getränke und Sonstiges')" 
+                class="fw-normal position-absolute w-100 text-center d-none d-md-block" 
+                style="left: 0; top: 50%; transform: translateY(-50%); z-index: 0; font-size: 14px; pointer-events: none;">
+            Alle Preise verstehen sich inklusive gesetzlicher MwSt. und Pfand, zuzüglich Versandkosten.
+          </span>
         </div>
 
         <div *ngIf="paginatedProducts.length > 0">
