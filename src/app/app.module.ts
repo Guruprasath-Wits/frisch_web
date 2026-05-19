@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { registerLocaleData } from '@angular/common';
+import localeEnGb from '@angular/common/locales/en-GB';
+
+registerLocaleData(localeEnGb);
 // import { GoogleMapsModule } from '@angular/google-maps';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -37,9 +41,13 @@ import { CancelledjobsComponent } from './cancelledjobs/cancelledjobs.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
 import { DialogComponent } from './dialog/dialog.component';
 import { ContactusComponent } from './contactus/contactus.component';
 import { FaqComponent } from './faq/faq.component';
@@ -74,6 +82,7 @@ import { UnzerFailureComponent } from './unzer-failure/unzer-failure.component';
 import { EmbeddedPaymentComponent } from './embedded-payment/embedded-payment.component';
 import { PaypalSubscriptionSuccessComponent } from './paypal-subscription-success/paypal-subscription-success.component';
 import { PaypalSubscriptionFailureComponent } from './paypal-subscription-failure/paypal-subscription-failure.component';
+import { MissingProductDialogComponent } from './dialog/missing-product-dialog/missing-product-dialog.component';
 
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -144,12 +153,15 @@ import { PaypalSubscriptionFailureComponent } from './paypal-subscription-failur
     UnzerFailureComponent,
     EmbeddedPaymentComponent,
     PaypalSubscriptionSuccessComponent,
-    PaypalSubscriptionFailureComponent
+    PaypalSubscriptionFailureComponent,
+    MissingProductDialogComponent
 
   ],
   imports: [
     BrowserModule,
-    MatDialogModule, MatExpansionModule,
+    BrowserAnimationsModule,
+    MatDialogModule, MatExpansionModule, MatFormFieldModule,
+    MatDatepickerModule, MatNativeDateModule, MatInputModule,
     RouterModule.forRoot([
       { path: 'guestlogin', component: SigninComponent },
       { path: 'auth', component: SignupComponent },
@@ -201,27 +213,29 @@ import { PaypalSubscriptionFailureComponent } from './paypal-subscription-failur
       { path: 'manual-address', component: ManualAddressComponent },
       { path: 'stripe-success', component: StripeSuccessComponent },
       { path: 'stripe-failure', component: StripeFailureComponent },
-      { path: 'impressum', component: ImpressumComponent},
-      { path: 'stripe-Subscription-success', component: StripeSubscriptionSuccessComponent},
+      { path: 'impressum', component: ImpressumComponent },
+      { path: 'stripe-Subscription-success', component: StripeSubscriptionSuccessComponent },
       { path: 'unzer-success', component: UnzerSuccessComponent },
       { path: 'unzer-failure', component: UnzerFailureComponent },
-{ path: 'embedded-payment', component: EmbeddedPaymentComponent },
- { path: 'paypal-subscription-success', component: PaypalSubscriptionSuccessComponent },
-  { path: 'paypal-subscription-failure', component: PaypalSubscriptionFailureComponent },
-      
+      { path: 'embedded-payment', component: EmbeddedPaymentComponent },
+      { path: 'paypal-subscription-success', component: PaypalSubscriptionSuccessComponent },
+      { path: 'paypal-subscription-failure', component: PaypalSubscriptionFailureComponent },
+
 
 
 
     ],
-    {
-  scrollPositionRestoration: 'enabled', // ✅ scrolls to top
-  anchorScrolling: 'enabled'            // optional: supports #anchor links
-}
-  ), ReactiveFormsModule, HttpClientModule, FormsModule,
+      {
+        scrollPositionRestoration: 'enabled', // ✅ scrolls to top
+        anchorScrolling: 'enabled'            // optional: supports #anchor links
+      }
+    ), ReactiveFormsModule, HttpClientModule, FormsModule,
     NgxStripeModule.forRoot("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"),
 
   ],
-  providers: [],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-contactus',
@@ -12,7 +13,7 @@ import { AuthService } from '../auth.service';
 })
 export class ContactusComponent {
 
-  constructor(private authService: AuthService, private dataService: DataService, private fb: FormBuilder, private router: Router) { }
+  constructor(private authService: AuthService, private dataService: DataService, private fb: FormBuilder, private router: Router, private titleService: Title, private metaService: Meta) { }
   isLoading = false; 
   contactForm!: FormGroup
 
@@ -21,6 +22,8 @@ export class ContactusComponent {
   isLogin = localStorage.getItem('isLoggedIn')
 
   ngOnInit() {
+    this.titleService.setTitle('Kontaktieren Sie uns - Frisch für Sie');
+    this.metaService.updateTag({ name: 'description', content: 'Haben Sie Fragen? Kontaktieren Sie das Team von Frisch für Sie. Wir helfen Ihnen gerne bei Ihrer Bestellung von frischen Lebensmitteln.' });
     this.loadSettingsData();
     this.initializeForm();
   }

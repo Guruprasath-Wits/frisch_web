@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit ,HostListener} from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener } from '@angular/core';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
@@ -16,24 +16,24 @@ export class NavbarComponent implements OnInit, OnDestroy {
   settings: any = {};
   userId: any
   cartData: any[] = []
-  fileUrl=this.dataService.fileUrl;
+  fileUrl = this.dataService.fileUrl;
   preventFetching: boolean = false;
   loginStatus: boolean = false
   isLogin = this.authService.isLoggedIn
   private authSubcription!: Subscription
-    menuVisible = false;
+  menuVisible = false;
 
-    
-    toggleMenu() {
-      this.menuVisible = !this.menuVisible;
-    }
-  
-    onMenuItemClick() {
-      this.menuVisible = false;
-    }
-    
 
-    closeOffcanvas() {
+  toggleMenu() {
+    this.menuVisible = !this.menuVisible;
+  }
+
+  onMenuItemClick() {
+    this.menuVisible = false;
+  }
+
+
+  closeOffcanvas() {
     const offcanvasEl = document.getElementById('mobileMenu');
 
     if (offcanvasEl) {
@@ -44,47 +44,47 @@ export class NavbarComponent implements OnInit, OnDestroy {
       offcanvas.hide();
     }
   }
-    
-  
-    // onMenuItemClick() {
-    //   if (window.innerWidth <= 768) {
-    //     this.menuVisible = false;
-    //     document.body.style.overflow = 'auto'; 
-    //   }
-    // }
 
-    // @HostListener('window:resize', ['$event'])
-    // onResize(event: any) {
-    //   if (event.target.innerWidth > 768) {
-    //     this.menuVisible = false;
-    //   }
-    // }
-    
+
+  // onMenuItemClick() {
+  //   if (window.innerWidth <= 768) {
+  //     this.menuVisible = false;
+  //     document.body.style.overflow = 'auto'; 
+  //   }
+  // }
+
+  // @HostListener('window:resize', ['$event'])
+  // onResize(event: any) {
+  //   if (event.target.innerWidth > 768) {
+  //     this.menuVisible = false;
+  //   }
+  // }
+
 
   constructor(private dataService: DataService, private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
-    if (localStorage.getItem('userId')) {
+    this.dataService.cartCount$.subscribe(count => {
+      // Re-fetch full cart data if count changes to keep local array in sync
+      if (this.cartData.length !== count) {
+        this.loadCartData();
+      }
+    });
 
-      // this.dataService.cartLoad?.subscribe((res:any)=>{
-      //   console.log(res)
-      //   this.loadCartData()
-      // })
-      this.dataService.cartLoad1.subscribe((res: any) => {
+    this.dataService.cartLoad1.subscribe((res: any) => {
       if (res) {
         this.loadCartData();
       }
     });
 
-       
     this.dataService.cartCleared$.subscribe((shouldClear) => {
       console.log("📢 Cart clear event received:", shouldClear);
       if (shouldClear) {
         this.clearCartAfterPayment();
       }
     });
-      this.loadCartData()
-    }
+
+    this.loadCartData();
     this.loadSettingsData()
 
     this.authSubcription = this.authService.isLoggedIn.subscribe((status) => {
@@ -123,18 +123,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this.authService.isLoggedIn) {
-      console.warn("User is not logged in. Skipping cart fetch.");
-      return;
-    }
-
     this.userId = localStorage.getItem('userId');
-    console.log("Fetching cart data for userId:", this.userId);
-
     if (!this.userId) {
-      console.error("User ID is null or undefined!");
+      this.cartData = [];
       return;
     }
+
+    console.log("Fetching cart data for userId:", this.userId);
 
     this.dataService.getCartData(this.userId).subscribe(
       (response) => {
@@ -143,10 +138,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
         if (response?.status && response.card?.length) {
           this.cartData = response.card;
           console.log("Updated cartData:", this.cartData);
-          // this.fetchProductDetails();
+          this.dataService.refreshCartCount(this.userId);
         } else {
           console.warn("Cart is empty or response is invalid.");
           this.cartData = [];
+          this.dataService.refreshCartCount(this.userId);
         }
       },
       (error) => {

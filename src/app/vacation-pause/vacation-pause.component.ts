@@ -20,13 +20,7 @@ export class VacationPauseComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForms()
-
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based
-    const day = today.getDate().toString().padStart(2, '0');
-
-    this.minDate = `${year}-${month}-${day}`
+    this.minDate = new Date().toISOString().split('T')[0];
   }
 
   private initializeForms(): void {

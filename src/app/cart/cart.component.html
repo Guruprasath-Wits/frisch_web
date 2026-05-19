@@ -33,7 +33,8 @@
                             <button class="border-0 text-danger bg-transparent" style="margin-top: -15px;"
                                 (click)="deleteFromCart(cart.id)"><i class="fa-regular fa-trash-can fa-lg"></i></button>
                         </div>
-                        <p>{{ cart.productDetails?.price.split(".")[0] }} <sup>{{ cart.productDetails?.price.split(".")[1] }}</sup> €</p>
+                        <p>{{ cart.productDetails?.price.split(".")[0] }} <sup>{{
+                                cart.productDetails?.price.split(".")[1] }}</sup> €</p>
                         <div class="input-group">
                             <button type="button" class="quantity-left-minus btn btn-warning btn-number"
                                 (click)="decrementQuantity(cart)">
@@ -60,53 +61,92 @@
         </div>
 
         <div class="col-12 col-lg-4 col-md-4 cart-calculate">
-         
+
 
             <div class="row card-footer text-center total border-0">
-                <div class="col-6 col-md-6 col-sm-3"><p>Produktsumme</p></div>
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>Produktsumme</p>
+                </div>
                 <div class="col-6 col-md-6 col-sm-3">
                     <p>{{ total.toFixed(2).split(".")[0] }} <sup>{{ total.toFixed(2).split(".")[1] }}</sup> €</p>
                 </div>
             </div>
-            
+
             <div class="row card-footer text-center total border-0">
-                <div class="col-6 col-md-6 col-sm-3"><p>Trinkgeld</p></div>
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>Trinkgeld</p>
+                </div>
                 <div class="col-6 col-md-6 col-sm-3">
                     <p>{{ tips.toFixed(2).split(".")[0] }} <sup>{{ tips.toFixed(2).split(".")[1] }}</sup> €</p>
                 </div>
             </div>
-            
+
+            <div class="row card-footer text-center total border-0">
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>Liefergebühr</p>
+                </div>
+                <div class="col-6 col-md-6 col-sm-3">
+                    <p>{{ deliveryFee.toFixed(2).split(".")[0] }} <sup>{{ deliveryFee.toFixed(2).split(".")[1] }}</sup>
+                        €</p>
+                </div>
+            </div>
+
+            <div *ngIf="total < minOrderRequired" class="row card-footer text-center border-0 py-0">
+                <div class="col-12 text-danger small">
+                    <p>Mindestbestellwert: {{ minOrderRequired.toFixed(2).replace('.', ',') }} € zzgl. Liefergebühr</p>
+                </div>
+            </div>
+
+
+
             <hr>
+            <div class="row card-footer text-center total border-0">
+                <div class="col-6 col-md-6 col-sm-3">
+                    <h4 class="font-weight-bold">Gesamtsumme</h4>
+                </div>
+                <div class="col-6 col-md-6 col-sm-3">
+                    <h4 class="font-weight-bold">{{ totalAmount.toFixed(2).split(".")[0] }} <sup>{{
+                            totalAmount.toFixed(2).split(".")[1] }}</sup> €</h4>
+                </div>
+            </div>
             <div class="card-footer text-muted border-0">
                 <div class="card-body text-center">
                     <h3 class="card-title">
                         Trinkgeld hinzufügen<br>
-                        <small class="small">(Ein kleines Dankeschön für unser Team wird immer geschätzt – selbstverständlich freiwillig)</small>
-                      </h3>
-                      
-                      <div class="row justify-content-center">
+                        <small class="small">(Ein kleines Dankeschön für unser Team wird immer geschätzt –
+                            selbstverständlich freiwillig)</small>
+                    </h3>
+
+                    <div class="row justify-content-center">
                         <div class="col-6 col-md-6 mb-3 px-2 d-flex justify-content-center"
-                             *ngFor="let button of buttons">
-                          <button class="btn btn-warning w-100"
-                                  
-                                  (click)="selectAmount(button)"
-                                  [ngClass]="{
+                            *ngFor="let button of buttons">
+                            <button class="btn btn-warning w-100" (click)="selectAmount(button)" [ngClass]="{
                                     'btn-primary': !button.disabled,
                                     'btn-secondary': button.disabled
                                   }">
-                            <div class="text-center">
-                              {{ button.value.toFixed(2).split('.')[0] }}
-                              <sup>{{ button.value.toFixed(2).split('.')[1] }}</sup> €
-                            </div>
-                          </button>
+                                <div class="text-center">
+                                    {{ button.value.toFixed(2).split('.')[0] }}
+                                    <sup>{{ button.value.toFixed(2).split('.')[1] }}</sup> €
+                                </div>
+                            </button>
                         </div>
-                      </div>
-                      
-                      
+                    </div>
+
+
 
                     <div class="mt-5">
-                        <button class="w-100 btn border border-2" (click)="subscribe_order()">Dauerbestellung</button><br><br>
+                        <!-- <ng-container *ngIf="!hasAndereCategory()">
+                            <button class="w-100 btn border border-2"
+                                (click)="subscribe_order()">Dauerbestellung</button><br><br>
+                        </ng-container> -->
                         <button class="w-100 btn btn-secondary" (click)="moveToOrder()">Zur Kasse</button>
+                        <div *ngIf="hasAndereCategory()" class="mt-4 text-start font-weight-bold"
+                            style="font-size: 14px; line-height: 1.6;">
+                            <span class="text-danger">Wichtiger Lieferhinweis:</span> <br>
+                            Bestellungen bis 13:59 Uhr werden noch am selben Tag geliefert.<br><br>
+                            Bei Bestellungen ab 14:00 Uhr erfolgt die Lieferung automatisch am nächsten Liefertag.<br><br>
+                            Alle Preise verstehen sich inklusive gesetzlicher MwSt. und Pfand, zuzüglich Versandkosten.
+                        </div>
                     </div>
                 </div>
             </div>

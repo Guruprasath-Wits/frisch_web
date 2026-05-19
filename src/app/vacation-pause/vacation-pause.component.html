@@ -48,25 +48,22 @@
                         <div class="pro-body">
                             <form [formGroup]="vacationPauseForm" (ngSubmit)="vacationPause()">
                                 <div class="row">
-                                    <div class="form-group col-12 col-md-6">
-                                        <label>Vom</label>
-                                        <input type="date" class="form-control" formControlName="vacation_from" [min]="minDate">
-                                        <div class="error text-danger"
-                                            *ngIf="vacationPauseForm.controls['vacation_from'].invalid && vacationPauseForm.controls['vacation_from'].touched">
-                                           Abwesenheit ab dem (Datum) ist erforderlich.
-                                        </div>
+                                    <div class="form-group col-12 col-md-6 mb-3">
+                                        <label class="fw-bold mb-1">Vom</label>
+                                        <input type="date" class="form-control border-warning"
+                                            formControlName="vacation_from" [min]="minDate"
+                                            style="background-color: #fff;">
                                     </div>
-                                    <div class="form-group col-12 col-md-6">
-                                        <label>Bis</label>
-                                        <input type="date" class="form-control" formControlName="vacation_to" [min]="minDate">
-                                        <div class="error text-danger"
-                                            *ngIf="vacationPauseForm.controls['vacation_to'].invalid && vacationPauseForm.controls['vacation_to'].touched">
-                                            Abwesenheit bis zum (Datum) ist erforderlich.
-                                        </div>
+                                    <div class="form-group col-12 col-md-6 mb-3">
+                                        <label class="fw-bold mb-1">Bis</label>
+                                        <input type="date" class="form-control border-warning"
+                                            formControlName="vacation_to" [min]="minDate"
+                                            style="background-color: #fff;">
                                     </div>
                                 </div>
                                 <div class="text-end">
-                                    <button type="submit" class="btn bg-warning text-dark" [disabled]="vacationPauseForm.invalid" >Pausieren</button>
+                                    <button type="submit" class="btn bg-warning text-dark"
+                                        [disabled]="vacationPauseForm.invalid">Pausieren</button>
                                 </div>
                             </form>
                         </div>

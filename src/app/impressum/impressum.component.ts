@@ -1,19 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { DataService } from '../data.service';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Title, Meta } from '@angular/platform-browser';
 @Component({
   selector: 'app-impressum',
   templateUrl: './impressum.component.html',
   styleUrls: ['./impressum.component.css']
 })
-export class ImpressumComponent {
+export class ImpressumComponent implements OnInit {
   imprintForm!: FormGroup;
   isLoading = false; 
   imprintData:any;
 
-  constructor(private fb: FormBuilder, private settingService: DataService){
+  constructor(private fb: FormBuilder, private settingService: DataService, private titleService: Title, private metaService: Meta){
     this.getSettings();
+  }
+
+  ngOnInit() {
+    this.titleService.setTitle('Impressum - Frisch für Sie');
+    this.metaService.updateTag({ name: 'description', content: 'Rechtliche Informationen und Impressum des Lieferservice Frisch für Sie.' });
   }
 
   getSettings(): void {

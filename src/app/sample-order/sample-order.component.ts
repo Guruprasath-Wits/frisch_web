@@ -1,4 +1,4 @@
-import { Component, OnInit,ElementRef, NgZone,ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { DataService } from '../data.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -16,16 +16,16 @@ declare var google: any;
   styleUrls: ['./sample-order.component.css']
 })
 export class SampleOrderComponent implements OnInit {
-  isLoading = false; 
+  isLoading = false;
   houseNo: string = '';
   address: string = '';
   storedAddress: any;
   city: string = '';
   lat: any;
-lng: any;
-postcodes: any[] = []
-@ViewChild('addressInput', { static: false }) addressInputRef!: ElementRef;
-  constructor(private http: HttpClient,private authService: AuthService,private ngZone: NgZone, private dataService: DataService, private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
+  lng: any;
+  postcodes: any[] = []
+  @ViewChild('addressInput', { static: false }) addressInputRef!: ElementRef;
+  constructor(private http: HttpClient, private authService: AuthService, private ngZone: NgZone, private dataService: DataService, private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
     const today = new Date();
     this.minDate = today.toISOString().split('T')[0];
   }
@@ -80,8 +80,8 @@ postcodes: any[] = []
 
   private initializeForms(): void {
     const fullAddress = this.houseNo && this.address && this.city
-    ? `${this.houseNo}, ${this.address}, ${this.city}`
-    : this.storedAddress;
+      ? `${this.houseNo}, ${this.address}, ${this.city}`
+      : this.storedAddress;
     this.SampleOrderForm = this.fb.group({
       address: [fullAddress],
       instruction: [null],
@@ -108,68 +108,68 @@ postcodes: any[] = []
     )
   }
 
- loadSampleProduct() {
+  loadSampleProduct() {
     // this.route.paramMap.subscribe((params) => {
     //   this.productId = params.get('id');
     //   console.log(this.productId);
     // })
-      this.route.params.subscribe(params => {
-    this.productId = params['id'];
-    console.log('Product ID:', this.productId);
-  });
-      this.route.queryParams.subscribe(params => {
-         
-    const type = params['type'] ? +params['type'] : 2;
-    console.log('Order Type:', type);
+    this.route.params.subscribe(params => {
+      this.productId = params['id'];
+      console.log('Product ID:', this.productId);
+    });
+    this.route.queryParams.subscribe(params => {
+
+      const type = params['type'] ? +params['type'] : 2;
+      console.log('Order Type:', type);
 
 
 
-    console.log('Product ID:', this.productId);
-    console.log('Order Type:', type);
+      console.log('Product ID:', this.productId);
+      console.log('Order Type:', type);
 
-    if(type == 2){
-    this.dataService.getProductById(this.productId).subscribe(
-      (response) => {
-        if (response.status) {
-          this.product = response.product;
-          console.log("============", this.product);
-        }
-      },
-      (error) => {
-        console.log("Error in fetching sample order data", error);
+      if (type == 2) {
+        this.dataService.getProductById(this.productId).subscribe(
+          (response) => {
+            if (response.status) {
+              this.product = response.product;
+              console.log("============", this.product);
+            }
+          },
+          (error) => {
+            console.log("Error in fetching sample order data", error);
 
+          }
+        )
       }
-    )
-  }
-  else if (type == 1){
+      else if (type == 1) {
         this.dataService.getSampleProductsDataByID(this.productId).subscribe(
-          
-      (response) => {
-        if (response.status) {
-          this.product = response.sampleOrder;
-          console.log("============", this.product);
-        }
-      },
-      (error) => {
-        console.log("Error in fetching sample order data", error);
 
+          (response) => {
+            if (response.status) {
+              this.product = response.sampleOrder;
+              console.log("============", this.product);
+            }
+          },
+          (error) => {
+            console.log("Error in fetching sample order data", error);
+
+          }
+        )
       }
-    )
-  }
-  });
-// if(type = 2)
-//     this.dataService.getProductById(this.productId).subscribe(
-//       (response) => {
-//         if (response.status) {
-//           this.product = response.product;
-//           console.log("============", this.product);
-//         }
-//       },
-//       (error) => {
-//         console.log("Error in fetching sample order data", error);
+    });
+    // if(type = 2)
+    //     this.dataService.getProductById(this.productId).subscribe(
+    //       (response) => {
+    //         if (response.status) {
+    //           this.product = response.product;
+    //           console.log("============", this.product);
+    //         }
+    //       },
+    //       (error) => {
+    //         console.log("Error in fetching sample order data", error);
 
-//       }
-//     )
+    //       }
+    //     )
   }
 
   ngAfterViewInit() {
@@ -181,7 +181,7 @@ postcodes: any[] = []
       console.error("Google Maps API not loaded or Places API missing!");
       return;
     }
-  
+
     const autocomplete = new google.maps.places.Autocomplete(
       this.addressInputRef.nativeElement,
       {
@@ -189,24 +189,24 @@ postcodes: any[] = []
         componentRestrictions: { country: 'DE' } // Restrict to Germany
       }
     );
-  
+
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
         const place = autocomplete.getPlace();
         console.log(place); // Log entire place object for debugging
-  
+
         if (place.geometry && place.geometry.location) {
           const latitude = place.geometry.location.lat();
           const longitude = place.geometry.location.lng();
           const formattedAddress = place.formatted_address;
-  
+
           // Updating form with address, latitude, and longitude
           this.SampleOrderForm.patchValue({
             address: formattedAddress,
             lat: latitude,
             lng: longitude
           });
-  
+
           console.log(`Address: ${formattedAddress}`);
           console.log(`Latitude: ${latitude}`);
           console.log(`Longitude: ${longitude}`);
@@ -218,139 +218,139 @@ postcodes: any[] = []
   }
 
 
- 
-
-// validateDate(event: any) {
-//     const inputDate = new Date(event.target.value); // Selected date
-//     const day = inputDate.getDay(); // 0 = Sunday, 6 = Saturday
-//     const formattedDate = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD
-
-//     const currentDate = new Date();
-//     const todayFormatted = currentDate.toISOString().split('T')[0];
-//     const currentDay = currentDate.getDay();
-//     const currentHour = currentDate.getHours();
-//     const currentMinutes = currentDate.getMinutes();
-
-//     this.selectedDateInfo = ''; // Reset
-//     this.SampleOrderForm.get('delivery_date')?.setErrors(null); // Reset errors
-
-//     // Helper to format date as YYYY-MM-DD
-//     const formatDate = (date: Date) => {
-//       const y = date.getFullYear();
-//       const m = String(date.getMonth() + 1).padStart(2, '0');
-//       const d = String(date.getDate()).padStart(2, '0');
-//       return `${y}-${m}-${d}`;
-//     };
-
-//     // ❌ Block Friday 4 PM onwards + Saturday & Sunday
-//     if (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) {
-//       const blockedDates = [
-//         formatDate(currentDate), // Friday
-//         formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)), // Saturday
-//         formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)), // Sunday
-//       ];
-
-//       if (blockedDates.includes(formattedDate)) {
-//         this.selectedDateInfo = 'Invalid';
-//         this.SampleOrderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
-//         return;
-//       }
-//     }
-
-//     // ❌ Block today
-//     if (formattedDate === todayFormatted) {
-//       this.selectedDateInfo = 'Invalid';
-//       this.SampleOrderForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
-//       return;
-//     }
-
-//     // ✅ Allow only Saturday/Sunday if not blocked
-//     if (day === 6 || day === 0) {
-//       this.selectedDateInfo = 'Weekend';
-//     } else {
-//       this.selectedDateInfo = 'Invalid';
-//       this.SampleOrderForm.get('delivery_date')?.setErrors({ invalidDate: true });
-//     }
-
-//     // Check if the selected date is a public holiday in Germany
-//     this.checkPublicHoliday(formattedDate);
-//   }
 
 
-validateDate(event: any) {
-  const inputDate = new Date(event.target.value); 
-  const day = inputDate.getDay(); 
-  const formattedDate = inputDate.toISOString().split('T')[0];
+  // validateDate(event: any) {
+  //     const inputDate = new Date(event.target.value); // Selected date
+  //     const day = inputDate.getDay(); // 0 = Sunday, 6 = Saturday
+  //     const formattedDate = inputDate.toISOString().split('T')[0]; // YYYY-MM-DD
 
-  const currentDate = new Date();
-  const todayFormatted = currentDate.toISOString().split('T')[0];
-  const currentDay = currentDate.getDay();
-  const currentHour = currentDate.getHours();
-  const currentMinutes = currentDate.getMinutes();
+  //     const currentDate = new Date();
+  //     const todayFormatted = currentDate.toISOString().split('T')[0];
+  //     const currentDay = currentDate.getDay();
+  //     const currentHour = currentDate.getHours();
+  //     const currentMinutes = currentDate.getMinutes();
 
-  this.selectedDateInfo = '';
-  this.SampleOrderForm.get('delivery_date')?.setErrors(null);
+  //     this.selectedDateInfo = ''; // Reset
+  //     this.SampleOrderForm.get('delivery_date')?.setErrors(null); // Reset errors
 
-  const formatDate = (date: Date) => {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  };
+  //     // Helper to format date as YYYY-MM-DD
+  //     const formatDate = (date: Date) => {
+  //       const y = date.getFullYear();
+  //       const m = String(date.getMonth() + 1).padStart(2, '0');
+  //       const d = String(date.getDate()).padStart(2, '0');
+  //       return `${y}-${m}-${d}`;
+  //     };
 
-  // ❌ Block Friday 4 PM onwards
-  if (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) {
-    const blockedDates = [
-      formatDate(currentDate),
-      formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)),
-      formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)),
-    ];
+  //     // ❌ Block Friday 4 PM onwards + Saturday & Sunday
+  //     if (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) {
+  //       const blockedDates = [
+  //         formatDate(currentDate), // Friday
+  //         formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)), // Saturday
+  //         formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)), // Sunday
+  //       ];
 
-    if (blockedDates.includes(formattedDate)) {
+  //       if (blockedDates.includes(formattedDate)) {
+  //         this.selectedDateInfo = 'Invalid';
+  //         this.SampleOrderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+  //         return;
+  //       }
+  //     }
+
+  //     // ❌ Block today
+  //     if (formattedDate === todayFormatted) {
+  //       this.selectedDateInfo = 'Invalid';
+  //       this.SampleOrderForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
+  //       return;
+  //     }
+
+  //     // ✅ Allow only Saturday/Sunday if not blocked
+  //     if (day === 6 || day === 0) {
+  //       this.selectedDateInfo = 'Weekend';
+  //     } else {
+  //       this.selectedDateInfo = 'Invalid';
+  //       this.SampleOrderForm.get('delivery_date')?.setErrors({ invalidDate: true });
+  //     }
+
+  //     // Check if the selected date is a public holiday in Germany
+  //     this.checkPublicHoliday(formattedDate);
+  //   }
+
+
+  validateDate(event: any) {
+    const inputDate = new Date(event.target.value);
+    const day = inputDate.getDay();
+    const formattedDate = inputDate.toISOString().split('T')[0];
+
+    const currentDate = new Date();
+    const todayFormatted = currentDate.toISOString().split('T')[0];
+    const currentDay = currentDate.getDay();
+    const currentHour = currentDate.getHours();
+    const currentMinutes = currentDate.getMinutes();
+
+    this.selectedDateInfo = '';
+    this.SampleOrderForm.get('delivery_date')?.setErrors(null);
+
+    const formatDate = (date: Date) => {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    };
+
+    // ❌ Block Friday 4 PM onwards
+    if (currentDay === 5 && (currentHour > 16 || (currentHour === 16 && currentMinutes > 0))) {
+      const blockedDates = [
+        formatDate(currentDate),
+        formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1)),
+        formatDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 2)),
+      ];
+
+      if (blockedDates.includes(formattedDate)) {
+        this.selectedDateInfo = 'Invalid';
+        this.SampleOrderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+        return;
+      }
+    }
+
+    // ❌ Today not allowed
+    if (formattedDate === todayFormatted) {
       this.selectedDateInfo = 'Invalid';
-      this.SampleOrderForm.get('delivery_date')?.setErrors({ afterFriday4pm: true });
+      this.SampleOrderForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
       return;
     }
-  }
 
-  // ❌ Today not allowed
-  if (formattedDate === todayFormatted) {
-    this.selectedDateInfo = 'Invalid';
-    this.SampleOrderForm.get('delivery_date')?.setErrors({ todayNotAllowed: true });
-    return;
-  }
-
-  // ✅ ONLY Saturday allowed
-  if (day === 6) {
-    this.selectedDateInfo = 'Saturday';
-  } else { 
-    this.selectedDateInfo = 'Invalid';
-    this.SampleOrderForm.get('delivery_date')?.setErrors({ invalidDate: true });
-    return;
-  }
-
-  // Public holiday check
-  this.checkPublicHoliday(formattedDate);
-}
-
-
-checkPublicHoliday(date: string) {
-  const apiUrl = `https://date.nager.at/api/v3/PublicHolidays/${new Date().getFullYear()}/DE`;
-  this.http.get<any[]>(apiUrl).subscribe(
-    holidays => {
-      const isHoliday = holidays.some(holiday => holiday.date === date);
-      if (isHoliday) {
-        this.selectedDateInfo = 'Public Holiday';
-        const control = this.SampleOrderForm.get('delivery_date');
-        control?.setErrors({ publicHoliday: true });
-        control?.markAsTouched();
-      }
-    },
-    error => {
-      console.error('Error fetching public holidays:', error);
+    // ✅ ONLY Saturday allowed
+    if (day === 6) {
+      this.selectedDateInfo = 'Saturday';
+    } else {
+      this.selectedDateInfo = 'Invalid';
+      this.SampleOrderForm.get('delivery_date')?.setErrors({ invalidDate: true });
+      return;
     }
-  );
-}
+
+    // Public holiday check
+    this.checkPublicHoliday(formattedDate);
+  }
+
+
+  checkPublicHoliday(date: string) {
+    const apiUrl = `https://date.nager.at/api/v3/PublicHolidays/${new Date().getFullYear()}/DE`;
+    this.http.get<any[]>(apiUrl).subscribe(
+      holidays => {
+        const isHoliday = holidays.some(holiday => holiday.date === date);
+        if (isHoliday) {
+          this.selectedDateInfo = 'Public Holiday';
+          const control = this.SampleOrderForm.get('delivery_date');
+          control?.setErrors({ publicHoliday: true });
+          control?.markAsTouched();
+        }
+      },
+      error => {
+        console.error('Error fetching public holidays:', error);
+      }
+    );
+  }
 
 
 
@@ -365,81 +365,81 @@ checkPublicHoliday(date: string) {
           console.log(this.postcodes);
         }
       },
-      (error)=>{
-        console.log("Error fetching data in delivery areas: "+error);
+      (error) => {
+        console.log("Error fetching data in delivery areas: " + error);
       }
     )
   }
 
 
- confirmOrder() {
+  confirmOrder() {
     this.isLoading = true;
     if (!this.postcodes || this.postcodes.length === 0) {
       this.isLoading = false;
-          Swal.fire('Fehler!', 'Liefergebiete konnten nicht geladen werden. Bitte versuchen Sie es später erneut.', 'error');
-          return;
-        }
-      
-        // Get the entered zipcode
-        const enteredZipcode = this.SampleOrderForm.value.zipcode;
-      
-        // Check if enteredZipcode exists in the postcodes list
-        const isZipcodeAvailable = this.postcodes.some((area: any) => area.zipcode.toString() === enteredZipcode.toString());
-      
-        if (!isZipcodeAvailable) {
-          this.isLoading = false;
-          Swal.fire('Fehler!', 'Lieferung an diese Postleitzahl ist nicht verfügbar!', 'warning');
-          return; // Stop execution
-        }
+      Swal.fire('Fehler!', 'Liefergebiete konnten nicht geladen werden. Bitte versuchen Sie es später erneut.', 'error');
+      return;
+    }
 
-//       let rawDate = this.SampleOrderForm.value.delivery_date;
-// let formattedDate = '';
+    // Get the entered zipcode
+    const enteredZipcode = this.SampleOrderForm.value.zipcode;
 
-// // If it's a string
-// if (typeof rawDate === 'string') {
-//   if (rawDate.includes('-')) {
-//     const parts = rawDate.split('-');
-//     if (parts[0].length === 4) {
-//       // Already YYYY-MM-DD
-//       formattedDate = rawDate;
-//     } else {
-//       // DD-MM-YYYY → convert
-//       const [day, month, year] = parts;
-//       formattedDate = `${year}-${month}-${day}`;
-//     }
-//   }
-// } 
-// // If it's a Date object
-// else if (rawDate instanceof Date) {
-//   const year = rawDate.getFullYear();
-//   const month = String(rawDate.getMonth() + 1).padStart(2, '0');
-//   const day = String(rawDate.getDate()).padStart(2, '0');
-//   formattedDate = `${year}-${month}-${day}`;
-// } else {
-//   console.error('Invalid delivery_date:', rawDate);
-// }
+    // Check if enteredZipcode exists in the postcodes list
+    const isZipcodeAvailable = this.postcodes.some((area: any) => area.zipcode.toString() === enteredZipcode.toString());
+
+    if (!isZipcodeAvailable) {
+      this.isLoading = false;
+      Swal.fire('Fehler!', 'Lieferung an diese Postleitzahl ist nicht verfügbar!', 'warning');
+      return; // Stop execution
+    }
+
+    //       let rawDate = this.SampleOrderForm.value.delivery_date;
+    // let formattedDate = '';
+
+    // // If it's a string
+    // if (typeof rawDate === 'string') {
+    //   if (rawDate.includes('-')) {
+    //     const parts = rawDate.split('-');
+    //     if (parts[0].length === 4) {
+    //       // Already YYYY-MM-DD
+    //       formattedDate = rawDate;
+    //     } else {
+    //       // DD-MM-YYYY → convert
+    //       const [day, month, year] = parts;
+    //       formattedDate = `${year}-${month}-${day}`;
+    //     }
+    //   }
+    // } 
+    // // If it's a Date object
+    // else if (rawDate instanceof Date) {
+    //   const year = rawDate.getFullYear();
+    //   const month = String(rawDate.getMonth() + 1).padStart(2, '0');
+    //   const day = String(rawDate.getDate()).padStart(2, '0');
+    //   formattedDate = `${year}-${month}-${day}`;
+    // } else {
+    //   console.error('Invalid delivery_date:', rawDate);
+    // }
 
     this.sampleOrderData = {
       user_id: localStorage.getItem('userId'),
       delivery_date: this.SampleOrderForm.value.delivery_date,
       // address: this.SampleOrderForm.value.address || this.userData.address,
       address:
-  (this.SampleOrderForm.value.street && this.SampleOrderForm.value.address &&
-   this.SampleOrderForm.value.zipcode &&
-   this.userData.ort)
-    ? `${this.SampleOrderForm.value.street} ${this.SampleOrderForm.value.address},${this.SampleOrderForm.value.zipcode},${this.userData.ort}`
-    : `${this.userData.street || ''} ${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
+        (this.SampleOrderForm.value.street && this.SampleOrderForm.value.address &&
+          this.SampleOrderForm.value.zipcode &&
+          this.userData.ort)
+          ? `${this.SampleOrderForm.value.street} ${this.SampleOrderForm.value.address},${this.SampleOrderForm.value.zipcode},${this.userData.ort}`
+          : `${this.userData.street || ''} ${this.userData.address || ''},${this.userData.zipcode || ''},${this.userData.ort || ''}`,
 
       contact: this.userData.phone,
       instruction: this.SampleOrderForm.value.instruction,
       price: 0.00,
       tips: 0.00,
       // productDetails: [[ this.product.products, 1 ]],
-      productDetails: this.product.products.map((prod:any) => [
-  prod.name,
-  1,
-  "0"
-]),
+      productDetails: this.product.products.map((prod: any) => [
+        prod.name,
+        1,
+        "0"
+      ]),
       lat: this.SampleOrderForm.value.lat,
       lng: this.SampleOrderForm.value.lng,
       zipcode: this.SampleOrderForm.value.zipcode,

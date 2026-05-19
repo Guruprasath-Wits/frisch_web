@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <style>
   /* === GLOBAL FIX === */
   html,
@@ -508,4 +509,726 @@
   </div>
 </section>
 
+=======
+<style>
+  /* === GLOBAL FIX === */
+  html,
+  body {
+    overflow-x: hidden !important;
+    width: 100%;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow-x: hidden;
+  }
+
+  .row {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+  }
+
+  /* === CARD & TEXT === */
+  .acard {
+    text-align: center;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    width: 250px;
+    height: 40px;
+    margin-top: 20px;
+  }
+
+  .acard p {
+    text-align: center;
+    color: black;
+    font-weight: 600;
+    padding-top: 10px;
+    letter-spacing: 1.5px;
+    font-size: 20px;
+  }
+
+  .acard:hover {
+    transform: translateY(-5px);
+    background-color: #e4a484;
+  }
+
+  .cus-h1 {
+    color: #954535;
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .cus-h2 {
+    color: #954535;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+
+  .cus-img {
+    width: 600px;
+    height: 500px;
+    margin-top: -80px;
+    margin-left: 40px;
+  }
+
+  @media(max-width:426px) {
+    .cus-img {
+      display: none;
+    }
+  }
+
+  @media(min-width:427px) and (max-width:770px) {
+    .cus-img {
+      display: none;
+    }
+
+    .static-card {
+      margin-left: 175px;
+    }
+
+    .area-con {
+      background-image: url('../../assets/img/dortmund.png');
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+  }
+
+  /* === FILTER SIDEBAR === */
+  .card.search-filter {
+    border-radius: 15px;
+    border: none;
+    width: 95%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    position: relative;
+    z-index: 2;
+  }
+
+  .filter-widget {
+    padding: 10px 0;
+  }
+
+  .filter-widget h4 {
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #333;
+  }
+
+  /* Checkbox container */
+  .checkbox-container {
+    margin-bottom: 10px;
+  }
+
+  /* Label wrapper ensures entire row clickable */
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    font-size: 16px;
+    user-select: none;
+    padding: 5px;
+    transition: background 0.2s ease;
+  }
+
+  .checkbox-label:hover {
+    background: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  /* Hide default checkbox */
+  .checkbox-label input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  /* Custom checkmark box */
+  .checkmark {
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  /* Show checkmark when checked */
+  .checkbox-label input:checked~.checkmark {
+    background-color: #ffb74d;
+    border-color: #e69500;
+  }
+
+  /* Add tick symbol */
+  .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .checkbox-label input:checked~.checkmark::after {
+    display: block;
+  }
+
+  .checkbox-label .checkmark::after {
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .label-text {
+    color: #333;
+    flex-grow: 1;
+  }
+
+  /* Disabled state for checkboxes */
+  .checkbox-label.disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+    pointer-events: none;
+    filter: grayscale(1);
+  }
+
+  .checkbox-label.disabled input {
+    cursor: not-allowed;
+  }
+
+  /* Selection style for select type */
+  .filter-select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid #ffb74d;
+    border-radius: 12px;
+    background: #fff;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffb74d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+  }
+
+  .filter-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 183, 77, 0.2);
+  }
+
+  .filter-select:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+  }
+
+  /* === PRODUCT CARD === */
+  .product_card {
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin: 15px auto;
+    width: 100%;
+    max-width: 300px;
+    box-sizing: border-box;
+    background: #fff;
+  }
+
+  .product_img img {
+    border-radius: 8px;
+    width: 100%;
+    height: auto;
+  }
+
+  .quantity-control {
+    justify-content: center;
+  }
+
+  /* === POPUP BOX (Redesigned) === */
+  .popup-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .popup-content {
+    background: #ffffff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    position: relative;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(30px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .popup-header {
+    padding: 20px 24px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .popup-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #954535;
+  }
+
+  .close-icon-btn {
+    background: #eee;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+  }
+
+  .close-icon-btn:hover {
+    background: #e4a484;
+    color: white;
+    transform: rotate(90deg);
+  }
+
+  .popup-body {
+    padding: 24px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ffb74d #f1f1f1;
+  }
+
+  .popup-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .popup-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  .popup-body::-webkit-scrollbar-thumb {
+    background: #ffb74d;
+    border-radius: 10px;
+  }
+
+  .info-section {
+    margin-bottom: 24px;
+  }
+
+  .info-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    border-bottom: 2px solid #ffb74d;
+    padding-bottom: 5px;
+    width: fit-content;
+  }
+
+  .info-section-title i {
+    color: #ffb74d;
+  }
+
+  .info-content {
+    color: #555;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .weight-badge {
+    background: #fff8e1;
+    color: #954535;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px solid #ffb74d;
+    margin-bottom: 15px;
+  }
+
+  .nutri-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .nutri-table tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+
+  .nutri-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .popup-footer {
+    padding: 16px 24px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    text-align: right;
+  }
+
+  .btn-close-modal {
+    background: #954535;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-close-modal:hover {
+    background: #7a382b;
+    box-shadow: 0 4px 12px rgba(149, 69, 53, 0.3);
+  }
+
+  /* === RESPONSIVE FIX === */
+  @media (max-width: 768px) {
+
+    .col-md-4,
+    .col-md-8,
+    .col-lg-3,
+    .col-lg-9 {
+      max-width: 100% !important;
+      flex: 1 1 100%;
+      box-sizing: border-box;
+    }
+
+    .card.search-filter,
+    .product_card {
+      width: 95% !important;
+      margin: 10px auto !important;
+    }
+
+    .popup-content {
+      width: 95%;
+      height: 80%;
+    }
+  }
+
+  /* === AVAILABILITY BADGES === */
+  .availability-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 5px;
+    justify-content: flex-start;
+  }
+
+  .availability-badge {
+    padding: 2px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    min-width: 35px;
+    text-align: center;
+    border: none;
+    line-height: 1.5;
+    background-color: #f0f0f0;
+    color: #666;
+  }
+
+  /* Specific color for Saturday */
+  .availability-badge.sa {
+    background-color: #edf7f0;
+    color: #4a7c59;
+  }
+
+  /* Specific color for Sunday */
+  .availability-badge.so {
+    background-color: #fef0ea;
+    color: #b35a3d;
+  }
+
+  .product_info p {
+    margin-bottom: 0 !important;
+  }
+</style>
+
+<!-- === PAGE CONTENT === -->
+<div class="bread-crumb-bar">
+  <div class="container"></div>
+</div>
+
+<section class="content">
+  <div class="container">
+    <div class="row">
+
+      <!-- FILTER SIDEBAR -->
+      <div class="col-12 col-md-4 col-lg-4 col-xl-3">
+        <div class="card search-filter shadow p-2">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">
+              <i class="fas fa-sliders-h"></i> Filtern
+            </h4>
+            <a href="javascript:void(0);" (click)="onClearAll()">Zurücksetzen</a>
+          </div>
+          <hr />
+          <div class="card-body">
+            <!-- CATEGORY TYPE CHECKBOX GROUP -->
+            <div class="filter-widget mb-4">
+              <h4 class="font-weight-bold mb-3">
+                Kategorie
+                <i *ngIf="cartData.length > 0" class="fas fa-lock text-muted" title="Locked by cart items"></i>
+              </h4>
+              <p *ngIf="cartData.length > 0" class="small text-muted mb-2">
+                Mischbestellungen sind leider nicht möglich. Da Backwaren und Getränke unterschiedliche Lieferzeiten
+                haben, müssen diese getrennt bestellt werden. Bitte leeren Sie Ihren Warenkorb, um die Kategorie zu
+                wechseln.
+              </p>
+              <div class="checkbox-container" *ngFor="let main of mainCategories">
+                <label class="checkbox-label" [class.disabled]="cartData.length > 0">
+                  <input type="checkbox" [checked]="selectedCategoryType === main.category_name"
+                    (change)="setCategoryTypeFilter(main.category_name, $any($event.target).checked)">
+                  <span class="checkmark"></span>
+                  <span class="label-text">{{ main.category_name }}</span>
+                </label>
+              </div>
+            </div>
+
+            <hr />
+
+            <!-- CATEGORY LIST CHECKBOX GROUP (Multiple Selection - No Disable) -->
+            <div class="filter-widget">
+              <h4 class="font-weight-bold mb-3">Unterkategorie</h4>
+              <div style="max-height: 300px; overflow-y: auto;">
+                <div class="checkbox-container" *ngFor="let category of categories">
+                  <label class="checkbox-label">
+                    <input type="checkbox" [checked]="selectedCategories.includes(category.id)"
+                      (change)="setCategoryFilter(category.id, $any($event.target).checked)">
+                    <span class="checkmark"></span>
+                    <span class="label-text">{{ category.category_name }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- MISSING PRODUCT WIDGET -->
+            <div class="filter-widget mt-4">
+              <h4 class="font-weight-bold" style="font-size: 16px; line-height: 1.4;">Fehlt dir etwas in unserem Sortiment? Wir freuen uns über dein Feedback!</h4>
+              <div class="p-2">
+                <textarea class="form-control mb-2" rows="3"
+                  placeholder="Dein Wunsch-Produkt ist nicht dabei? Schreib uns!" [(ngModel)]="missingProductText"
+                  style="font-size: 14px; background: #f9f9f9;"></textarea>
+                <div class="d-flex justify-content-end">
+                  <button class="btn btn-sm btn-secondary me-2" (click)="clearMissingProduct()">Leeren</button>
+                  <button class="btn btn-sm btn-warning" (click)="submitMissingProduct()">Absenden</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- POPUP INFO (Redesigned) -->
+      <div class="popup-box" *ngIf="showProductDescribe" (click)="closePopup()">
+        <div class="popup-content" (click)="$event.stopPropagation()">
+          <div class="popup-header">
+            <h2>Artikel Info</h2>
+            <button class="close-icon-btn" (click)="closePopup()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="popup-body">
+            <h3 class="fw-bold mb-1" style="color: #333;">{{ productDescribeData?.product_name }}</h3>
+            <div class="weight-badge" *ngIf="productDescribeData?.weight">
+              <i class="fas fa-weight-hanging"></i> {{ productDescribeData?.weight }}
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.description">
+              <div class="info-content" [innerHTML]="formatDescription(productDescribeData?.description)">
+              </div>
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.ingredients">
+              <div class="info-section-title">
+                <i class="fas fa-leaf"></i> Zutaten
+              </div>
+              <div class="info-content" [innerHTML]="formatDescriptionss(productDescribeData?.ingredients)"></div>
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.nutri_inform">
+              <div class="info-section-title">
+                <i class="fas fa-chart-pie"></i> Nährwert
+              </div>
+              <div class="info-content" [innerHTML]="formatDescriptions(productDescribeData?.nutri_inform)"></div>
+            </div>
+
+            <div class="info-section" *ngIf="productDescribeData?.desc">
+              <div class="info-section-title">
+                <i class="fas fa-info-circle"></i> Weitere Informationen
+              </div>
+              <div class="info-content" [innerHTML]="formatDescription(productDescribeData?.desc)"></div>
+            </div>
+          </div>
+
+          <div class="popup-footer">
+            <button class="btn-close-modal" (click)="closePopup()">Schließen</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT LIST -->
+      <div class="col-12 col-md-8 col-lg-8 col-xl-9">
+        <div class="product-result w-100 bg-warning p-3 text-dark fw-bold position-relative">
+          <div class="d-flex flex-column flex-md-row align-items-md-center">
+            <h2 class="h5 mb-0 position-relative" style="z-index: 1;">{{ enabledPaginatedProducts.length }} Produkte gefunden</h2>
+            
+            <span *ngIf="selectedCategoryType && selectedCategoryType.includes('Getränke und Sonstiges')" 
+                  class="fw-normal d-block d-md-none mt-2" style="font-size: 14px;">
+              Alle Preise verstehen sich inklusive gesetzlicher MwSt. und Pfand, zuzüglich Versandkosten.
+            </span>
+          </div>
+          
+          <span *ngIf="selectedCategoryType && selectedCategoryType.includes('Getränke und Sonstiges')" 
+                class="fw-normal position-absolute w-100 text-center d-none d-md-block" 
+                style="left: 0; top: 50%; transform: translateY(-50%); z-index: 0; font-size: 14px; pointer-events: none;">
+            Alle Preise verstehen sich inklusive gesetzlicher MwSt. und Pfand, zuzüglich Versandkosten.
+          </span>
+        </div>
+
+        <div *ngIf="paginatedProducts.length > 0">
+          <div class="d-md-flex flex-row flex-wrap justify-content-center">
+            <div class="col-lg-3 col-md-6 col-xl-3" *ngFor="let product of paginatedProducts">
+              <div class="product_card text-center">
+                <div class="product_img">
+                  <img [src]="fileUrl + product.product_img" [alt]="product.product_name" class="img-fluid">
+                </div>
+                <div class="product_info mt-2 d-flex flex-column text-start">
+                  <div class="d-flex justify-content-between align-items-center w-100">
+                    <h3 (click)="selectProductFilter(product)"
+                      style="cursor: pointer; text-decoration: underline; color: #954535; font-size: 1.1rem; font-weight: 600; margin-bottom: 0;">
+                      {{ cleanProductName(product.product_name) }}
+                    </h3>
+                    <img src="../../assets/img/icon/information.png" width="30" height="30" style="cursor: pointer;"
+                      (click)="showProductDescription(product)" alt="Produktinformationen anzeigen">
+                  </div>
+
+                  <div class="availability-container d-flex gap-2 mt-2">
+                    <span *ngFor="let day of getAvailability(product.availability)" class="availability-badge"
+                      [ngClass]="day.toLowerCase()">
+                      {{ day }}
+                    </span>
+                  </div>
+
+                  <div class="mt-1">
+                    <p style="font-size: 1.25rem; font-weight: 700; color: #555;">
+                      {{ product.price.split(".")[0] }}<sup>{{ product.price.split(".")[1] }}</sup> €
+                    </p>
+                  </div>
+                </div>
+                <div class="input-group quantity-control mt-2">
+                  <button type="button" class="btn btn-warning btn-number" (click)="decrementQuantity(product)">
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                  <input type="text" class="input-number" [value]="product.quantity" readonly />
+                  <button type="button" class="btn btn-warning btn-number" (click)="incrementQuantity(product)">
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
+                </div>
+                <a class="btn btn-warning w-120 mt-3 fw" (click)="moveToCart(product)">
+                  In den Warenkorb legen <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <nav aria-label="Product pagination" class="mt-4">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 1">Zurück</button>
+            </li>
+            <li class="page-item" *ngFor="let page of pageNumbers" [class.active]="page === currentPage">
+              <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages">Weiter</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+>>>>>>> 740e4f0737f774c5146761b19c92242ddacf0015
 <app-footer></app-footer>
